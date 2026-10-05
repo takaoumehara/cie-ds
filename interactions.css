@@ -1,0 +1,173 @@
+/* ─────────────────────────────────────────────────────────────
+   CIE interactions — snappy hover / press / cycle / invert.
+   Refined, subtle. No bounce. Honour reduced-motion below.
+   ───────────────────────────────────────────────────────────── */
+
+/* Tap — scale settle on press (buttons, cards) */
+.cie-tap {
+  transition: transform var(--cie-t-snap) var(--cie-ease-out);
+  transform-origin: center;
+  touch-action: manipulation;
+}
+.cie-tap:active {
+  transform: scale(var(--cie-press-scale, 0.97));
+}
+
+/* Lift — 1px rise on hover (cards, chips) */
+.cie-lift {
+  transition: transform var(--cie-t-fast) var(--cie-ease-out);
+}
+@media (hover: hover) {
+  .cie-lift:hover { transform: translateY(-2px); }
+}
+.cie-lift:active { transform: translateY(0); }
+
+/* Invert — ink↔paper swap on hover/focus (blocks) */
+.cie-invert {
+  background: var(--cie-paper);
+  color: var(--cie-ink);
+  transition:
+    background-color var(--cie-t-cell) var(--cie-ease-expo),
+    color var(--cie-t-fast) var(--cie-ease-out),
+    border-color var(--cie-t-cell) var(--cie-ease-expo);
+}
+@media (hover: hover) {
+  .cie-invert:hover,
+  .cie-invert:focus-visible {
+    background: var(--cie-ink);
+    color: var(--cie-paper);
+    box-shadow: inset 0 0 0 1px var(--cie-stroke);
+  }
+}
+.cie-invert--ink {
+  background: var(--cie-ink);
+  color: var(--cie-paper);
+  box-shadow: inset 0 0 0 1px var(--cie-stroke);
+}
+@media (hover: hover) {
+  .cie-invert--ink:hover,
+  .cie-invert--ink:focus-visible {
+    background: var(--cie-paper);
+    color: var(--cie-ink);
+    box-shadow: none;
+  }
+}
+
+/* Flash — brief opacity dip on click (confirm feel) */
+.cie-flash {
+  transition: opacity var(--cie-t-snap) var(--cie-ease-out);
+}
+.cie-flash.is-flash {
+  opacity: 0.55;
+}
+
+/* Cycle control — click-to-cycle states (JS drives [data-cie-cycle-i]) */
+[data-cie-cycle] {
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--cie-t-cell) var(--cie-ease-expo),
+    color var(--cie-t-fast) var(--cie-ease-out),
+    transform var(--cie-t-snap) var(--cie-ease-out),
+    border-color var(--cie-t-cell) var(--cie-ease-expo);
+}
+[data-cie-cycle]:active {
+  transform: scale(var(--cie-press-scale, 0.97));
+}
+[data-cie-cycle] .cie-cycle-label {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Soft chip / pill for cycle demos */
+.cie-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cie-s-8);
+  padding: 0.55em 1em;
+  border-radius: var(--cie-r-pill);
+  background: var(--cie-btn);
+  font-family: var(--cie-mono);
+  font-size: var(--cie-text-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition:
+    background-color 150ms linear,
+    transform var(--cie-t-snap) var(--cie-ease-out);
+}
+@media (hover: hover) {
+  .cie-chip:hover { background: var(--cie-btn-hover); }
+}
+.cie-chip:active { transform: scale(0.96); }
+.cie-chip[aria-pressed="true"] {
+  background: var(--cie-paper);
+  color: var(--cie-ink);
+}
+
+/* Sound section — visual frame when audio is armed */
+[data-cie-sound] {
+  position: relative;
+}
+[data-cie-sound].is-sound-on {
+  /* subtle stroke cue — not a glow */
+  box-shadow: inset 0 0 0 1px var(--cie-stroke);
+}
+[data-cie-sound-toggle] {
+  /* inherits .cie-chip / .cie-pbtn when those classes are present */
+}
+[data-cie-sound-toggle][aria-pressed="true"] {
+  background: var(--cie-paper);
+  color: var(--cie-ink);
+}
+/* Geometric speaker mark — two bars; muted = single thin bar */
+[data-cie-sound-toggle] .cie-sound-icon {
+  display: inline-block;
+  width: 12px;
+  height: 10px;
+  position: relative;
+  flex-shrink: 0;
+}
+[data-cie-sound-toggle] .cie-sound-icon::before,
+[data-cie-sound-toggle] .cie-sound-icon::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  border-radius: 1px;
+}
+[data-cie-sound-toggle] .cie-sound-icon::before {
+  left: 0; top: 2px;
+  width: 4px; height: 6px;
+}
+[data-cie-sound-toggle] .cie-sound-icon::after {
+  left: 6px; top: 1px;
+  width: 2px; height: 8px;
+  opacity: 0.35;
+}
+[data-cie-sound-toggle][aria-pressed="true"] .cie-sound-icon::after {
+  opacity: 1;
+  left: 6px;
+  width: 2px;
+  box-shadow: 3px 0 0 currentColor;
+}
+
+/* Interactive hit targets that request sfx from section audio */
+[data-cie-sfx] {
+  touch-action: manipulation;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cie-tap,
+  .cie-lift,
+  .cie-invert,
+  .cie-flash,
+  [data-cie-cycle],
+  .cie-chip {
+    transition: none !important;
+  }
+  .cie-tap:active,
+  .cie-lift:hover,
+  .cie-lift:active,
+  [data-cie-cycle]:active,
+  .cie-chip:active {
+    transform: none !important;
+  }
+}

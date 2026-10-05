@@ -4,14 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>cie-ds — demo</title>
-<meta name="description" content="Personal/internal CIE tokens + motion preview. Not a public design system.">
+<meta name="description" content="Personal/internal CIE tokens, motion, scroll, and section sound. Not a public design system.">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=Outfit:wght@100..900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap">
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="scrollbar.css">
 <link rel="stylesheet" href="motion.css">
+<link rel="stylesheet" href="scroll.css">
+<link rel="stylesheet" href="interactions.css">
 <style>
   .demo {
     max-width: 920px;
@@ -26,8 +29,16 @@
     text-transform: uppercase;
     color: var(--cie-ink-mute);
     margin-bottom: var(--cie-s-24);
+    display: flex; flex-wrap: wrap; gap: var(--cie-s-12);
+    justify-content: space-between; align-items: baseline;
   }
   .demo__banner b { color: var(--cie-paper); font-weight: 400; }
+  .demo__nav {
+    display: flex; flex-wrap: wrap; gap: var(--cie-s-16);
+  }
+  .demo__nav a { color: var(--cie-ink-mute); }
+  .demo__nav a:hover { color: var(--cie-paper); }
+
   .demo h1 {
     font-size: clamp(40px, 8vw, 72px);
     font-weight: 300;
@@ -38,18 +49,37 @@
   }
   .demo__lede {
     color: var(--cie-ink-mute);
-    max-width: 48ch;
+    max-width: 52ch;
     margin-bottom: var(--cie-s-40);
   }
-  .demo section + section { margin-top: var(--cie-s-40); }
+
+  .demo section.pattern {
+    margin-top: var(--cie-s-64);
+    padding-top: var(--cie-s-28);
+    border-top: 1px solid var(--cie-stroke);
+  }
   .demo h2 {
     font-family: var(--cie-mono);
     font-size: var(--cie-text-mono);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--cie-ink-mute);
-    margin-bottom: var(--cie-s-16);
+    margin-bottom: var(--cie-s-8);
   }
+  .pattern__hint {
+    color: var(--cie-ink-mute);
+    font-size: 14px;
+    max-width: 60ch;
+    margin-bottom: var(--cie-s-20);
+  }
+  .pattern__hint code {
+    font-family: var(--cie-mono);
+    font-size: 11px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--cie-paper);
+  }
+
   .swatches {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -110,6 +140,9 @@
     font-variation-settings: 'wght' 300;
     letter-spacing: -0.03em;
   }
+  .card .muted { color: var(--cie-paper-mute); font-size: 14px; }
+  .card--ink .muted { color: var(--cie-ink-mute); }
+
   .row-list { list-style: none; display: grid; gap: 0; }
   .row-list li {
     border-top: 1px solid var(--cie-stroke);
@@ -124,6 +157,7 @@
   .play {
     display: flex; flex-wrap: wrap; align-items: center; gap: var(--cie-s-16) var(--cie-s-28);
   }
+
   .ja-sample {
     border-radius: var(--cie-r);
     padding: var(--cie-s-24);
@@ -137,6 +171,125 @@
     line-height: 1.35;
     margin-bottom: var(--cie-s-8);
   }
+
+  /* Scroll reveal demo stack */
+  .reveal-stack {
+    display: grid;
+    gap: var(--cie-s-12);
+  }
+  .reveal-stack .cell {
+    border-radius: var(--cie-r);
+    padding: var(--cie-s-20) var(--cie-s-24);
+    background: var(--cie-paper);
+    color: var(--cie-ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--cie-s-16);
+  }
+  .reveal-stack .cell--ink {
+    background: var(--cie-ink);
+    color: var(--cie-paper);
+    box-shadow: inset 0 0 0 1px var(--cie-stroke);
+  }
+
+  /* Parallax stage */
+  .px-stage {
+    height: min(52vh, 420px);
+    border-radius: var(--cie-r-page);
+    background: var(--cie-ink);
+    box-shadow: inset 0 0 0 1px var(--cie-stroke);
+    display: grid;
+    place-items: center;
+    padding: var(--cie-s-40);
+  }
+  .px-stage .layer-a {
+    font-size: clamp(48px, 10vw, 96px);
+    font-weight: 300;
+    font-variation-settings: 'wght' 300;
+    letter-spacing: -0.045em;
+    line-height: 0.9;
+    color: var(--cie-paper);
+  }
+  .px-stage .layer-b {
+    margin-top: var(--cie-s-16);
+    color: var(--cie-ink-mute);
+    font-family: var(--cie-mono);
+    font-size: var(--cie-text-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .px-stage .layer-c {
+    position: absolute;
+    inset: auto auto 16% 8%;
+    width: 72px; height: 72px;
+    border-radius: var(--cie-r);
+    background: var(--cie-paper);
+    opacity: 0.9;
+  }
+  .px-stage .layer-d {
+    position: absolute;
+    inset: 18% 10% auto auto;
+    width: 40px; height: 40px;
+    border-radius: calc(var(--cie-r) * 0.5);
+    box-shadow: inset 0 0 0 1px var(--cie-stroke);
+  }
+
+  /* Sound section */
+  .sound-panel {
+    border-radius: var(--cie-r-page);
+    padding: var(--cie-s-28);
+    background: var(--cie-ink);
+    color: var(--cie-paper);
+    transition: box-shadow var(--cie-t-cell) var(--cie-ease-expo);
+  }
+  .sound-panel__head {
+    display: flex; flex-wrap: wrap;
+    justify-content: space-between; align-items: center;
+    gap: var(--cie-s-16);
+    margin-bottom: var(--cie-s-24);
+  }
+  .sound-panel__head h3 {
+    font-size: var(--cie-text-cell);
+    font-weight: 300;
+    font-variation-settings: 'wght' 300;
+    letter-spacing: -0.03em;
+  }
+  .sound-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--cie-s-12);
+  }
+  .sound-grid button,
+  .sound-grid [data-cie-cycle] {
+    min-height: 72px;
+    border-radius: var(--cie-r);
+    padding: var(--cie-s-16);
+    background: var(--cie-paper);
+    color: var(--cie-ink);
+    text-align: left;
+    display: grid;
+    gap: 6px;
+    align-content: space-between;
+  }
+  .sound-grid .tag {
+    font-family: var(--cie-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cie-paper-mute);
+  }
+
+  .scroll-pad {
+    height: 18vh;
+    display: grid; place-items: center;
+    color: var(--cie-ink-mute);
+    font-family: var(--cie-mono);
+    font-size: var(--cie-text-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
   .foot-note {
     margin-top: var(--cie-s-64);
     padding-top: var(--cie-s-24);
@@ -144,20 +297,67 @@
     color: var(--cie-ink-mute);
     font-size: 13px;
   }
+
+  .include-box {
+    border-radius: var(--cie-r);
+    padding: var(--cie-s-20);
+    background: var(--cie-ink);
+    box-shadow: inset 0 0 0 1px var(--cie-stroke);
+    overflow-x: auto;
+  }
+  .include-box pre {
+    font-family: var(--cie-mono);
+    font-size: 11px;
+    line-height: 1.55;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--cie-paper);
+    white-space: pre;
+    margin: 0;
+  }
 </style>
 </head>
 <body>
   <main class="demo">
-    <p class="demo__banner"><b>cie-ds</b> · personal / internal · not for public adoption</p>
+    <div class="demo__banner">
+      <p><b>cie-ds</b> · personal / internal · not for public adoption</p>
+      <nav class="demo__nav" aria-label="Patterns">
+        <a class="cie-uline" href="#colour">Colour</a>
+        <a class="cie-uline" href="#motion">Motion</a>
+        <a class="cie-uline" href="#scroll">Scroll</a>
+        <a class="cie-uline" href="#parallax">Parallax</a>
+        <a class="cie-uline" href="#cycle">Cycle</a>
+        <a class="cie-uline" href="#sound">Sound</a>
+      </nav>
+    </div>
+
     <h1 class="cie-rise" style="--i:0">Two inks.<br>Snappy motion.</h1>
     <p class="demo__lede cie-rise" style="--i:1">
-      Tokens and micro-interactions from Creativity Is Everywhere —
-      Outfit, paper on ink, expo settles. Open this file locally or on Pages.
+      Portable tokens and micro-interactions from Creativity Is Everywhere —
+      Outfit + DM Mono, paper on ink, expo settles, thin scrollbar, scroll reveals,
+      optional per-section UI sound. Copy a pattern; leave the rest.
     </p>
 
-    <section class="cie-rise" style="--i:2">
+    <!-- ── Include ───────────────────────────────────────── -->
+    <section class="pattern cie-rise" style="--i:2" id="include">
+      <h2>Include</h2>
+      <p class="pattern__hint">Plain CSS + one script. No npm. No build.</p>
+      <div class="include-box">
+<pre>&lt;link rel="stylesheet" href="https://cie-ds.vercel.app/tokens.css"&gt;
+&lt;link rel="stylesheet" href="https://cie-ds.vercel.app/base.css"&gt;
+&lt;link rel="stylesheet" href="https://cie-ds.vercel.app/scrollbar.css"&gt;
+&lt;link rel="stylesheet" href="https://cie-ds.vercel.app/motion.css"&gt;
+&lt;link rel="stylesheet" href="https://cie-ds.vercel.app/scroll.css"&gt;
+&lt;link rel="stylesheet" href="https://cie-ds.vercel.app/interactions.css"&gt;
+&lt;script src="https://cie-ds.vercel.app/interaction.js" defer&gt;&lt;/script&gt;</pre>
+      </div>
+    </section>
+
+    <!-- ── Colour ────────────────────────────────────────── -->
+    <section class="pattern" id="colour">
       <h2>Colour</h2>
-      <div class="swatches">
+      <p class="pattern__hint">Ink + paper only. Hierarchy via size and weight — never a third hue.</p>
+      <div class="swatches" data-cie-reveal="rise">
         <div class="swatch swatch--ink"><span>Ink</span><code>#0b0b0b</code></div>
         <div class="swatch swatch--paper"><span>Paper</span><code>#f3f2ee</code></div>
         <div class="swatch swatch--ink-mute"><span>Ink mute</span><code>#9c9c98</code></div>
@@ -165,65 +365,226 @@
       </div>
     </section>
 
-    <section>
+    <!-- ── Type ──────────────────────────────────────────── -->
+    <section class="pattern" id="type">
       <h2>Type</h2>
-      <div class="type-rows cie-stagger">
-        <article class="cie-rise"><p class="label mono">Mark · Outfit 300</p><p class="t-mark">creativity</p></article>
-        <article class="cie-rise"><p class="label mono">Title</p><p class="t-title cie-breath">A block becomes the page</p></article>
-        <article class="cie-rise"><p class="label mono">Row / cell</p><p class="t-row cie-breath cie-press">Work</p></article>
-        <article class="cie-rise"><p class="label mono">Body 16 / 1.5 · 62ch</p>
+      <p class="pattern__hint"><code>.cie-breath</code> · weight 300→640 on hover. <code>.cie-press</code> · 3px nudge.</p>
+      <div class="type-rows cie-reveal-stagger">
+        <article data-cie-reveal="rise"><p class="label mono">Mark · Outfit 300</p><p class="t-mark">creativity</p></article>
+        <article data-cie-reveal="rise"><p class="label mono">Title · breath</p><p class="t-title cie-breath">A block becomes the page</p></article>
+        <article data-cie-reveal="rise"><p class="label mono">Row · breath + press</p><p class="t-row cie-breath cie-press" tabindex="0">Work</p></article>
+        <article data-cie-reveal="rise"><p class="label mono">Body 16 / 1.5 · 62ch</p>
           <p class="t-body">Anyone can put a language model behind a chat window. Very few people can make the result feel like something.</p>
         </article>
-        <article class="cie-rise"><p class="label mono">Register</p><p class="mono">01 / 06 · New York · Est. 2006</p></article>
+        <article data-cie-reveal="rise"><p class="label mono">Register</p><p class="mono">01 / 06 · New York · Est. 2006</p></article>
       </div>
     </section>
 
-    <section>
+    <!-- ── Scrollbar note ────────────────────────────────── -->
+    <section class="pattern" id="scrollbar">
+      <h2>Scrollbar</h2>
+      <p class="pattern__hint">
+        <code>scrollbar.css</code> — 5px, pill thumb, transparent track.
+        Firefox <code>scrollbar-width: thin</code>. Scroll this page to feel it.
+      </p>
+      <div class="card card--ink" style="max-height:120px;overflow:auto" data-cie-reveal="fade">
+        <p class="muted" style="margin:0">Nested scroll surface — same thin bar on paper or ink.</p>
+        <p style="margin-top:var(--cie-s-16)">Line 01</p><p>Line 02</p><p>Line 03</p>
+        <p>Line 04</p><p>Line 05</p><p>Line 06</p><p>Line 07</p><p>Line 08</p>
+      </div>
+    </section>
+
+    <!-- ── Loader ────────────────────────────────────────── -->
+    <section class="pattern" id="loader">
       <h2>Loader · シュパシュパ</h2>
-      <div class="play">
+      <p class="pattern__hint"><code>.cie-loader</code> · complementary (site has none). Expo pulse, two-ink block.</p>
+      <div class="play" data-cie-reveal="pop">
         <div class="cie-loader" aria-hidden="true"></div>
         <div class="cie-loader cie-loader--ink cie-loader--lg" aria-hidden="true"></div>
         <div class="cie-loader cie-loader--sm" aria-hidden="true"></div>
         <span class="cie-loader-dots">Loading</span>
       </div>
-      <p class="t-body" style="margin-top:var(--cie-s-16)">
-        Complementary — the company site has no spinner. Same two-ink block +
-        <code class="mono" style="text-transform:none;letter-spacing:0">--cie-ease-expo</code> pulse.
-      </p>
     </section>
 
-    <section>
+    <!-- ── Micro-interactions ────────────────────────────── -->
+    <section class="pattern" id="motion">
       <h2>Micro-interactions</h2>
-      <div class="grid-demo">
-        <div class="card">
-          <p class="mono">Breath + press</p>
-          <h3 class="cie-breath cie-press" tabindex="0">Playable</h3>
-          <p style="color:var(--cie-paper-mute);font-size:14px">Hover / focus weight 300→640. Active nudges 3px.</p>
+      <p class="pattern__hint">
+        <code>.cie-breath</code> <code>.cie-press</code> <code>.cie-tap</code>
+        <code>.cie-lift</code> <code>.cie-invert</code> <code>.cie-arrow</code>
+        <code>.cie-uline</code> <code>.cie-pbtn</code>
+      </p>
+      <div class="grid-demo cie-reveal-stagger">
+        <div class="card cie-lift cie-tap" data-cie-reveal="rise" tabindex="0">
+          <p class="mono">Lift + tap</p>
+          <h3 class="cie-breath">Hover me</h3>
+          <p class="muted">Card rises 2px; press scales to 0.97.</p>
         </div>
-        <div class="card card--ink">
+        <div class="card card--ink" data-cie-reveal="rise">
           <p class="mono">Arrow + underline</p>
-          <p><a class="cie-arrow cie-uline" href="#motion">Open the move</a></p>
+          <p><a class="cie-arrow cie-uline" href="#scroll">Open the move</a></p>
           <p><a class="cie-arrow cie-arrow--ext cie-uline" href="https://creativityiseverywhere.com" target="_blank" rel="noopener">Site</a></p>
         </div>
-        <div class="card">
+        <button class="card cie-invert cie-tap" type="button" data-cie-reveal="rise">
+          <p class="mono">Invert</p>
+          <h3>Swap inks</h3>
+          <p class="muted">Hover / focus flips paper ↔ ink on expo.</p>
+        </button>
+        <div class="card" data-cie-reveal="rise">
           <p class="mono">Panel buttons</p>
           <div class="play">
-            <button class="cie-pbtn" type="button" aria-label="Close">×</button>
-            <button class="cie-pbtn" type="button" aria-label="Next">→</button>
+            <button class="cie-pbtn cie-tap" type="button" aria-label="Close">×</button>
+            <button class="cie-pbtn cie-tap" type="button" aria-label="Next">→</button>
           </div>
         </div>
       </div>
-      <ul class="row-list cie-stagger" style="margin-top:var(--cie-s-28)" id="motion">
-        <li class="cie-rise"><span class="cie-breath cie-press" tabindex="0">Rise stagger</span><span class="mono">720ms · ease-out</span></li>
-        <li class="cie-rise"><span class="cie-breath cie-press" tabindex="0">Cell settle</span><span class="mono">520ms · expo</span></li>
-        <li class="cie-rise"><span class="cie-breath cie-press" tabindex="0">Snap tick</span><span class="mono">160ms</span></li>
-        <li class="cie-pop"><span class="cie-breath cie-press" tabindex="0">Pop enter</span><span class="mono">scale 0.8→1</span></li>
+      <ul class="row-list" style="margin-top:var(--cie-s-28)" id="timing">
+        <li data-cie-reveal="slide"><span class="cie-breath cie-press" tabindex="0">Rise stagger</span><span class="mono">720ms · ease-out</span></li>
+        <li data-cie-reveal="slide"><span class="cie-breath cie-press" tabindex="0">Cell settle</span><span class="mono">520ms · expo</span></li>
+        <li data-cie-reveal="slide"><span class="cie-breath cie-press" tabindex="0">Snap tick</span><span class="mono">160ms</span></li>
+        <li data-cie-reveal="pop"><span class="cie-breath cie-press" tabindex="0">Pop enter</span><span class="mono">scale 0.92→1</span></li>
       </ul>
     </section>
 
-    <section>
+    <p class="scroll-pad" aria-hidden="true">↓ scroll to reveal ↓</p>
+
+    <!-- ── Scroll reveal ─────────────────────────────────── -->
+    <section class="pattern" id="scroll">
+      <h2>Scroll reveal</h2>
+      <p class="pattern__hint">
+        <code>data-cie-reveal="rise|fade|slide|slide-right|pop"</code>
+        · observed once by <code>interaction.js</code>. Parent
+        <code>.cie-reveal-stagger</code> sets <code>--i</code>.
+      </p>
+      <div class="reveal-stack cie-reveal-stagger">
+        <div class="cell" data-cie-reveal="rise">
+          <span>Rise</span><span class="mono">translateY</span>
+        </div>
+        <div class="cell cell--ink" data-cie-reveal="fade">
+          <span>Fade</span><span class="mono">opacity only</span>
+        </div>
+        <div class="cell" data-cie-reveal="slide">
+          <span>Slide</span><span class="mono">from left</span>
+        </div>
+        <div class="cell cell--ink" data-cie-reveal="slide-right">
+          <span>Slide right</span><span class="mono">from right</span>
+        </div>
+        <div class="cell" data-cie-reveal="pop">
+          <span>Pop</span><span class="mono">scale 0.92</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Parallax ──────────────────────────────────────── -->
+    <section class="pattern" id="parallax">
+      <h2>Parallax</h2>
+      <p class="pattern__hint">
+        <code>data-cie-parallax="0.35"</code> speed · JS writes <code>--cie-py</code>.
+        Capped by <code>--cie-parallax-max</code>. Disabled under reduced-motion.
+      </p>
+      <div class="cie-parallax-stage px-stage" data-cie-reveal="fade">
+        <div class="layer-c" data-cie-parallax="0.55" aria-hidden="true"></div>
+        <div class="layer-d" data-cie-parallax="0.8" aria-hidden="true"></div>
+        <div>
+          <p class="layer-a" data-cie-parallax="0.25">Shift</p>
+          <p class="layer-b" data-cie-parallax="0.45">scroll-linked · subtle</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Click cycle ───────────────────────────────────── -->
+    <section class="pattern" id="cycle">
+      <h2>Click-to-cycle</h2>
+      <p class="pattern__hint">
+        <code>data-cie-cycle="Idle|Working|Done"</code> · pipe-separated states.
+        Click advances. Optional sound if inside an armed sound section.
+      </p>
+      <div class="play cie-reveal-stagger">
+        <button
+          type="button"
+          class="cie-chip cie-flash"
+          data-cie-cycle="Idle|Working|Done"
+          data-cie-reveal="rise"
+        >Idle</button>
+        <button
+          type="button"
+          class="cie-chip cie-flash"
+          data-cie-cycle="EN|JA|両方"
+          data-cie-reveal="rise"
+        >EN</button>
+        <button
+          type="button"
+          class="card cie-invert cie-tap"
+          style="min-width:180px"
+          data-cie-cycle="Draft|Review|Shipped"
+          data-cie-reveal="rise"
+        >
+          <p class="mono">Status</p>
+          <span class="cie-cycle-label" style="font-size:var(--cie-text-cell);font-weight:300;letter-spacing:-0.03em">Draft</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ── Section sound ─────────────────────────────────── -->
+    <section class="pattern" id="sound">
+      <h2>Section sound</h2>
+      <p class="pattern__hint">
+        Not a global mute. Wrap a region in <code>data-cie-sound</code>,
+        add <code>data-cie-sound-toggle</code>. When ON, interactions inside
+        play short Web Audio tones (no files). Opt into hover with
+        <code>data-cie-hover-sfx</code>. Respects reduced-motion; unlocks after gesture.
+      </p>
+
+      <div
+        class="sound-panel"
+        data-cie-sound
+        data-cie-hover-sfx
+        data-cie-reveal="rise"
+      >
+        <div class="sound-panel__head">
+          <div>
+            <h3>Playable section</h3>
+            <p class="mono" style="color:var(--cie-ink-mute);margin-top:6px">Speaker toggle · local only</p>
+          </div>
+          <button
+            type="button"
+            class="cie-chip"
+            data-cie-sound-toggle
+            aria-pressed="false"
+            aria-label="Toggle section sound"
+          >
+            <span class="cie-sound-icon" aria-hidden="true"></span>
+            <span>Sound</span>
+          </button>
+        </div>
+
+        <div class="sound-grid">
+          <button type="button" class="cie-tap" data-cie-sfx="click">
+            <span class="tag">data-cie-sfx="click"</span>
+            <span>Click</span>
+          </button>
+          <button type="button" class="cie-tap" data-cie-sfx="confirm">
+            <span class="tag">confirm</span>
+            <span>Confirm</span>
+          </button>
+          <button type="button" class="cie-tap cie-flash" data-cie-cycle="One|Two|Three" data-cie-sfx="cycle">
+            <span class="tag">cycle</span>
+            <span class="cie-cycle-label">One</span>
+          </button>
+          <button type="button" class="cie-pbtn cie-tap" data-cie-sfx="click" aria-label="Next" style="justify-self:start">→</button>
+        </div>
+        <p style="margin-top:var(--cie-s-20);color:var(--cie-ink-mute);font-size:13px;max-width:48ch">
+          Toggle Sound on, then hover and click the controls above.
+          Outside this panel, the rest of the page stays silent.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Japanese ──────────────────────────────────────── -->
+    <section class="pattern" id="ja">
       <h2>Japanese · :lang(ja)</h2>
-      <div class="ja-sample" lang="ja">
+      <p class="pattern__hint">Tracking 0 · leading 1.8 · <code>palt</code>.</p>
+      <div class="ja-sample" lang="ja" data-cie-reveal="rise">
         <h3 class="cie-breath">創造性は、いたるところにある。</h3>
         <p style="color:var(--cie-paper-mute);line-height:1.8;font-feature-settings:'palt' 1">
           トラッキングは 0。行間は広め。ウェイトの呼吸は Outfit と同じくホバーで太くなる。
@@ -234,17 +595,12 @@
     <p class="foot-note">
       Source aesthetic: creativityiseverywhere.com (<code>main</code> tokens).
       Package license: proprietary — view OK, no redistrib / commercial reuse.
-      See <a class="cie-uline" href="README.md">README</a> · <a class="cie-uline" href="DESIGN.md">DESIGN.md</a> · <a class="cie-uline" href="LICENSE">LICENSE</a>.
+      See <a class="cie-uline" href="README.md">README</a> ·
+      <a class="cie-uline" href="DESIGN.md">DESIGN.md</a> ·
+      <a class="cie-uline" href="LICENSE">LICENSE</a>.
+      Repo <a class="cie-uline" href="https://github.com/takaoumehara/cie-ds">takaoumehara/cie-ds</a>.
     </p>
   </main>
-  <script>
-    // Optional: mark data-cie-reveal nodes in when present
-    requestAnimationFrame(() => {
-      document.querySelectorAll('[data-cie-reveal]').forEach((el, i) => {
-        el.style.setProperty('--i', i);
-        el.classList.add('is-in');
-      });
-    });
-  </script>
+  <script src="interaction.js" defer></script>
 </body>
 </html>

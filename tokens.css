@@ -91,6 +91,20 @@
   --ease-expo: var(--cie-ease-expo);
   --ease-out:  var(--cie-ease-out);
 
+  /* Scroll / parallax / micro-interaction */
+  --cie-reveal-y: 22px;
+  --cie-reveal-x: 14px;
+  --cie-parallax-max: 48px;
+  --cie-press-scale: 0.97;
+  --cie-hover-nudge: 3px;
+  --cie-sb-size: 5px;
+  --cie-sb-thumb: var(--cie-ink-mute);
+  --cie-sb-track: transparent;
+  --reveal-y: var(--cie-reveal-y);
+  --reveal-x: var(--cie-reveal-x);
+  --parallax-max: var(--cie-parallax-max);
+  --sb-size: var(--cie-sb-size);
+
   /* Board grid (optional; site-only) */
   --cols: 8;
   --rows: 6;

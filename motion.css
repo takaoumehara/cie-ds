@@ -123,10 +123,13 @@
 .cie-stagger > *:nth-child(9) { --i: 8; }
 .cie-stagger > *:nth-child(10) { --i: 9; }
 
-/* Reveal-on-in (data attribute pattern from older CIE shell) */
+/* Reveal-on-in — lightweight fallback.
+   Prefer scroll.css + interaction.js for IntersectionObserver reveals
+   and parallax. This block keeps pages that only load motion.css working
+   if something adds .is-in manually. */
 [data-cie-reveal] {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(var(--cie-reveal-y, 10px));
   transition:
     opacity var(--cie-t-cell) var(--cie-ease-out),
     transform var(--cie-t-cell) var(--cie-ease-out);

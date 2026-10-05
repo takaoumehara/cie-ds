@@ -1,0 +1,90 @@
+/* ─────────────────────────────────────────────────────────────
+   CIE scroll — reveal-on-scroll + optional parallax.
+   Pair with interaction.js (IntersectionObserver + rAF parallax).
+   ───────────────────────────────────────────────────────────── */
+
+/* Base reveal: hidden until .is-in (JS) or reduced-motion */
+[data-cie-reveal] {
+  opacity: 0;
+  transform: translate3d(0, var(--cie-reveal-y, 22px), 0);
+  transition:
+    opacity var(--cie-t-cell) var(--cie-ease-out),
+    transform var(--cie-t-cell) var(--cie-ease-out);
+  transition-delay: calc(var(--i, 0) * var(--cie-t-stagger));
+  will-change: opacity, transform;
+}
+[data-cie-reveal].is-in {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Variants via attribute value */
+[data-cie-reveal="fade"] {
+  transform: none;
+}
+[data-cie-reveal="slide"] {
+  transform: translate3d(calc(var(--cie-reveal-x, 14px) * -1), 0, 0);
+}
+[data-cie-reveal="slide-right"] {
+  transform: translate3d(var(--cie-reveal-x, 14px), 0, 0);
+}
+[data-cie-reveal="pop"] {
+  transform: scale(0.92);
+}
+[data-cie-reveal="rise"],
+[data-cie-reveal=""] {
+  transform: translate3d(0, var(--cie-reveal-y, 22px), 0);
+}
+
+[data-cie-reveal="fade"].is-in,
+[data-cie-reveal="slide"].is-in,
+[data-cie-reveal="slide-right"].is-in,
+[data-cie-reveal="pop"].is-in,
+[data-cie-reveal="rise"].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger host for scroll reveals */
+.cie-reveal-stagger > [data-cie-reveal]:nth-child(1) { --i: 0; }
+.cie-reveal-stagger > [data-cie-reveal]:nth-child(2) { --i: 1; }
+.cie-reveal-stagger > [data-cie-reveal]:nth-child(3) { --i: 2; }
+.cie-reveal-stagger > [data-cie-reveal]:nth-child(4) { --i: 3; }
+.cie-reveal-stagger > [data-cie-reveal]:nth-child(5) { --i: 4; }
+.cie-reveal-stagger > [data-cie-reveal]:nth-child(6) { --i: 5; }
+.cie-reveal-stagger > [data-cie-reveal]:nth-child(7) { --i: 6; }
+.cie-reveal-stagger > [data-cie-reveal]:nth-child(8) { --i: 7; }
+.cie-reveal-stagger > [data-cie-reveal]:nth-child(9) { --i: 8; }
+.cie-reveal-stagger > [data-cie-reveal]:nth-child(10) { --i: 9; }
+
+/* Parallax layer — JS sets --cie-py (px). Keep subtle. */
+[data-cie-parallax] {
+  will-change: transform;
+  transform: translate3d(0, var(--cie-py, 0px), 0);
+  transition: none; /* driven by scroll rAF */
+}
+
+/* Parallax stage: clip overflow for layered demos */
+.cie-parallax-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--cie-r);
+  isolation: isolate;
+}
+.cie-parallax-stage > [data-cie-parallax] {
+  position: relative;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-cie-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto;
+  }
+  [data-cie-parallax] {
+    transform: none !important;
+    will-change: auto;
+  }
+}
