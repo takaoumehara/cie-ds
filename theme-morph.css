@@ -4,16 +4,16 @@
    JS sets --cie-theme-progress (0..1). Prefer over heavy parallax.
    ───────────────────────────────────────────────────────────── */
 
-/* Theme morph container — JS sets --cie-theme-progress */
+/* Theme morph container — JS sets concrete color values */
 [data-cie-theme-morph] {
   --cie-theme-progress: 0;
-  --cie-theme-bg: hsl(0, 0%, calc(4% + var(--cie-theme-progress) * 91%));
-  --cie-theme-fg: hsl(0, 0%, calc(95% - var(--cie-theme-progress) * 91%));
-  --cie-theme-mute: hsl(0, 0%, calc(60% - var(--cie-theme-progress) * 20%));
+  --cie-theme-bg: #0b0b0b;
+  --cie-theme-fg: #f3f2ee;
+  --cie-theme-mute: #7f7f7d;
   
   background: var(--cie-theme-bg);
   color: var(--cie-theme-fg);
-  transition: background 0ms linear, color 0ms linear;
+  transition: none; /* JS updates continuously, no CSS transition needed */
 }
 
 /* Theme-aware elements */

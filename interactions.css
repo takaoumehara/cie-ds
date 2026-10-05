@@ -108,8 +108,8 @@
   position: relative;
 }
 [data-cie-sound].is-sound-on {
-  /* subtle stroke cue — not a glow */
-  box-shadow: inset 0 0 0 1px var(--cie-stroke);
+  /* Strong visual feedback when sound is armed */
+  box-shadow: inset 0 0 0 2px var(--cie-stroke), 0 0 0 2px rgba(243, 242, 238, 0.2);
 }
 [data-cie-sound-toggle] {
   /* inherits .cie-chip / .cie-pbtn when those classes are present */
