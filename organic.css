@@ -1,0 +1,135 @@
+/* ─────────────────────────────────────────────────────────────
+   CIE organic / slow motion family — soft drift, breath, gentle
+   float, slow morph loops. CSS-driven, reduced-motion safe.
+   Complement to snappy UI chrome family.
+   ───────────────────────────────────────────────────────────── */
+
+/* Soft drift — gentle horizontal float */
+.cie-drift,
+[data-cie-organic="drift"] {
+  animation: cie-drift 8s var(--cie-ease-out) infinite alternate;
+}
+@keyframes cie-drift {
+  0% { transform: translateX(-8px); }
+  100% { transform: translateX(8px); }
+}
+
+/* Breath — soft scale pulse */
+.cie-organic-breath,
+[data-cie-organic="breath"] {
+  animation: cie-organic-breath 6s var(--cie-ease-out) infinite alternate;
+}
+@keyframes cie-organic-breath {
+  0% { transform: scale(0.98); opacity: 0.85; }
+  100% { transform: scale(1.02); opacity: 1; }
+}
+
+/* Gentle float — vertical drift with opacity */
+.cie-float,
+[data-cie-organic="float"] {
+  animation: cie-float 10s var(--cie-ease-out) infinite alternate;
+}
+@keyframes cie-float {
+  0% { transform: translateY(-12px); opacity: 0.7; }
+  100% { transform: translateY(12px); opacity: 0.95; }
+}
+
+/* Slow morph — border-radius + scale loop */
+.cie-morph,
+[data-cie-organic="morph"] {
+  animation: cie-morph 12s var(--cie-ease-out) infinite alternate;
+}
+@keyframes cie-morph {
+  0% { 
+    border-radius: var(--cie-r); 
+    transform: scale(0.96) rotate(-1deg); 
+  }
+  100% { 
+    border-radius: calc(var(--cie-r) * 2.2); 
+    transform: scale(1.04) rotate(1deg); 
+  }
+}
+
+/* Ambient shapes stage — container for organic elements */
+.cie-ambient-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Ambient blob — soft moving shape */
+.cie-ambient-blob {
+  position: absolute;
+  border-radius: 40% 60% 50% 50%;
+  background: var(--cie-paper);
+  opacity: 0.18;
+  animation: 
+    cie-blob-float 14s var(--cie-ease-out) infinite alternate,
+    cie-blob-morph 16s var(--cie-ease-out) infinite;
+  animation-delay: calc(var(--blob-i, 0) * -2s);
+}
+.cie-ambient-blob--ink {
+  background: var(--cie-ink);
+  opacity: 0.12;
+}
+
+@keyframes cie-blob-float {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  100% { transform: translate(20px, -20px) scale(1.1) rotate(5deg); }
+}
+@keyframes cie-blob-morph {
+  0%, 100% { border-radius: 40% 60% 50% 50%; }
+  25% { border-radius: 50% 50% 60% 40%; }
+  50% { border-radius: 60% 40% 50% 50%; }
+  75% { border-radius: 50% 50% 40% 60%; }
+}
+
+/* Slow rotate — gentle continuous rotation */
+.cie-slow-rotate {
+  animation: cie-slow-rotate 20s linear infinite;
+}
+@keyframes cie-slow-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Slow rotate reverse */
+.cie-slow-rotate-reverse {
+  animation: cie-slow-rotate-reverse 24s linear infinite;
+}
+@keyframes cie-slow-rotate-reverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+/* Pulse glow — soft opacity wave */
+.cie-glow-pulse {
+  animation: cie-glow-pulse 5s var(--cie-ease-out) infinite alternate;
+}
+@keyframes cie-glow-pulse {
+  0% { opacity: 0.4; }
+  100% { opacity: 0.8; }
+}
+
+/* Reduced motion: freeze all organic animations */
+@media (prefers-reduced-motion: reduce) {
+  .cie-drift,
+  [data-cie-organic="drift"],
+  .cie-organic-breath,
+  [data-cie-organic="breath"],
+  .cie-float,
+  [data-cie-organic="float"],
+  .cie-morph,
+  [data-cie-organic="morph"],
+  .cie-ambient-blob,
+  .cie-slow-rotate,
+  .cie-slow-rotate-reverse,
+  .cie-glow-pulse {
+    animation: none !important;
+    transform: none !important;
+    opacity: 0.6 !important;
+  }
+}

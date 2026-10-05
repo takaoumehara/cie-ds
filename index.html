@@ -2,11 +2,191 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="refresh" content="0; url=demo.html">
-<title>cie-ds</title>
-<link rel="canonical" href="demo.html">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cie-ds — Design System Catalog</title>
+<meta name="description" content="Personal/internal design system for Creativity Is Everywhere. Interactive component catalog.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=Outfit:wght@100..900&display=swap">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="scrollbar.css">
+<link rel="stylesheet" href="motion.css">
+<link rel="stylesheet" href="scroll.css">
+<link rel="stylesheet" href="interactions.css">
+<link rel="stylesheet" href="nav.css">
+<link rel="stylesheet" href="text-load.css">
+<style>
+  body {
+    background: var(--cie-ink);
+    color: var(--cie-paper);
+    padding: 0;
+    margin: 0;
+  }
+  
+  .catalog {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: var(--cie-s-40) var(--cie-edge);
+  }
+  .catalog__inner {
+    max-width: 840px;
+    width: 100%;
+  }
+  
+  .catalog__header {
+    margin-bottom: var(--cie-s-64);
+    text-align: center;
+  }
+  .catalog__title {
+    font-size: clamp(56px, 10vw, 96px);
+    font-weight: 300;
+    font-variation-settings: 'wght' 300;
+    letter-spacing: -0.045em;
+    line-height: 0.9;
+    margin-bottom: var(--cie-s-16);
+  }
+  .catalog__subtitle {
+    font-family: var(--cie-mono);
+    font-size: var(--cie-text-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cie-ink-mute);
+  }
+  
+  .catalog__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--cie-s-16);
+    margin-bottom: var(--cie-s-64);
+  }
+  
+  .catalog-card {
+    border-radius: var(--cie-r-page);
+    padding: var(--cie-s-28);
+    background: var(--cie-paper);
+    color: var(--cie-ink);
+    display: grid;
+    gap: var(--cie-s-12);
+    align-content: start;
+    text-decoration: none;
+    transition:
+      transform var(--cie-t-fast) var(--cie-ease-out),
+      box-shadow var(--cie-t-fast) var(--cie-ease-out);
+  }
+  .catalog-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(11, 11, 11, 0.18);
+  }
+  .catalog-card:active {
+    transform: scale(0.98);
+  }
+  .catalog-card__tag {
+    font-family: var(--cie-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cie-paper-mute);
+  }
+  .catalog-card__title {
+    font-size: var(--cie-text-cell);
+    font-weight: 300;
+    font-variation-settings: 'wght' 300;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+  .catalog-card__desc {
+    color: var(--cie-paper-mute);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .catalog__footer {
+    text-align: center;
+    padding-top: var(--cie-s-40);
+    border-top: 1px solid var(--cie-stroke);
+    color: var(--cie-ink-mute);
+    font-size: 13px;
+  }
+  .catalog__footer a {
+    color: var(--cie-paper);
+  }
+</style>
 </head>
 <body>
-<p><a href="demo.html">Open demo</a></p>
+  <main class="catalog">
+    <div class="catalog__inner">
+      <header class="catalog__header">
+        <h1 class="catalog__title" data-cie-text="fade-up">cie-ds</h1>
+        <p class="catalog__subtitle" data-cie-text="fade-up" style="--i: 1;">
+          Design System · Interactive Catalog
+        </p>
+      </header>
+      
+      <div class="catalog__grid">
+        <a href="demo.html" class="catalog-card cie-reveal-stagger" data-cie-reveal="rise">
+          <span class="catalog-card__tag">Comprehensive</span>
+          <h2 class="catalog-card__title">Component Demo</h2>
+          <p class="catalog-card__desc">
+            Complete showcase: tokens, motion, interactions, expand, sheets, scroll reveals, cycles, sound system.
+          </p>
+        </a>
+        
+        <a href="parallax.html" class="catalog-card" data-cie-reveal="rise">
+          <span class="catalog-card__tag">Scroll-linked</span>
+          <h2 class="catalog-card__title">Parallax + Theme Morph</h2>
+          <p class="catalog-card__desc">
+            Long scroll experience. Theme shifts ink → grey → paper with subtle parallax layers. Contrast-safe.
+          </p>
+        </a>
+        
+        <a href="guide.md" class="catalog-card" data-cie-reveal="rise">
+          <span class="catalog-card__tag">Documentation</span>
+          <h2 class="catalog-card__title">Usage Guide</h2>
+          <p class="catalog-card__desc">
+            How to include, API reference, attribute hooks, CSS classes. Copy patterns without the rest.
+          </p>
+        </a>
+        
+        <a href="DESIGN.md" class="catalog-card" data-cie-reveal="rise">
+          <span class="catalog-card__tag">Reference</span>
+          <h2 class="catalog-card__title">Design Brief</h2>
+          <p class="catalog-card__desc">
+            Tokens, motion language, timing values, ease curves, do/don't. Agent-readable spec.
+          </p>
+        </a>
+        
+        <a href="https://github.com/takaoumehara/cie-ds" class="catalog-card" data-cie-reveal="rise" target="_blank" rel="noopener">
+          <span class="catalog-card__tag">Repository</span>
+          <h2 class="catalog-card__title">GitHub</h2>
+          <p class="catalog-card__desc">
+            Source code, issues, changelog. Proprietary license — view OK, no commercial redistribution.
+          </p>
+        </a>
+        
+        <div class="catalog-card" data-cie-reveal="rise" style="opacity: 0.6; pointer-events: none;">
+          <span class="catalog-card__tag">Coming soon</span>
+          <h2 class="catalog-card__title">Figma Kit</h2>
+          <p class="catalog-card__desc">
+            Component library with variants, tokens, and auto-layout patterns. Internal use.
+          </p>
+        </div>
+      </div>
+      
+      <footer class="catalog__footer">
+        <p>
+          cie-ds v0.4.0 · Creativity Is Everywhere ·
+          <a href="LICENSE" class="cie-uline">Proprietary License</a>
+        </p>
+        <p style="margin-top: var(--cie-s-12); opacity: 0.7;">
+          Aesthetic: Outfit + DM Mono · ink #0b0b0b / paper #f3f2ee · snappy にゅるっと
+        </p>
+      </footer>
+    </div>
+  </main>
+  
+  <script src="interaction.js"></script>
 </body>
 </html>

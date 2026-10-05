@@ -15,6 +15,9 @@
 <link rel="stylesheet" href="motion.css">
 <link rel="stylesheet" href="scroll.css">
 <link rel="stylesheet" href="interactions.css">
+<link rel="stylesheet" href="nav.css">
+<link rel="stylesheet" href="text-load.css">
+<link rel="stylesheet" href="organic.css">
 <style>
   .demo {
     max-width: 920px;
@@ -324,12 +327,15 @@
       <nav class="demo__nav" aria-label="Patterns">
         <a class="cie-uline" href="#colour">Colour</a>
         <a class="cie-uline" href="#motion">Motion</a>
+        <a class="cie-uline" href="#hamburger">Hamburger Nav</a>
+        <a class="cie-uline" href="#text-load">Text Load</a>
         <a class="cie-uline" href="#expand">Expand</a>
         <a class="cie-uline" href="#sheet">Sheet</a>
         <a class="cie-uline" href="#scroll">Scroll</a>
         <a class="cie-uline" href="#parallax">Parallax</a>
         <a class="cie-uline" href="#cycle">Cycle</a>
         <a class="cie-uline" href="#sound">Sound</a>
+        <a class="cie-uline" href="#organic">Organic</a>
       </nav>
     </div>
 
@@ -447,6 +453,87 @@
         <li data-cie-reveal="slide"><span class="cie-breath cie-press" tabindex="0">Sheet</span><span class="mono">300ms · expo/snap</span></li>
         <li data-cie-reveal="pop"><span class="cie-breath cie-press" tabindex="0">Snap tick</span><span class="mono">120ms</span></li>
       </ul>
+    </section>
+
+    <!-- ── Hamburger Nav ─────────────────────────────────── -->
+    <section class="pattern" id="hamburger">
+      <h2>Hamburger → X + Nav Panel</h2>
+      <p class="pattern__hint">
+        <code>.cie-hamburger</code> morphs to X on <code>--cie-t-move</code> expo.
+        Panel slides in, synced icon, aria-expanded, Escape / backdrop close.
+      </p>
+      <div class="play" data-cie-reveal="rise">
+        <button 
+          type="button" 
+          class="cie-hamburger" 
+          data-cie-hamburger="demo-nav"
+          aria-expanded="false"
+          aria-controls="demo-nav"
+          aria-label="Toggle navigation"
+        >
+          <span class="cie-hamburger__line"></span>
+          <span class="cie-hamburger__line"></span>
+          <span class="cie-hamburger__line"></span>
+        </button>
+        <span class="mono" style="color: var(--cie-ink-mute);">Click to open</span>
+      </div>
+    </section>
+
+    <nav id="demo-nav" class="cie-nav-panel cie-nav-panel--ink">
+      <div class="cie-nav-panel__head">
+        <h3 class="cie-nav-panel__title">Navigation</h3>
+        <button type="button" class="cie-pbtn cie-tap" data-cie-nav-close aria-label="Close">×</button>
+      </div>
+      <div class="cie-nav-panel__nav">
+        <a href="#colour" class="cie-breath">Colour</a>
+        <a href="#motion" class="cie-breath">Motion</a>
+        <a href="#expand" class="cie-breath">Expand</a>
+        <a href="#sheet" class="cie-breath">Sheet</a>
+        <a href="#sound" class="cie-breath">Sound</a>
+      </div>
+    </nav>
+
+    <!-- ── Text Loading Family ───────────────────────────── -->
+    <section class="pattern" id="text-load">
+      <h2>Text Loading · Quiet Variants</h2>
+      <p class="pattern__hint">
+        <code>data-cie-text="fade-up|soft-wipe|letter-fade|line-rise|pulse-dot"</code><br>
+        For CIE company site — refined, not flashy. NOT portfolio scramble/pixelate.
+      </p>
+      
+      <div style="display: grid; gap: var(--cie-s-28); margin-top: var(--cie-s-24);">
+        <!-- Fade-up -->
+        <div class="card" data-cie-reveal="rise">
+          <p class="mono" style="margin-bottom: var(--cie-s-12);">fade-up (default)</p>
+          <h3 data-cie-text="fade-up" style="font-size: var(--cie-text-cell); font-weight: 300; letter-spacing: -0.03em;">
+            Creativity is everywhere
+          </h3>
+        </div>
+        
+        <!-- Soft-wipe -->
+        <div class="card" data-cie-reveal="rise">
+          <p class="mono" style="margin-bottom: var(--cie-s-12);">soft-wipe (clip-path)</p>
+          <h3 data-cie-text="soft-wipe" style="font-size: var(--cie-text-cell); font-weight: 300; letter-spacing: -0.03em;">
+            Block becomes page
+          </h3>
+        </div>
+        
+        <!-- Letter-fade -->
+        <div class="card" data-cie-reveal="rise">
+          <p class="mono" style="margin-bottom: var(--cie-s-12);">letter-fade (stagger)</p>
+          <h3 data-cie-text="letter-fade" style="font-size: var(--cie-text-cell); font-weight: 300; letter-spacing: -0.03em;">
+            Snappy settle
+          </h3>
+        </div>
+        
+        <!-- Pulse-dot -->
+        <div class="card" data-cie-reveal="rise">
+          <p class="mono" style="margin-bottom: var(--cie-s-12);">pulse-dot (minimal loading)</p>
+          <h3 data-cie-text="pulse-dot" style="font-size: var(--cie-text-cell); font-weight: 300; letter-spacing: -0.03em;">
+            Loading
+          </h3>
+        </div>
+      </div>
     </section>
 
 
@@ -636,6 +723,9 @@
       <p class="pattern__hint">
         <code>data-cie-parallax="0.35"</code> speed · JS writes <code>--cie-py</code>.
         Capped by <code>--cie-parallax-max</code>. Disabled under reduced-motion.
+        <br><br>
+        <strong>→ See <a href="parallax.html" class="cie-uline" target="_blank">parallax.html</a></strong> for a full-page scroll-linked theme morph experience
+        (ink ↔ grey ↔ paper with contrast-safe UI).
       </p>
       <div class="cie-parallax-stage px-stage" data-cie-reveal="fade">
         <div class="layer-c" data-cie-parallax="0.55" aria-hidden="true"></div>
@@ -686,8 +776,8 @@
       <p class="pattern__hint">
         Not a global mute. Wrap a region in <code>data-cie-sound</code>,
         add <code>data-cie-sound-toggle</code>. When ON, interactions inside
-        play short Web Audio tones (no files). Opt into hover with
-        <code>data-cie-hover-sfx</code>. Respects reduced-motion; unlocks after gesture.
+        play short Web Audio tones (no files). Multiple presets available.
+        Opt into hover with <code>data-cie-hover-sfx</code>. Respects reduced-motion; unlocks after gesture.
       </p>
 
       <div
@@ -701,15 +791,30 @@
             <h3>Playable section</h3>
             <p class="mono" style="color:var(--cie-ink-mute);margin-top:6px">Speaker toggle · local only</p>
           </div>
-          <button
-            type="button"
-            class="cie-chip"
-            data-cie-sound-toggle
-            aria-pressed="false"
-            aria-label="Toggle section sound"
+          <div style="display: flex; gap: var(--cie-s-12); align-items: center;">
+            <button
+              type="button"
+              class="cie-chip"
+              data-cie-sound-toggle
+              aria-pressed="false"
+              aria-label="Toggle section sound"
+            >
+              <span class="cie-sound-icon" aria-hidden="true"></span>
+              <span>Sound</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Preset picker -->
+        <div style="margin-bottom: var(--cie-s-20);" data-cie-sfx-picker>
+          <p class="mono" style="color: var(--cie-ink-mute); margin-bottom: var(--cie-s-8); font-size: 11px;">Preset:</p>
+          <button 
+            type="button" 
+            class="cie-chip cie-tap cie-flash" 
+            data-cie-cycle="soft-tick|paper-snap|glass-pip|low-thud|bright-confirm"
+            data-cie-sfx="cycle"
           >
-            <span class="cie-sound-icon" aria-hidden="true"></span>
-            <span>Sound</span>
+            <span class="cie-cycle-label">paper-snap</span>
           </button>
         </div>
 
@@ -729,9 +834,59 @@
           <button type="button" class="cie-pbtn cie-tap" data-cie-sfx="click" aria-label="Next" style="justify-self:start">→</button>
         </div>
         <p style="margin-top:var(--cie-s-20);color:var(--cie-ink-mute);font-size:13px;max-width:48ch">
-          Toggle Sound on, then hover and click the controls above.
-          Outside this panel, the rest of the page stays silent.
+          Toggle Sound on, choose a preset, then hover and click the controls above.
+          Outside this panel, the rest of the page stays silent. Presets: soft-tick, paper-snap (default), glass-pip, low-thud, bright-confirm.
         </p>
+      </div>
+    </section>
+
+    <!-- ── Organic / Slow Motion ────────────────────────────── -->
+    <section class="pattern" id="organic">
+      <h2>Organic / Slow Motion</h2>
+      <p class="pattern__hint">
+        Complement to snappy UI chrome. Soft drift, breath, gentle float, slow morph loops.
+        CSS-driven, reduced-motion safe. For ambient elements, backgrounds, not primary UI.
+      </p>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--cie-s-16); margin-top: var(--cie-s-24);">
+        <!-- Drift -->
+        <div class="card" data-cie-reveal="rise">
+          <p class="mono" style="margin-bottom: var(--cie-s-12);">drift (8s)</p>
+          <div style="width: 60px; height: 60px; background: var(--cie-paper-mute); border-radius: var(--cie-r);" class="cie-drift"></div>
+        </div>
+        
+        <!-- Breath -->
+        <div class="card" data-cie-reveal="rise">
+          <p class="mono" style="margin-bottom: var(--cie-s-12);">breath (6s)</p>
+          <div style="width: 60px; height: 60px; background: var(--cie-paper-mute); border-radius: var(--cie-r);" class="cie-organic-breath"></div>
+        </div>
+        
+        <!-- Float -->
+        <div class="card" data-cie-reveal="rise">
+          <p class="mono" style="margin-bottom: var(--cie-s-12);">float (10s)</p>
+          <div style="width: 60px; height: 60px; background: var(--cie-paper-mute); border-radius: var(--cie-r);" class="cie-float"></div>
+        </div>
+        
+        <!-- Morph -->
+        <div class="card" data-cie-reveal="rise">
+          <p class="mono" style="margin-bottom: var(--cie-s-12);">morph (12s)</p>
+          <div style="width: 60px; height: 60px; background: var(--cie-paper-mute);" class="cie-morph"></div>
+        </div>
+      </div>
+      
+      <!-- Ambient stage demo -->
+      <div style="margin-top: var(--cie-s-40);" data-cie-reveal="fade">
+        <p class="mono" style="margin-bottom: var(--cie-s-12); color: var(--cie-ink-mute);">Ambient stage with soft blobs</p>
+        <div class="card card--ink" style="height: 280px; position: relative; overflow: hidden;">
+          <div class="cie-ambient-stage">
+            <div style="position: absolute; top: 15%; left: 10%; width: 140px; height: 140px;" class="cie-ambient-blob" style="--blob-i: 0;"></div>
+            <div style="position: absolute; top: 50%; right: 15%; width: 180px; height: 180px;" class="cie-ambient-blob" style="--blob-i: 1;"></div>
+            <div style="position: absolute; bottom: 20%; left: 25%; width: 100px; height: 100px;" class="cie-ambient-blob" style="--blob-i: 2;"></div>
+            <p style="position: relative; z-index: 2; text-align: center; font-size: var(--cie-text-cell); font-weight: 300;">
+              Organic background
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -750,8 +905,10 @@
     <p class="foot-note">
       Source aesthetic: creativityiseverywhere.com (<code>main</code> tokens).
       Package license: proprietary — view OK, no redistrib / commercial reuse.
+      Version <code>0.4.0</code> — New: hamburger nav, text loading family, sound presets, organic motion, theme morph.
       See <a class="cie-uline" href="guide.md">README</a> ·
       <a class="cie-uline" href="DESIGN.md">DESIGN.md</a> ·
+      <a class="cie-uline" href="parallax.html">Parallax demo</a> ·
       <a class="cie-uline" href="LICENSE">LICENSE</a>.
       Repo <a class="cie-uline" href="https://github.com/takaoumehara/cie-ds">takaoumehara/cie-ds</a>.
     </p>

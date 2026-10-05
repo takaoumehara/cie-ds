@@ -1,0 +1,173 @@
+/* ─────────────────────────────────────────────────────────────
+   CIE hamburger → X morph + sliding nav panel.
+   Snappy morph (~360ms expo), panel slide, backdrop, focus trap,
+   aria-expanded, Escape / backdrop click to close.
+   ───────────────────────────────────────────────────────────── */
+
+/* Hamburger button — three lines that morph to X */
+.cie-hamburger {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--cie-r-pill);
+  background: var(--cie-btn);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0;
+  position: relative;
+  transition: background-color 150ms linear;
+  z-index: 70;
+}
+.cie-hamburger:hover {
+  background: var(--cie-btn-hover);
+}
+.cie-hamburger:active {
+  transform: scale(0.96);
+}
+
+/* Three lines */
+.cie-hamburger__line {
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  transition:
+    transform var(--cie-t-move) var(--cie-ease-expo),
+    opacity var(--cie-t-fast) linear;
+  transform-origin: center;
+}
+
+/* Open state: morph to X */
+.cie-hamburger[aria-expanded="true"] .cie-hamburger__line:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.cie-hamburger[aria-expanded="true"] .cie-hamburger__line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.cie-hamburger[aria-expanded="true"] .cie-hamburger__line:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Nav panel — slides in from side */
+.cie-nav-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(85vw, 360px);
+  background: var(--cie-paper);
+  color: var(--cie-ink);
+  padding: var(--cie-s-24);
+  transform: translateX(100%);
+  visibility: hidden;
+  z-index: 65;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition:
+    transform var(--cie-t-move) var(--cie-ease-expo),
+    visibility 0ms linear var(--cie-t-move);
+  box-shadow: -4px 0 16px rgba(11, 11, 11, 0.12);
+}
+.cie-nav-panel.is-open {
+  transform: translateX(0);
+  visibility: visible;
+  transition:
+    transform var(--cie-t-move) var(--cie-ease-expo),
+    visibility 0ms linear 0ms;
+}
+
+/* Nav panel variant: from left */
+.cie-nav-panel--left {
+  right: auto;
+  left: 0;
+  transform: translateX(-100%);
+  box-shadow: 4px 0 16px rgba(11, 11, 11, 0.12);
+}
+.cie-nav-panel--left.is-open {
+  transform: translateX(0);
+}
+
+/* Nav panel variant: ink */
+.cie-nav-panel--ink {
+  background: var(--cie-ink);
+  color: var(--cie-paper);
+  box-shadow: inset 0 0 0 1px var(--cie-stroke), -4px 0 16px rgba(11, 11, 11, 0.12);
+}
+
+/* Nav panel header */
+.cie-nav-panel__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--cie-s-16);
+  margin-bottom: var(--cie-s-28);
+}
+.cie-nav-panel__title {
+  font-size: var(--cie-text-cell);
+  font-weight: 300;
+  font-variation-settings: 'wght' 300;
+  letter-spacing: -0.03em;
+}
+
+/* Nav panel content */
+.cie-nav-panel__nav {
+  display: grid;
+  gap: 0;
+}
+.cie-nav-panel__nav a {
+  padding: var(--cie-s-16) 0;
+  border-bottom: 1px solid var(--cie-stroke);
+  font-size: var(--cie-text-row);
+  font-weight: 300;
+  font-variation-settings: 'wght' 300;
+  letter-spacing: -0.02em;
+  transition: 
+    font-variation-settings 320ms var(--cie-ease-out),
+    transform 180ms var(--cie-ease-out);
+}
+.cie-nav-panel__nav a:first-child {
+  border-top: 1px solid var(--cie-stroke);
+}
+@media (hover: hover) {
+  .cie-nav-panel__nav a:hover {
+    font-variation-settings: 'wght' 500;
+    transform: translateX(4px);
+  }
+}
+
+/* Nav backdrop */
+.cie-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(11, 11, 11, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--cie-t-move) linear;
+}
+.cie-nav-backdrop.is-on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .cie-hamburger,
+  .cie-hamburger__line,
+  .cie-nav-panel,
+  .cie-nav-backdrop {
+    transition: none !important;
+  }
+  .cie-hamburger:active {
+    transform: none;
+  }
+  .cie-nav-panel {
+    transform: translateX(0);
+  }
+  .cie-nav-panel:not(.is-open) {
+    visibility: hidden;
+  }
+}

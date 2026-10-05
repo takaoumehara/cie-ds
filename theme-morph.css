@@ -1,0 +1,75 @@
+/* ─────────────────────────────────────────────────────────────
+   CIE scroll-linked theme morph — ink ↔ grey ↔ paper as you
+   scroll. UI chrome (text/controls) inverts to stay readable.
+   JS sets --cie-theme-progress (0..1). Prefer over heavy parallax.
+   ───────────────────────────────────────────────────────────── */
+
+/* Theme morph container — JS sets --cie-theme-progress */
+[data-cie-theme-morph] {
+  --cie-theme-progress: 0;
+  --cie-theme-bg: hsl(0, 0%, calc(4% + var(--cie-theme-progress) * 91%));
+  --cie-theme-fg: hsl(0, 0%, calc(95% - var(--cie-theme-progress) * 91%));
+  --cie-theme-mute: hsl(0, 0%, calc(60% - var(--cie-theme-progress) * 20%));
+  
+  background: var(--cie-theme-bg);
+  color: var(--cie-theme-fg);
+  transition: background 0ms linear, color 0ms linear;
+}
+
+/* Theme-aware elements */
+[data-cie-theme-morph] .cie-theme-text {
+  color: var(--cie-theme-fg);
+}
+[data-cie-theme-morph] .cie-theme-mute {
+  color: var(--cie-theme-mute);
+}
+[data-cie-theme-morph] .cie-theme-bg {
+  background: var(--cie-theme-bg);
+  color: var(--cie-theme-fg);
+}
+[data-cie-theme-morph] .cie-theme-stroke {
+  border-color: var(--cie-theme-mute);
+  opacity: 0.4;
+}
+
+/* Stage variant: full viewport height sections */
+.cie-theme-stage {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--cie-s-40);
+  position: relative;
+}
+
+/* Theme indicator (optional debug/visual) */
+.cie-theme-indicator {
+  position: fixed;
+  top: var(--cie-s-16);
+  left: var(--cie-s-16);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--cie-r);
+  background: var(--cie-theme-bg);
+  border: 2px solid var(--cie-theme-fg);
+  z-index: 100;
+  pointer-events: none;
+  transition: background 0ms linear, border-color 0ms linear;
+}
+
+/* Parallax layers within theme morph (optional subtle displacement) */
+[data-cie-theme-morph] [data-cie-parallax] {
+  will-change: transform;
+  transform: translate3d(0, var(--cie-py, 0px), 0);
+  transition: none;
+}
+
+/* Reduced motion: disable theme morph transitions */
+@media (prefers-reduced-motion: reduce) {
+  [data-cie-theme-morph],
+  [data-cie-theme-morph] * {
+    transition: none !important;
+  }
+  [data-cie-theme-morph] [data-cie-parallax] {
+    transform: none !important;
+  }
+}

@@ -36,24 +36,59 @@
     return ctx;
   }
 
-  /** Tiny tasteful one-shots. Keep gain low. */
-  function playTone(kind) {
+  /** Tiny tasteful one-shots. Keep polite but audible. */
+  function playTone(kind, preset) {
     const ctx = getCtx();
     if (!ctx || ctx.state !== 'running') return;
     if (REDUCE) return;
 
     const now = ctx.currentTime;
     const master = ctx.createGain();
-    master.gain.value = 0.0001;
+    master.gain.value = 0.18; // audible but polite
     master.connect(ctx.destination);
 
-    const shapes = {
-      hover:  { freq: 880,  dur: 0.045, type: 'sine',     peak: 0.028, slide: 1.04 },
-      click:  { freq: 420,  dur: 0.07,  type: 'triangle', peak: 0.045, slide: 0.72 },
-      confirm:{ freq: 560,  dur: 0.11,  type: 'sine',     peak: 0.05,  slide: 1.35 },
-      cycle:  { freq: 360,  dur: 0.08,  type: 'square',   peak: 0.028, slide: 1.2  },
-      toggle: { freq: 240,  dur: 0.09,  type: 'triangle', peak: 0.04,  slide: 1.6  },
+    // Preset shapes library
+    const presets = {
+      'soft-tick': {
+        hover:  { freq: 1200, dur: 0.04,  type: 'sine',     peak: 0.038, slide: 1.1 },
+        click:  { freq: 660,  dur: 0.065, type: 'triangle', peak: 0.052, slide: 0.75 },
+        confirm:{ freq: 880,  dur: 0.10,  type: 'sine',     peak: 0.058, slide: 1.4 },
+        cycle:  { freq: 540,  dur: 0.075, type: 'square',   peak: 0.038, slide: 1.25 },
+        toggle: { freq: 380,  dur: 0.085, type: 'triangle', peak: 0.048, slide: 1.7 },
+      },
+      'paper-snap': {
+        hover:  { freq: 880,  dur: 0.045, type: 'sine',     peak: 0.035, slide: 1.04 },
+        click:  { freq: 420,  dur: 0.07,  type: 'triangle', peak: 0.055, slide: 0.72 },
+        confirm:{ freq: 560,  dur: 0.11,  type: 'sine',     peak: 0.062, slide: 1.35 },
+        cycle:  { freq: 360,  dur: 0.08,  type: 'square',   peak: 0.038, slide: 1.2  },
+        toggle: { freq: 240,  dur: 0.09,  type: 'triangle', peak: 0.048, slide: 1.6  },
+      },
+      'glass-pip': {
+        hover:  { freq: 2400, dur: 0.035, type: 'sine',     peak: 0.032, slide: 1.15 },
+        click:  { freq: 1760, dur: 0.055, type: 'sine',     peak: 0.048, slide: 0.68 },
+        confirm:{ freq: 2200, dur: 0.08,  type: 'sine',     peak: 0.055, slide: 1.5 },
+        cycle:  { freq: 1480, dur: 0.065, type: 'sine',     peak: 0.035, slide: 1.3 },
+        toggle: { freq: 1100, dur: 0.075, type: 'sine',     peak: 0.045, slide: 1.8 },
+      },
+      'low-thud': {
+        hover:  { freq: 220,  dur: 0.05,  type: 'triangle', peak: 0.045, slide: 0.85 },
+        click:  { freq: 140,  dur: 0.09,  type: 'square',   peak: 0.065, slide: 0.65 },
+        confirm:{ freq: 180,  dur: 0.13,  type: 'triangle', peak: 0.072, slide: 0.95 },
+        cycle:  { freq: 120,  dur: 0.10,  type: 'square',   peak: 0.048, slide: 0.9  },
+        toggle: { freq: 90,   dur: 0.11,  type: 'square',   peak: 0.058, slide: 1.1  },
+      },
+      'bright-confirm': {
+        hover:  { freq: 1540, dur: 0.04,  type: 'sine',     peak: 0.038, slide: 1.08 },
+        click:  { freq: 1100, dur: 0.06,  type: 'sine',     peak: 0.052, slide: 0.78 },
+        confirm:{ freq: 1320, dur: 0.095, type: 'sine',     peak: 0.060, slide: 1.45 },
+        cycle:  { freq: 880,  dur: 0.07,  type: 'sine',     peak: 0.040, slide: 1.28 },
+        toggle: { freq: 660,  dur: 0.08,  type: 'sine',     peak: 0.050, slide: 1.65 },
+      },
     };
+
+    // Get active preset from localStorage or default
+    const activePreset = preset || localStorage.getItem('cie-sfx-preset') || 'paper-snap';
+    const shapes = presets[activePreset] || presets['paper-snap'];
     const s = shapes[kind] || shapes.click;
 
     const osc = ctx.createOscillator();
@@ -68,7 +103,7 @@
     // Soft filter so square/triangle stay polite
     const filter = ctx.createBiquadFilter();
     filter.type = 'lowpass';
-    filter.frequency.value = kind === 'hover' ? 2400 : 1800;
+    filter.frequency.value = s.freq > 1000 ? 3200 : (kind === 'hover' ? 2400 : 1800);
 
     gain.gain.setValueAtTime(0.0001, now);
     gain.gain.exponentialRampToValueAtTime(s.peak, now + 0.008);
@@ -80,7 +115,7 @@
     osc.start(now);
     osc.stop(now + s.dur + 0.02);
 
-    // Optional whisper of noise on confirm (paper tick)
+    // Optional whisper of noise on confirm/click (paper tick)
     if (kind === 'confirm' || kind === 'click') {
       const frames = Math.floor(ctx.sampleRate * 0.03);
       const buf = ctx.createBuffer(1, frames, ctx.sampleRate);
@@ -91,10 +126,10 @@
       const noise = ctx.createBufferSource();
       noise.buffer = buf;
       const ng = ctx.createGain();
-      ng.gain.value = kind === 'confirm' ? 0.012 : 0.008;
+      ng.gain.value = kind === 'confirm' ? 0.015 : 0.010;
       const nf = ctx.createBiquadFilter();
       nf.type = 'highpass';
-      nf.frequency.value = 1200;
+      nf.frequency.value = activePreset === 'glass-pip' ? 2000 : (activePreset === 'low-thud' ? 800 : 1200);
       noise.connect(nf);
       nf.connect(ng);
       ng.connect(master);
@@ -110,7 +145,9 @@
 
   function sfxFrom(el, kind) {
     if (!sectionSoundEnabled(el)) return;
-    playTone(kind);
+    const root = el.closest('[data-cie-sound]');
+    const preset = root ? root.getAttribute('data-cie-sfx-preset') : null;
+    playTone(kind, preset);
   }
 
   /* ── Scroll reveal ───────────────────────────────────────── */
@@ -228,7 +265,9 @@
         setTimeout(() => el.classList.remove('is-flash'), 120);
         if (sectionSoundEnabled(el)) {
           await unlockAudio();
-          playTone(index === 0 ? 'confirm' : 'cycle');
+          const root = el.closest('[data-cie-sound]');
+          const preset = root ? root.getAttribute('data-cie-sfx-preset') : null;
+          playTone(index === 0 ? 'confirm' : 'cycle', preset);
         }
       });
     });
@@ -254,8 +293,10 @@
         section.classList.toggle('is-sound-on', on);
         section.setAttribute('data-sound', on ? 'on' : 'off');
         if (on) {
+          const root = section.closest('[data-cie-sound]');
+          const preset = root ? root.getAttribute('data-cie-sfx-preset') : null;
           await unlockAudio();
-          playTone('toggle');
+          playTone('toggle', preset);
         }
       });
 
@@ -268,7 +309,8 @@
         const kind =
           (t.getAttribute('data-cie-sfx') ||
             (t.hasAttribute('data-cie-cycle') ? 'cycle' : 'click'));
-        unlockAudio().then(() => playTone(kind === 'hover' ? 'click' : kind));
+        const preset = section.getAttribute('data-cie-sfx-preset');
+        unlockAudio().then(() => playTone(kind === 'hover' ? 'click' : kind, preset));
       });
 
       // Optional hover sfx — only when data-cie-sfx-hover on section or element
@@ -279,8 +321,8 @@
         if (!(t instanceof Element)) return;
         const hit = t.closest('[data-cie-sfx-hover], [data-cie-sfx="hover"]');
         if (!hit || !section.contains(hit)) return;
-        // section-level opt-in: data-cie-sfx-hover on section enables hover for [data-cie-sfx]
-        playTone('hover');
+        const preset = section.getAttribute('data-cie-sfx-preset');
+        playTone('hover', preset);
       }, true);
 
       // If section has data-cie-hover-sfx, play hover on any [data-cie-sfx]
@@ -293,8 +335,51 @@
           const now = performance.now();
           if (now - lastHover < 80) return; // debounce
           lastHover = now;
-          playTone('hover');
+          const preset = section.getAttribute('data-cie-sfx-preset');
+          playTone('hover', preset);
         });
+      }
+
+      // Preset picker support
+      const picker = section.querySelector('[data-cie-sfx-picker]');
+      if (picker) {
+        const presetOptions = ['soft-tick', 'paper-snap', 'glass-pip', 'low-thud', 'bright-confirm'];
+        const currentPreset = section.getAttribute('data-cie-sfx-preset') || 
+                            localStorage.getItem('cie-sfx-preset') || 
+                            'paper-snap';
+        
+        // If picker is a select element
+        if (picker.tagName === 'SELECT') {
+          picker.value = currentPreset;
+          picker.addEventListener('change', () => {
+            const newPreset = picker.value;
+            section.setAttribute('data-cie-sfx-preset', newPreset);
+            localStorage.setItem('cie-sfx-preset', newPreset);
+            if (section.classList.contains('is-sound-on')) {
+              unlockAudio().then(() => playTone('confirm', newPreset));
+            }
+          });
+        } 
+        // If picker contains cycle buttons
+        else {
+          const cycleBtn = picker.querySelector('[data-cie-cycle]');
+          if (cycleBtn) {
+            const label = cycleBtn.querySelector('.cie-cycle-label') || cycleBtn;
+            label.textContent = currentPreset;
+            section.setAttribute('data-cie-sfx-preset', currentPreset);
+            
+            cycleBtn.addEventListener('click', () => {
+              const current = section.getAttribute('data-cie-sfx-preset') || 'paper-snap';
+              const idx = presetOptions.indexOf(current);
+              const next = presetOptions[(idx + 1) % presetOptions.length];
+              section.setAttribute('data-cie-sfx-preset', next);
+              localStorage.setItem('cie-sfx-preset', next);
+              if (section.classList.contains('is-sound-on')) {
+                unlockAudio().then(() => playTone('confirm', next));
+              }
+            });
+          }
+        }
       }
     });
   }
@@ -567,12 +652,190 @@
     });
   }
 
+  /* ── Hamburger nav ──────────────────────────────────────────── */
+  function initNav(root) {
+    const hamburgers = root.querySelectorAll('[data-cie-hamburger], .cie-hamburger');
+    if (!hamburgers.length) return;
+
+    const backdrop = ensureNavBackdrop();
+    let openPanel = null;
+
+    function closeNav() {
+      if (!openPanel) return;
+      const { button, panel } = openPanel;
+      openPanel = null;
+      button.setAttribute('aria-expanded', 'false');
+      panel.classList.remove('is-open');
+      backdrop.classList.remove('is-on');
+      document.documentElement.classList.remove('cie-has-nav');
+      button.focus({ preventScroll: true });
+    }
+
+    function openNav(button, panel) {
+      if (openPanel && openPanel.panel !== panel) closeNav();
+      openPanel = { button, panel };
+      button.setAttribute('aria-expanded', 'true');
+      panel.classList.add('is-open');
+      backdrop.classList.add('is-on');
+      document.documentElement.classList.add('cie-has-nav');
+      const firstLink = panel.querySelector('a, button:not([data-cie-nav-close])');
+      (firstLink || panel).focus({ preventScroll: true });
+    }
+
+    hamburgers.forEach((btn) => {
+      const target = btn.getAttribute('data-cie-hamburger') || btn.getAttribute('aria-controls');
+      const panel = target ? document.getElementById(target) : btn.nextElementSibling;
+      if (!panel) return;
+
+      if (!btn.hasAttribute('aria-expanded')) btn.setAttribute('aria-expanded', 'false');
+      if (!btn.hasAttribute('aria-controls') && panel.id) btn.setAttribute('aria-controls', panel.id);
+      if (!btn.hasAttribute('aria-label')) btn.setAttribute('aria-label', 'Toggle navigation');
+
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isOpen = btn.getAttribute('aria-expanded') === 'true';
+        isOpen ? closeNav() : openNav(btn, panel);
+      });
+
+      // Close buttons inside panel
+      panel.querySelectorAll('[data-cie-nav-close], .cie-nav-close').forEach((close) => {
+        close.addEventListener('click', (e) => {
+          e.preventDefault();
+          closeNav();
+        });
+      });
+    });
+
+    backdrop.addEventListener('click', () => closeNav());
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && openPanel) {
+        e.preventDefault();
+        closeNav();
+      }
+    });
+  }
+
+  function ensureNavBackdrop() {
+    let bd = document.querySelector('.cie-nav-backdrop');
+    if (!bd) {
+      bd = document.createElement('div');
+      bd.className = 'cie-nav-backdrop';
+      bd.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(bd);
+    }
+    return bd;
+  }
+
+  /* ── Text loading ────────────────────────────────────────────── */
+  function initTextLoad(root) {
+    root.querySelectorAll('[data-cie-text]').forEach((el) => {
+      const variant = el.getAttribute('data-cie-text') || 'fade-up';
+      
+      // Prepare letter-fade: wrap each character
+      if (variant === 'letter-fade') {
+        const text = el.textContent || '';
+        el.innerHTML = '';
+        text.split('').forEach((char, i) => {
+          const span = document.createElement('span');
+          span.className = 'cie-text-char';
+          span.textContent = char;
+          span.style.setProperty('--char-i', String(i));
+          el.appendChild(span);
+        });
+      }
+      
+      // Prepare line-rise: wrap lines (split by <br> or manual .cie-text-line)
+      if (variant === 'line-rise' && !el.querySelector('.cie-text-line')) {
+        const html = el.innerHTML;
+        const lines = html.split(/<br\s*\/?>/i);
+        if (lines.length > 1) {
+          el.innerHTML = '';
+          lines.forEach((line, i) => {
+            const div = document.createElement('div');
+            div.className = 'cie-text-line';
+            div.innerHTML = line;
+            div.style.setProperty('--line-i', String(i));
+            el.appendChild(div);
+          });
+        }
+      }
+
+      // Trigger load after a frame
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (variant === 'pulse-dot') {
+            el.classList.add('is-loading');
+            setTimeout(() => {
+              el.classList.remove('is-loading');
+              el.classList.add('is-loaded');
+            }, 800);
+          } else {
+            el.classList.add('is-loaded');
+          }
+        });
+      });
+    });
+  }
+
+  /* ── Theme morph (scroll-linked) ────────────────────────────── */
+  function initThemeMorph(root) {
+    const containers = root.querySelectorAll('[data-cie-theme-morph]');
+    if (!containers.length || REDUCE) return;
+
+    let ticking = false;
+
+    function update() {
+      ticking = false;
+      containers.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const vh = global.innerHeight || 1;
+        const top = rect.top;
+        const height = rect.height;
+        
+        // Calculate progress: 0 at top of viewport, 1 at bottom
+        // When element top is at viewport top = 0, at viewport bottom = 1
+        let progress = 0;
+        if (height > vh) {
+          // Tall container: progress based on how much has scrolled past
+          progress = Math.max(0, Math.min(1, -top / (height - vh)));
+        } else {
+          // Short container: progress based on position in viewport
+          progress = Math.max(0, Math.min(1, (vh - top) / vh));
+        }
+        
+        el.style.setProperty('--cie-theme-progress', progress.toFixed(3));
+      });
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }
+
+    update();
+    global.addEventListener('scroll', onScroll, { passive: true });
+    global.addEventListener('resize', onScroll, { passive: true });
+  }
+
   /* ── Public API ──────────────────────────────────────────── */
   const Cie = {
-    version: '0.3.0',
+    version: '0.4.0',
     reducedMotion: REDUCE,
     play: playTone,
     unlock: unlockAudio,
+    presets: ['soft-tick', 'paper-snap', 'glass-pip', 'low-thud', 'bright-confirm'],
+    getPreset() {
+      return localStorage.getItem('cie-sfx-preset') || 'paper-snap';
+    },
+    setPreset(name) {
+      if (this.presets.includes(name)) {
+        localStorage.setItem('cie-sfx-preset', name);
+        return true;
+      }
+      return false;
+    },
     init(scope) {
       const root = scope || document;
       initReveal(root);
@@ -582,6 +845,9 @@
       initSheet(root);
       initSound(root);
       initFlash(root);
+      initNav(root);
+      initTextLoad(root);
+      initThemeMorph(root);
       return Cie;
     },
   };
