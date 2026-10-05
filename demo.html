@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cie-ds — demo</title>
+<meta name="description" content="Personal/internal CIE tokens + motion preview. Not a public design system.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=Outfit:wght@100..900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="motion.css">
+<style>
+  .demo {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: var(--cie-edge);
+    padding-block: var(--cie-s-40) var(--cie-s-64);
+  }
+  .demo__banner {
+    font-family: var(--cie-mono);
+    font-size: var(--cie-text-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cie-ink-mute);
+    margin-bottom: var(--cie-s-24);
+  }
+  .demo__banner b { color: var(--cie-paper); font-weight: 400; }
+  .demo h1 {
+    font-size: clamp(40px, 8vw, 72px);
+    font-weight: 300;
+    font-variation-settings: 'wght' 300;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin-bottom: var(--cie-s-16);
+  }
+  .demo__lede {
+    color: var(--cie-ink-mute);
+    max-width: 48ch;
+    margin-bottom: var(--cie-s-40);
+  }
+  .demo section + section { margin-top: var(--cie-s-40); }
+  .demo h2 {
+    font-family: var(--cie-mono);
+    font-size: var(--cie-text-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cie-ink-mute);
+    margin-bottom: var(--cie-s-16);
+  }
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--cie-s-12);
+  }
+  .swatch {
+    border-radius: var(--cie-r);
+    padding: var(--cie-s-16);
+    min-height: 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+  .swatch code {
+    font-family: var(--cie-mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+  .swatch--ink { background: var(--cie-ink); color: var(--cie-paper); box-shadow: inset 0 0 0 1px var(--cie-stroke); }
+  .swatch--paper { background: var(--cie-paper); color: var(--cie-ink); }
+  .swatch--ink-mute { background: var(--cie-ink-mute); color: var(--cie-ink); }
+  .swatch--paper-mute { background: var(--cie-paper-mute); color: var(--cie-paper); }
+
+  .type-rows { display: grid; gap: var(--cie-s-16); }
+  .type-rows article {
+    border-top: 1px solid var(--cie-stroke);
+    padding-top: var(--cie-s-12);
+  }
+  .type-rows .label { color: var(--cie-ink-mute); margin-bottom: 6px; }
+  .t-mark { font-size: var(--cie-text-mark); font-weight: 300; font-variation-settings: 'wght' 300; line-height: 0.88; letter-spacing: -0.045em; }
+  .t-title { font-size: clamp(32px, 5vw, 56px); font-weight: 300; font-variation-settings: 'wght' 300; letter-spacing: -0.03em; line-height: 1; }
+  .t-row { font-size: var(--cie-text-row); font-weight: 400; font-variation-settings: 'wght' 400; letter-spacing: -0.02em; }
+  .t-body { font-size: var(--cie-text-body); max-width: var(--cie-measure); color: var(--cie-ink-mute); }
+
+  .grid-demo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--cie-s-16);
+  }
+  .card {
+    border-radius: var(--cie-r);
+    padding: var(--cie-s-24);
+    background: var(--cie-paper);
+    color: var(--cie-ink);
+    display: grid;
+    gap: var(--cie-s-12);
+    align-content: start;
+  }
+  .card--ink {
+    background: var(--cie-ink);
+    color: var(--cie-paper);
+    box-shadow: inset 0 0 0 1px var(--cie-stroke);
+  }
+  .card h3 {
+    font-size: var(--cie-text-cell);
+    font-weight: 300;
+    font-variation-settings: 'wght' 300;
+    letter-spacing: -0.03em;
+  }
+  .row-list { list-style: none; display: grid; gap: 0; }
+  .row-list li {
+    border-top: 1px solid var(--cie-stroke);
+    padding: var(--cie-s-12) 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--cie-s-16);
+  }
+  .row-list li:last-child { border-bottom: 1px solid var(--cie-stroke); }
+
+  .play {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--cie-s-16) var(--cie-s-28);
+  }
+  .ja-sample {
+    border-radius: var(--cie-r);
+    padding: var(--cie-s-24);
+    background: var(--cie-paper);
+    color: var(--cie-ink);
+  }
+  .ja-sample h3 {
+    font-size: clamp(22px, 3vw, 28px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.35;
+    margin-bottom: var(--cie-s-8);
+  }
+  .foot-note {
+    margin-top: var(--cie-s-64);
+    padding-top: var(--cie-s-24);
+    border-top: 1px solid var(--cie-stroke);
+    color: var(--cie-ink-mute);
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+  <main class="demo">
+    <p class="demo__banner"><b>cie-ds</b> · personal / internal · not for public adoption</p>
+    <h1 class="cie-rise" style="--i:0">Two inks.<br>Snappy motion.</h1>
+    <p class="demo__lede cie-rise" style="--i:1">
+      Tokens and micro-interactions from Creativity Is Everywhere —
+      Outfit, paper on ink, expo settles. Open this file locally or on Pages.
+    </p>
+
+    <section class="cie-rise" style="--i:2">
+      <h2>Colour</h2>
+      <div class="swatches">
+        <div class="swatch swatch--ink"><span>Ink</span><code>#0b0b0b</code></div>
+        <div class="swatch swatch--paper"><span>Paper</span><code>#f3f2ee</code></div>
+        <div class="swatch swatch--ink-mute"><span>Ink mute</span><code>#9c9c98</code></div>
+        <div class="swatch swatch--paper-mute"><span>Paper mute</span><code>#66665f</code></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Type</h2>
+      <div class="type-rows cie-stagger">
+        <article class="cie-rise"><p class="label mono">Mark · Outfit 300</p><p class="t-mark">creativity</p></article>
+        <article class="cie-rise"><p class="label mono">Title</p><p class="t-title cie-breath">A block becomes the page</p></article>
+        <article class="cie-rise"><p class="label mono">Row / cell</p><p class="t-row cie-breath cie-press">Work</p></article>
+        <article class="cie-rise"><p class="label mono">Body 16 / 1.5 · 62ch</p>
+          <p class="t-body">Anyone can put a language model behind a chat window. Very few people can make the result feel like something.</p>
+        </article>
+        <article class="cie-rise"><p class="label mono">Register</p><p class="mono">01 / 06 · New York · Est. 2006</p></article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Loader · シュパシュパ</h2>
+      <div class="play">
+        <div class="cie-loader" aria-hidden="true"></div>
+        <div class="cie-loader cie-loader--ink cie-loader--lg" aria-hidden="true"></div>
+        <div class="cie-loader cie-loader--sm" aria-hidden="true"></div>
+        <span class="cie-loader-dots">Loading</span>
+      </div>
+      <p class="t-body" style="margin-top:var(--cie-s-16)">
+        Complementary — the company site has no spinner. Same two-ink block +
+        <code class="mono" style="text-transform:none;letter-spacing:0">--cie-ease-expo</code> pulse.
+      </p>
+    </section>
+
+    <section>
+      <h2>Micro-interactions</h2>
+      <div class="grid-demo">
+        <div class="card">
+          <p class="mono">Breath + press</p>
+          <h3 class="cie-breath cie-press" tabindex="0">Playable</h3>
+          <p style="color:var(--cie-paper-mute);font-size:14px">Hover / focus weight 300→640. Active nudges 3px.</p>
+        </div>
+        <div class="card card--ink">
+          <p class="mono">Arrow + underline</p>
+          <p><a class="cie-arrow cie-uline" href="#motion">Open the move</a></p>
+          <p><a class="cie-arrow cie-arrow--ext cie-uline" href="https://creativityiseverywhere.com" target="_blank" rel="noopener">Site</a></p>
+        </div>
+        <div class="card">
+          <p class="mono">Panel buttons</p>
+          <div class="play">
+            <button class="cie-pbtn" type="button" aria-label="Close">×</button>
+            <button class="cie-pbtn" type="button" aria-label="Next">→</button>
+          </div>
+        </div>
+      </div>
+      <ul class="row-list cie-stagger" style="margin-top:var(--cie-s-28)" id="motion">
+        <li class="cie-rise"><span class="cie-breath cie-press" tabindex="0">Rise stagger</span><span class="mono">720ms · ease-out</span></li>
+        <li class="cie-rise"><span class="cie-breath cie-press" tabindex="0">Cell settle</span><span class="mono">520ms · expo</span></li>
+        <li class="cie-rise"><span class="cie-breath cie-press" tabindex="0">Snap tick</span><span class="mono">160ms</span></li>
+        <li class="cie-pop"><span class="cie-breath cie-press" tabindex="0">Pop enter</span><span class="mono">scale 0.8→1</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Japanese · :lang(ja)</h2>
+      <div class="ja-sample" lang="ja">
+        <h3 class="cie-breath">創造性は、いたるところにある。</h3>
+        <p style="color:var(--cie-paper-mute);line-height:1.8;font-feature-settings:'palt' 1">
+          トラッキングは 0。行間は広め。ウェイトの呼吸は Outfit と同じくホバーで太くなる。
+        </p>
+      </div>
+    </section>
+
+    <p class="foot-note">
+      Source aesthetic: creativityiseverywhere.com (<code>main</code> tokens).
+      Package license: proprietary — view OK, no redistrib / commercial reuse.
+      See <a class="cie-uline" href="README.md">README</a> · <a class="cie-uline" href="DESIGN.md">DESIGN.md</a> · <a class="cie-uline" href="LICENSE">LICENSE</a>.
+    </p>
+  </main>
+  <script>
+    // Optional: mark data-cie-reveal nodes in when present
+    requestAnimationFrame(() => {
+      document.querySelectorAll('[data-cie-reveal]').forEach((el, i) => {
+        el.style.setProperty('--i', i);
+        el.classList.add('is-in');
+      });
+    });
+  </script>
+</body>
+</html>
