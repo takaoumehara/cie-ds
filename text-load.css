@@ -1,0 +1,116 @@
+/* ─────────────────────────────────────────────────────────────
+   CIE text loading family — quiet, refined (NOT portfolio flashy).
+   For company site / cie-ds. Variants: fade-up, soft-wipe,
+   letter-fade, line-rise, pulse-dot.
+   ───────────────────────────────────────────────────────────── */
+
+/* Base: hidden until .is-loaded or .is-loading */
+[data-cie-text] {
+  opacity: 0;
+}
+[data-cie-text].is-loaded {
+  opacity: 1;
+}
+
+/* Variant: fade-up (default) */
+[data-cie-text="fade-up"],
+[data-cie-text=""] {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 480ms var(--cie-ease-out),
+    transform 480ms var(--cie-ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+[data-cie-text="fade-up"].is-loaded,
+[data-cie-text=""].is-loaded {
+  opacity: 1;
+  transform: none;
+}
+
+/* Variant: soft-wipe (clip-path mask) */
+[data-cie-text="soft-wipe"] {
+  opacity: 1;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 520ms var(--cie-ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+[data-cie-text="soft-wipe"].is-loaded {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Variant: letter-fade (stagger letters) */
+[data-cie-text="letter-fade"] .cie-text-char {
+  display: inline-block;
+  opacity: 0;
+  transition: opacity 360ms var(--cie-ease-out);
+  transition-delay: calc(var(--char-i, 0) * 18ms + var(--i, 0) * 80ms);
+}
+[data-cie-text="letter-fade"].is-loaded .cie-text-char {
+  opacity: 1;
+}
+
+/* Variant: line-rise (block lines rise with stagger) */
+[data-cie-text="line-rise"] .cie-text-line {
+  display: block;
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 440ms var(--cie-ease-out),
+    transform 440ms var(--cie-ease-out);
+  transition-delay: calc(var(--line-i, 0) * 70ms + var(--i, 0) * 60ms);
+}
+[data-cie-text="line-rise"].is-loaded .cie-text-line {
+  opacity: 1;
+  transform: none;
+}
+
+/* Variant: pulse-dot (minimal loading with quiet pulse) */
+[data-cie-text="pulse-dot"] {
+  opacity: 1;
+}
+[data-cie-text="pulse-dot"].is-loading::after {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin-left: 0.6em;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.35;
+  animation: cie-text-pulse 1200ms var(--cie-ease-out) infinite;
+}
+[data-cie-text="pulse-dot"].is-loaded::after {
+  content: none;
+}
+
+@keyframes cie-text-pulse {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 0.6; transform: scale(1.1); }
+}
+
+/* Helper: wrap mode adds overflow handling */
+.cie-text-wrap {
+  overflow: hidden;
+}
+.cie-text-wrap [data-cie-text="soft-wipe"],
+.cie-text-wrap [data-cie-text="line-rise"] .cie-text-line {
+  display: block;
+}
+
+/* Reduced motion: instant reveal */
+@media (prefers-reduced-motion: reduce) {
+  [data-cie-text],
+  [data-cie-text] .cie-text-char,
+  [data-cie-text] .cie-text-line {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+  [data-cie-text="pulse-dot"]::after {
+    animation: none;
+    opacity: 0.35;
+  }
+}

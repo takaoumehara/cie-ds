@@ -4,6 +4,8 @@ Personal/internal tokens for Creativity Is Everywhere. **Not** a public product.
 Fetch this file + `tokens.css` / `tokens.json` / `interaction.js` when styling Takao’s small tools.
 
 - Demo: https://cie-ds.vercel.app/demo
+- Parallax: https://cie-ds.vercel.app/parallax
+- Catalog: https://cie-ds.vercel.app/
 - Tokens CSS: https://cie-ds.vercel.app/tokens.css
 - JS: https://cie-ds.vercel.app/interaction.js
 - This brief: https://cie-ds.vercel.app/DESIGN.md
@@ -130,6 +132,70 @@ interaction.js (defer)
   rainbow loaders; springy bouncy easings; global site-mute UX for sound;
   chunky scrollbars; heavy parallax; royalty audio files.
 
+## New in 0.4.0
+
+### Text Loading Family (CIE company site, NOT portfolio)
+
+Portfolio (takaoumehara.com) has flashy modes: scramble-typewriter, katakana, pixelate.  
+**CIE / company site: quieter family**, several related variants:
+
+- `data-cie-text="fade-up"` — opacity + slight Y (default)
+- `data-cie-text="soft-wipe"` — clip-path wipe, restrained
+- `data-cie-text="letter-fade"` — stagger letters gently, no scramble
+- `data-cie-text="line-rise"` — block lines rise with short stagger
+- `data-cie-text="pulse-dot"` — minimal loading indicator with quiet pulse
+
+No motion-lab settings UI — just preset switcher in demo that re-runs effect.  
+JS: `initTextLoad()` auto-wraps characters/lines, adds `.is-loaded` class.
+
+### Hamburger Nav
+
+Hamburger → X morph + sliding panel:
+
+- `data-cie-hamburger="panel-id"` on button
+- `.cie-hamburger__line` × 3 for bars
+- `.cie-nav-panel` with `id="panel-id"`
+- Panel slides on `--cie-t-move` expo, synced with icon morph
+- `aria-expanded`, Escape, backdrop click, light focus trap
+- Variants: `.cie-nav-panel--left`, `.cie-nav-panel--ink`
+
+### Organic / Slow Motion Family
+
+Complement to snappy UI chrome. CSS-driven loops, reduced-motion safe:
+
+- `.cie-drift` / `data-cie-organic="drift"` — gentle horizontal float (8s)
+- `.cie-organic-breath` / `data-cie-organic="breath"` — soft scale pulse (6s)
+- `.cie-float` / `data-cie-organic="float"` — vertical drift + opacity (10s)
+- `.cie-morph` / `data-cie-organic="morph"` — border-radius + scale loop (12s)
+- `.cie-ambient-blob` — soft moving shapes for backgrounds
+- For ambient elements, backgrounds, hero stages — **not** primary UI
+
+### Sound System Enhancements
+
+- **Fixed**: master gain 0.0001 → 0.18 (now clearly audible)
+- **Presets**: 5 tasteful options, no audio files needed:
+  - `soft-tick` — high gentle taps
+  - `paper-snap` — default, balanced (420–560Hz)
+  - `glass-pip` — bright, crystalline (1760–2400Hz)
+  - `low-thud` — deep, subdued (90–220Hz)
+  - `bright-confirm` — clear, affirmative (660–1540Hz)
+- `localStorage.getItem('cie-sfx-preset')` persists choice
+- `data-cie-sfx-preset` on section overrides global
+- `data-cie-sfx-picker` auto-wires preset cycle button
+- API: `Cie.presets`, `Cie.getPreset()`, `Cie.setPreset(name)`
+
+### Theme Morph (scroll-linked)
+
+Replaces weak parallax with convincing scroll color shift:
+
+- `data-cie-theme-morph` on container
+- JS sets `--cie-theme-progress` (0..1) based on scroll position
+- CSS: background shifts `hsl(0, 0%, 4% → 95%)` ink → grey → paper
+- Text/controls invert automatically via `--cie-theme-fg` / `--cie-theme-bg`
+- Contrast-safe at every scroll position
+- Optional subtle layer parallax (`data-cie-parallax`) inside theme sections
+- See `parallax.html` for full-page demo
+
 ## Files
 
 - `tokens.css` / `tokens.json` — variables  
@@ -138,7 +204,13 @@ interaction.js (defer)
 - `motion.css` — loader + utilities  
 - `scroll.css` — reveal + parallax CSS  
 - `interactions.css` — tap / lift / invert / cycle / expand / sheet / sound cues  
-- `interaction.js` — observers + expand/morph + sheet + audio  
-- `demo.html` — visual checklist (`#expand`, `#sheet`)  
+- `nav.css` — hamburger → X morph + sliding panel  
+- `text-load.css` — quiet text loading variants (fade-up, soft-wipe, letter-fade, line-rise, pulse-dot)  
+- `organic.css` — slow motion family (drift, breath, float, morph, ambient blobs)  
+- `theme-morph.css` — scroll-linked theme morph system  
+- `interaction.js` — observers + expand/morph + sheet + audio + nav + text-load + theme-morph  
+- `demo.html` — comprehensive catalog with all patterns  
+- `parallax.html` — dedicated scroll-linked theme morph + parallax demo  
+- `index.html` — catalog navigation hub  
 
 License: proprietary (see `LICENSE`). Internal use only.
