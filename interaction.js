@@ -31,20 +31,44 @@
     const ctx = getCtx();
     if (!ctx) return null;
     if (ctx.state === 'suspended') {
-      try { await ctx.resume(); } catch (_) { /* ignore */ }
+      try { 
+        await ctx.resume();
+        // Double-check and retry if needed
+        if (ctx.state === 'suspended') {
+          await ctx.resume();
+        }
+      } catch (_) { /* ignore */ }
     }
     return ctx;
   }
 
-  /** Tiny tasteful one-shots. Keep polite but audible. */
-  function playTone(kind, preset) {
+  /** Tiny tasteful one-shots. Audible but polite. */
+  async function playTone(kind, preset) {
     const ctx = getCtx();
-    if (!ctx || ctx.state !== 'running') return;
-    if (REDUCE) return;
+    if (!ctx) return;
+    
+    // DO NOT gate main interactions on REDUCE (only hover)
+    // Main clicks/confirms/cycles should always play when armed
+    const isHover = kind === 'hover';
+    if (isHover && REDUCE) return;
+    
+    // Ensure context is running (with retry)
+    if (ctx.state !== 'running') {
+      try {
+        await ctx.resume();
+        // Retry once more if still suspended
+        if (ctx.state !== 'running') {
+          await ctx.resume();
+        }
+      } catch (_) { /* ignore */ }
+    }
+    
+    // Last check: if still not running, give up silently
+    if (ctx.state !== 'running') return;
 
     const now = ctx.currentTime;
     const master = ctx.createGain();
-    master.gain.value = 0.18; // audible but polite
+    master.gain.value = 0.4; // Clearly audible on laptop speakers
     master.connect(ctx.destination);
 
     // Preset shapes library
@@ -86,8 +110,15 @@
       },
     };
 
-    // Get active preset from localStorage or default
-    const activePreset = preset || localStorage.getItem('cie-sfx-preset') || 'paper-snap';
+    // Get active preset from localStorage or default (with error handling)
+    let activePreset = preset;
+    if (!activePreset) {
+      try {
+        activePreset = localStorage.getItem('cie-sfx-preset') || 'paper-snap';
+      } catch (_) {
+        activePreset = 'paper-snap';
+      }
+    }
     const shapes = presets[activePreset] || presets['paper-snap'];
     const s = shapes[kind] || shapes.click;
 
@@ -295,8 +326,12 @@
         if (on) {
           const root = section.closest('[data-cie-sound]');
           const preset = root ? root.getAttribute('data-cie-sfx-preset') : null;
+          // Unlock audio and play immediate test beep
           await unlockAudio();
-          playTone('toggle', preset);
+          // Give a moment for context to be ready, then play test tone
+          setTimeout(() => {
+            playTone('toggle', preset);
+          }, 50);
         }
       });
 
@@ -780,7 +815,32 @@
   /* ── Theme morph (scroll-linked) ────────────────────────────── */
   function initThemeMorph(root) {
     const containers = root.querySelectorAll('[data-cie-theme-morph]');
-    if (!containers.length || REDUCE) return;
+    if (!containers.length) return;
+
+    // Color interpolation: ink #0b0b0b → grey → paper #f3f2ee
+    const inkRGB = { r: 11, g: 11, b: 11 };
+    const paperRGB = { r: 243, g: 242, b: 238 };
+    
+    function lerpColor(progress) {
+      // 0 → 1: ink → paper via linear interpolation
+      const r = Math.round(inkRGB.r + (paperRGB.r - inkRGB.r) * progress);
+      const g = Math.round(inkRGB.g + (paperRGB.g - inkRGB.g) * progress);
+      const b = Math.round(inkRGB.b + (paperRGB.b - inkRGB.b) * progress);
+      return { r, g, b };
+    }
+    
+    function rgbToHex(rgb) {
+      return '#' + 
+        rgb.r.toString(16).padStart(2, '0') +
+        rgb.g.toString(16).padStart(2, '0') +
+        rgb.b.toString(16).padStart(2, '0');
+    }
+    
+    function getContrast(rgb) {
+      // Simple luminance check: if bg is dark, return light; if light, return dark
+      const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+      return luminance > 0.5 ? inkRGB : paperRGB;
+    }
 
     let ticking = false;
 
@@ -793,7 +853,6 @@
         const height = rect.height;
         
         // Calculate progress: 0 at top of viewport, 1 at bottom
-        // When element top is at viewport top = 0, at viewport bottom = 1
         let progress = 0;
         if (height > vh) {
           // Tall container: progress based on how much has scrolled past
@@ -803,7 +862,34 @@
           progress = Math.max(0, Math.min(1, (vh - top) / vh));
         }
         
+        // Compute colors directly
+        const bgRGB = lerpColor(progress);
+        const fgRGB = getContrast(bgRGB);
+        const bgHex = rgbToHex(bgRGB);
+        const fgHex = rgbToHex(fgRGB);
+        
+        // Mute color (mid-tone between bg and fg)
+        const muteRGB = {
+          r: Math.round((bgRGB.r + fgRGB.r) / 2),
+          g: Math.round((bgRGB.g + fgRGB.g) / 2),
+          b: Math.round((bgRGB.b + fgRGB.b) / 2)
+        };
+        const muteHex = rgbToHex(muteRGB);
+        
+        // Set CSS custom properties with concrete colors
         el.style.setProperty('--cie-theme-progress', progress.toFixed(3));
+        el.style.setProperty('--cie-theme-bg', bgHex);
+        el.style.setProperty('--cie-theme-fg', fgHex);
+        el.style.setProperty('--cie-theme-mute', muteHex);
+        
+        // Apply to document root for full-page effect
+        document.documentElement.style.setProperty('--cie-theme-bg', bgHex);
+        document.documentElement.style.setProperty('--cie-theme-fg', fgHex);
+        document.documentElement.style.setProperty('--cie-theme-mute', muteHex);
+        
+        // Directly set background on the container for immediate visibility
+        el.style.backgroundColor = bgHex;
+        el.style.color = fgHex;
       });
     }
 
@@ -821,7 +907,7 @@
 
   /* ── Public API ──────────────────────────────────────────── */
   const Cie = {
-    version: '0.4.0',
+    version: '0.4.1',
     reducedMotion: REDUCE,
     play: playTone,
     unlock: unlockAudio,
