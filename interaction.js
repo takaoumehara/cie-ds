@@ -217,7 +217,10 @@
   /* ── Parallax ────────────────────────────────────────────── */
   function initParallax(root) {
     const layers = Array.from(root.querySelectorAll('[data-cie-parallax]'));
-    if (!layers.length || REDUCE) return;
+    if (!layers.length) return;
+    
+    // Don't block parallax entirely on REDUCE - let CSS handle transform disable
+    // We still run the calculation so --cie-py is set for other potential uses
 
     let ticking = false;
 
@@ -231,8 +234,9 @@
         const progress = (mid - vh / 2) / vh; // -0.5..0.5-ish centred
         const max = parseFloat(
           getComputedStyle(el).getPropertyValue('--cie-parallax-max')
-        ) || 48;
-        const y = Math.max(-max, Math.min(max, -progress * speed * max * 2));
+        ) || 80; // Increased from 48 for more noticeable effect
+        // Increased multiplier from 2 to 3 for stronger parallax
+        const y = Math.max(-max, Math.min(max, -progress * speed * max * 3));
         el.style.setProperty('--cie-py', y.toFixed(2) + 'px');
       });
     }
@@ -870,11 +874,39 @@
     }
     
     function getContrast(rgb) {
-      // Luminance check: if bg is dark, return light; if light, return dark
-      const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
-      return luminance > 0.5 
-        ? { r: 11, g: 11, b: 11 }      // Ink for light backgrounds
-        : { r: 243, g: 242, b: 238 };  // Paper for dark backgrounds
+      // Calculate relative luminance (WCAG formula)
+      function getLuminance(rgb) {
+        const rsRGB = rgb.r / 255;
+        const gsRGB = rgb.g / 255;
+        const bsRGB = rgb.b / 255;
+        
+        const r = rsRGB <= 0.03928 ? rsRGB / 12.92 : Math.pow((rsRGB + 0.055) / 1.055, 2.4);
+        const g = gsRGB <= 0.03928 ? gsRGB / 12.92 : Math.pow((gsRGB + 0.055) / 1.055, 2.4);
+        const b = bsRGB <= 0.03928 ? bsRGB / 12.92 : Math.pow((bsRGB + 0.055) / 1.055, 2.4);
+        
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      }
+      
+      function contrastRatio(lum1, lum2) {
+        const lighter = Math.max(lum1, lum2);
+        const darker = Math.min(lum1, lum2);
+        return (lighter + 0.05) / (darker + 0.05);
+      }
+      
+      const bgLuminance = getLuminance(rgb);
+      const inkLuminance = getLuminance({ r: 11, g: 11, b: 11 });
+      const paperLuminance = getLuminance({ r: 243, g: 242, b: 238 });
+      
+      const inkContrast = contrastRatio(bgLuminance, inkLuminance);
+      const paperContrast = contrastRatio(bgLuminance, paperLuminance);
+      
+      // Pick the option with better contrast
+      // For mid-grey (luminance ~0.15-0.5), use ink (dark text)
+      // For lighter backgrounds, use ink
+      // For darker backgrounds, use paper
+      return inkContrast > paperContrast
+        ? { r: 11, g: 11, b: 11 }      // Ink
+        : { r: 243, g: 242, b: 238 };  // Paper
     }
 
     let ticking = false;
@@ -903,12 +935,46 @@
         const bgHex = rgbToHex(bgRGB);
         const fgHex = rgbToHex(fgRGB);
         
-        // Mute color (blend bg and fg)
-        const muteRGB = {
-          r: Math.round((bgRGB.r + fgRGB.r) / 2),
-          g: Math.round((bgRGB.g + fgRGB.g) / 2),
-          b: Math.round((bgRGB.b + fgRGB.b) / 2)
-        };
+        // Mute color calculation with better contrast
+        // Instead of 50/50, use 70/30 weighted toward foreground for better readability
+        function getLuminance(rgb) {
+          const rsRGB = rgb.r / 255;
+          const gsRGB = rgb.g / 255;
+          const bsRGB = rgb.b / 255;
+          
+          const r = rsRGB <= 0.03928 ? rsRGB / 12.92 : Math.pow((rsRGB + 0.055) / 1.055, 2.4);
+          const g = gsRGB <= 0.03928 ? gsRGB / 12.92 : Math.pow((gsRGB + 0.055) / 1.055, 2.4);
+          const b = bsRGB <= 0.03928 ? bsRGB / 12.92 : Math.pow((bsRGB + 0.055) / 1.055, 2.4);
+          
+          return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        }
+        
+        function contrastRatio(lum1, lum2) {
+          const lighter = Math.max(lum1, lum2);
+          const darker = Math.min(lum1, lum2);
+          return (lighter + 0.05) / (darker + 0.05);
+        }
+        
+        // Try different blend ratios and pick one with best contrast (min 4.5:1 for AA)
+        let muteRGB;
+        let bestContrast = 0;
+        const bgLuminance = getLuminance(bgRGB);
+        
+        for (let weight = 0.6; weight <= 0.8; weight += 0.05) {
+          const testMute = {
+            r: Math.round(bgRGB.r * (1 - weight) + fgRGB.r * weight),
+            g: Math.round(bgRGB.g * (1 - weight) + fgRGB.g * weight),
+            b: Math.round(bgRGB.b * (1 - weight) + fgRGB.b * weight)
+          };
+          const muteLuminance = getLuminance(testMute);
+          const contrast = contrastRatio(bgLuminance, muteLuminance);
+          
+          if (contrast > bestContrast) {
+            bestContrast = contrast;
+            muteRGB = testMute;
+          }
+        }
+        
         const muteHex = rgbToHex(muteRGB);
         
         // Set CSS custom properties with concrete colors
@@ -1003,7 +1069,7 @@
 
   /* ── Public API ──────────────────────────────────────────── */
   const Cie = {
-    version: '0.4.2',
+    version: '0.4.3',
     reducedMotion: REDUCE,
     play: playTone,
     unlock: unlockAudio,
