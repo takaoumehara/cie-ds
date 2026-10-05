@@ -8,6 +8,12 @@ Portable CSS tokens + snappy motion extracted from
 
 > **JA** — 社内・個人用のトークン一式です。公開リポジトリは自分（と許可した人／エージェント）が取りに来るためのもの。第三者のプロダクト採用・再配布は想定していません。`LICENSE` 参照。
 
+## Demo
+
+https://cie-design-system.vercel.app/demo.html
+
+(GitHub Pages could not be enabled with current token scopes; Vercel static is the permanent preview.)
+
 ## One-line include
 
 ```html
@@ -22,8 +28,8 @@ Portable CSS tokens + snappy motion extracted from
 Or from the published Pages URL (after deploy):
 
 ```html
-<link rel="stylesheet" href="https://takaoumehara.github.io/cie-ds/tokens.css">
-<link rel="stylesheet" href="https://takaoumehara.github.io/cie-ds/motion.css">
+<link rel="stylesheet" href="https://cie-design-system.vercel.app/tokens.css">
+<link rel="stylesheet" href="https://cie-design-system.vercel.app/motion.css">
 ```
 
 Plain CSS. No npm package. No build step.
@@ -105,4 +111,5 @@ Proprietary — see `LICENSE`. Viewing the public repo is fine. Redistribution, 
 - Live: https://creativityiseverywhere.com  
 - Design notes in company repo: `docs/design.md`  
 - Tokens extracted from: `assets/tokens.css` on branch `main`  
-- Demo: see repo Pages / `demo.html`
+- Demo: https://cie-design-system.vercel.app/demo.html
+- Repo: https://github.com/takaoumehara/cie-ds
