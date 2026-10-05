@@ -10,9 +10,9 @@ Portable CSS tokens + snappy motion extracted from
 
 ## Demo
 
-https://cie-design-system.vercel.app/demo.html
+https://cie-ds.vercel.app/demo.html
 
-(GitHub Pages could not be enabled with current token scopes; Vercel static is the permanent preview.)
+(GitHub Pages API blocked by token scopes; permanent preview is Vercel static at the quiet alias below.)
 
 ## One-line include
 
@@ -28,8 +28,8 @@ https://cie-design-system.vercel.app/demo.html
 Or from the published Pages URL (after deploy):
 
 ```html
-<link rel="stylesheet" href="https://cie-design-system.vercel.app/tokens.css">
-<link rel="stylesheet" href="https://cie-design-system.vercel.app/motion.css">
+<link rel="stylesheet" href="https://cie-ds.vercel.app/tokens.css">
+<link rel="stylesheet" href="https://cie-ds.vercel.app/motion.css">
 ```
 
 Plain CSS. No npm package. No build step.
@@ -111,5 +111,5 @@ Proprietary — see `LICENSE`. Viewing the public repo is fine. Redistribution, 
 - Live: https://creativityiseverywhere.com  
 - Design notes in company repo: `docs/design.md`  
 - Tokens extracted from: `assets/tokens.css` on branch `main`  
-- Demo: https://cie-design-system.vercel.app/demo.html
+- Demo: https://cie-ds.vercel.app/demo.html
 - Repo: https://github.com/takaoumehara/cie-ds

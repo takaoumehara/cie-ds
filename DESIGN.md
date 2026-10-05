@@ -3,6 +3,11 @@
 Personal/internal tokens for Creativity Is Everywhere. **Not** a public product.
 Fetch this file + `tokens.css` / `tokens.json` when styling Takao’s small tools.
 
+- Demo: https://cie-ds.vercel.app/demo
+- Tokens CSS: https://cie-ds.vercel.app/tokens.css
+- This brief: https://cie-ds.vercel.app/DESIGN.md
+- Repo: https://github.com/takaoumehara/cie-ds
+
 ## Surface
 
 Black ground (`#0b0b0b`), paper blocks (`#f3f2ee`). Two inks. No accent colour,
