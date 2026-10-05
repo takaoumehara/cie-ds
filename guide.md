@@ -6,11 +6,15 @@ Portable CSS tokens + snappy motion + scroll/parallax + per-section UI sound,
 extracted from [creativityiseverywhere.com](https://creativityiseverywhere.com)
 (`takaoumehara/creativityiseverywhere.com` · `main`).
 
+**Version 0.4.0** — New: hamburger nav, text loading family, sound presets, organic motion, theme morph.
+
 > **JA** — 社内・個人用のトークン一式です。公開リポジトリは自分（と許可した人／エージェント）が取りに来るためのもの。第三者のプロダクト採用・再配布は想定していません。`LICENSE` 参照。
 
 ## Demo
 
-https://cie-ds.vercel.app/demo
+- Catalog: https://cie-ds.vercel.app/
+- Comprehensive: https://cie-ds.vercel.app/demo
+- Parallax + Theme: https://cie-ds.vercel.app/parallax
 
 ## One-line include
 
@@ -24,6 +28,14 @@ https://cie-ds.vercel.app/demo
 <link rel="stylesheet" href="https://cie-ds.vercel.app/motion.css">
 <link rel="stylesheet" href="https://cie-ds.vercel.app/scroll.css">
 <link rel="stylesheet" href="https://cie-ds.vercel.app/interactions.css">
+<!-- Optional: hamburger nav -->
+<link rel="stylesheet" href="https://cie-ds.vercel.app/nav.css">
+<!-- Optional: text loading variants -->
+<link rel="stylesheet" href="https://cie-ds.vercel.app/text-load.css">
+<!-- Optional: organic/slow motion -->
+<link rel="stylesheet" href="https://cie-ds.vercel.app/organic.css">
+<!-- Optional: theme morph -->
+<link rel="stylesheet" href="https://cie-ds.vercel.app/theme-morph.css">
 <script src="https://cie-ds.vercel.app/interaction.js" defer></script>
 ```
 
@@ -46,11 +58,17 @@ Minimal (tokens + motion only):
 | `motion.css` | Loader + fade/rise/slide/press/breath/stagger |
 | `scroll.css` | Reveal-on-scroll variants + parallax hooks |
 | `interactions.css` | Tap, lift, invert, chip, cycle, expand/morph, sheet, sound cues |
-| `interaction.js` | Observers, parallax, click-cycle, expand/morph, sheet, per-section Web Audio |
+| `nav.css` | Hamburger → X morph + sliding panel |
+| `text-load.css` | Quiet text loading variants (fade-up, soft-wipe, letter-fade, line-rise, pulse-dot) |
+| `organic.css` | Slow motion family (drift, breath, float, morph, ambient blobs) |
+| `theme-morph.css` | Scroll-linked theme morph (ink ↔ paper) |
+| `interaction.js` | Observers, parallax, cycle, expand, sheet, nav, text-load, theme-morph, Web Audio |
 | `tokens.json` | Same tokens for tooling / AIs |
 | `DESIGN.md` | Compact system summary for agents |
 | `guide.md` | Same as README (Vercel serves this; `README.md` is blocked at the edge) |
-| `demo.html` | Pattern showcase with copyable labels |
+| `demo.html` | Comprehensive pattern showcase |
+| `parallax.html` | Dedicated scroll-linked theme morph demo |
+| `index.html` | Catalog navigation hub |
 | `LICENSE` / `NOTICE` | Restrictive — view OK; no redistrib / commercial reuse |
 
 ## Key tokens (mirror of site `main`)
@@ -159,6 +177,103 @@ Use `.cie-sheet--center` for a centered modal with `--cie-ease-snap`. Demo: `/de
 - Kinds: `hover` · `click` · `confirm` · `cycle` · `toggle`.
 - Under `prefers-reduced-motion: reduce`, motion collapses and UI sounds stay silent.
 
+**Sound Presets (v0.4.0):**  
+5 tasteful presets, localStorage-persisted, no audio files:
+
+- `soft-tick` — high gentle taps
+- `paper-snap` — default, balanced
+- `glass-pip` — bright, crystalline
+- `low-thud` — deep, subdued
+- `bright-confirm` — clear, affirmative
+
+```html
+<!-- Preset picker (cycle button) -->
+<div data-cie-sfx-picker>
+  <button class="cie-chip cie-tap" 
+          data-cie-cycle="soft-tick|paper-snap|glass-pip|low-thud|bright-confirm">
+    <span class="cie-cycle-label">paper-snap</span>
+  </button>
+</div>
+```
+
+Per-section override: `<section data-cie-sound data-cie-sfx-preset="glass-pip">`.
+
+### Hamburger Nav (v0.4.0)
+
+```html
+<button type="button" class="cie-hamburger" 
+        data-cie-hamburger="main-nav" 
+        aria-expanded="false" aria-controls="main-nav">
+  <span class="cie-hamburger__line"></span>
+  <span class="cie-hamburger__line"></span>
+  <span class="cie-hamburger__line"></span>
+</button>
+
+<nav id="main-nav" class="cie-nav-panel cie-nav-panel--ink">
+  <div class="cie-nav-panel__head">
+    <h3 class="cie-nav-panel__title">Navigation</h3>
+    <button type="button" class="cie-pbtn" data-cie-nav-close>×</button>
+  </div>
+  <div class="cie-nav-panel__nav">
+    <a href="#">Work</a>
+    <a href="#">About</a>
+  </div>
+</nav>
+```
+
+- Icon morphs hamburger → X on `--cie-t-move` expo
+- Panel slides in (right by default, or `.cie-nav-panel--left`)
+- Synced `aria-expanded`, Escape, backdrop click, light focus trap
+
+### Text Loading (v0.4.0)
+
+Quiet variants for CIE company site (NOT portfolio scramble/pixelate):
+
+```html
+<h1 data-cie-text="fade-up">Creativity is everywhere</h1>
+<h2 data-cie-text="soft-wipe">Block becomes page</h2>
+<h3 data-cie-text="letter-fade">Snappy settle</h3>
+<p data-cie-text="pulse-dot">Loading</p>
+```
+
+Variants: `fade-up` (default), `soft-wipe`, `letter-fade`, `line-rise`, `pulse-dot`.  
+JS auto-wraps characters/lines, adds `.is-loaded` class after frame delay.
+
+### Organic / Slow Motion (v0.4.0)
+
+Complement to snappy UI chrome. For ambient elements, backgrounds, hero stages:
+
+```html
+<div class="cie-drift">Gentle float</div>
+<div class="cie-organic-breath">Soft pulse</div>
+<div class="cie-float">Vertical drift</div>
+<div class="cie-morph">Border-radius loop</div>
+
+<!-- Ambient stage with soft blobs -->
+<div class="cie-ambient-stage">
+  <div class="cie-ambient-blob" style="--blob-i: 0;"></div>
+  <div class="cie-ambient-blob" style="--blob-i: 1;"></div>
+</div>
+```
+
+CSS-driven loops (6s–14s), reduced-motion safe. NOT for primary UI interactions.
+
+### Theme Morph (v0.4.0)
+
+Scroll-linked color shift: ink → grey → paper. Contrast-safe at every position.
+
+```html
+<main data-cie-theme-morph>
+  <section class="cie-theme-stage">
+    <h1 class="cie-theme-text">Shift</h1>
+    <p class="cie-theme-mute">Scroll-linked · subtle</p>
+  </section>
+</main>
+```
+
+JS sets `--cie-theme-progress` (0..1); CSS shifts background/foreground via HSL.  
+See `parallax.html` for full-page demo with optional layer parallax.
+
 #### JS API
 
 ```js
@@ -167,6 +282,12 @@ Cie.init();           // re-scan (e.g. after injecting DOM)
 Cie.play('click');    // manual tone (still needs unlocked ctx)
 Cie.unlock();         // resume AudioContext after gesture
 Cie.reducedMotion;    // boolean
+Cie.version;          // "0.4.0"
+
+// Sound presets (v0.4.0)
+Cie.presets;          // ['soft-tick', 'paper-snap', 'glass-pip', 'low-thud', 'bright-confirm']
+Cie.getPreset();      // current preset name
+Cie.setPreset('glass-pip'); // set + persist to localStorage
 ```
 
 ## Reduced motion
@@ -187,6 +308,11 @@ import './cie-ds/scrollbar.css'
 import './cie-ds/motion.css'
 import './cie-ds/scroll.css'
 import './cie-ds/interactions.css'
+// Optional:
+import './cie-ds/nav.css'
+import './cie-ds/text-load.css'
+import './cie-ds/organic.css'
+import './cie-ds/theme-morph.css'
 import './cie-ds/interaction.js' // side-effect: Cie.init()
 ```
 
@@ -212,5 +338,7 @@ Proprietary — see `LICENSE`. Viewing the public repo is fine. Redistribution, 
 - Live: https://creativityiseverywhere.com  
 - Design notes in company repo: `docs/design.md`  
 - Tokens extracted from: `assets/tokens.css` on branch `main`  
-- Demo: https://cie-ds.vercel.app/demo  
+- Catalog: https://cie-ds.vercel.app/
+- Demo: https://cie-ds.vercel.app/demo
+- Parallax: https://cie-ds.vercel.app/parallax
 - Repo: https://github.com/takaoumehara/cie-ds
