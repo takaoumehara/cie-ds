@@ -1,8 +1,8 @@
 /* ─────────────────────────────────────────────────────────────
    CIE motion — site language + complementary snappy utilities.
 
-   From the site:
-     · --ease-expo / --ease-out, 520–720ms moves
+   From the site (snappier portable timings):
+     · --ease-expo / --ease-out / --ease-snap, 280–420ms expands
      · type weight breath (font-variation-settings)
      · rise + stagger after open
      · press nudge (translateX)

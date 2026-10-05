@@ -45,8 +45,8 @@ Minimal (tokens + motion only):
 | `scrollbar.css` | Thin elegant scrollbar (5px, not chunky) |
 | `motion.css` | Loader + fade/rise/slide/press/breath/stagger |
 | `scroll.css` | Reveal-on-scroll variants + parallax hooks |
-| `interactions.css` | Tap, lift, invert, chip, cycle, sound-section cues |
-| `interaction.js` | Observers, parallax, click-cycle, per-section Web Audio |
+| `interactions.css` | Tap, lift, invert, chip, cycle, expand/morph, sheet, sound cues |
+| `interaction.js` | Observers, parallax, click-cycle, expand/morph, sheet, per-section Web Audio |
 | `tokens.json` | Same tokens for tooling / AIs |
 | `DESIGN.md` | Compact system summary for agents |
 | `guide.md` | Same as README (Vercel serves this; `README.md` is blocked at the edge) |
@@ -65,7 +65,7 @@ Minimal (tokens + motion only):
 | Mono | **DM Mono** 400 |
 | JA face | **Zen Kaku Gothic New** (+ Hiragino / Noto) via `:lang(ja)` |
 | Radius | `--cie-r` block / `--cie-r-page` card |
-| Motion | `--cie-ease-expo` · `--cie-ease-out` · cell `520ms` · move `720ms` · snap `160ms` |
+| Motion | `--cie-ease-expo` · `--cie-ease-out` · `--cie-ease-snap` · cell `320ms` · move `360ms` · snap `120ms` |
 
 **Rules:** two colours only; hierarchy via size + weight motion; no shadow / gradient / accent on the board language.
 
@@ -104,6 +104,35 @@ Requires `scroll.css` + `interaction.js`. Variants: `rise` (default), `fade`, `s
 ```
 
 Speed is a unitless factor. Displacement capped by `--cie-parallax-max` (default 48px).
+
+
+### Click-to-expand (cell → panel)
+
+```html
+<div class="cie-expand-board cie-expand--snap" data-cie-expand-board>
+  <button type="button" class="cie-expand-cell" data-cie-expand="panel-work">Work</button>
+</div>
+<div id="panel-work" class="cie-expand-panel cie-expand--snap" data-cie-expand-panel hidden>
+  <div class="cie-expand-panel__bar">
+    <button type="button" class="cie-pbtn" data-cie-expand-close aria-label="Close">×</button>
+  </div>
+  <div class="cie-expand-panel__in">…</div>
+</div>
+```
+
+FLIP morph on `--cie-t-move` (360ms) / `--cie-ease-expo`. Add `.cie-expand--snap` for subtle overshoot. Demo: `/demo#expand`.
+
+### Sheet / modal
+
+```html
+<button type="button" data-cie-sheet-open="sheet-1">Open</button>
+<div id="sheet-1" class="cie-sheet" data-cie-sheet role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+  <button type="button" data-cie-sheet-close aria-label="Close">×</button>
+  …
+</div>
+```
+
+Use `.cie-sheet--center` for a centered modal with `--cie-ease-snap`. Demo: `/demo#sheet`.
 
 ### Click-to-cycle
 

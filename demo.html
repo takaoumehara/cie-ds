@@ -324,6 +324,8 @@
       <nav class="demo__nav" aria-label="Patterns">
         <a class="cie-uline" href="#colour">Colour</a>
         <a class="cie-uline" href="#motion">Motion</a>
+        <a class="cie-uline" href="#expand">Expand</a>
+        <a class="cie-uline" href="#sheet">Sheet</a>
         <a class="cie-uline" href="#scroll">Scroll</a>
         <a class="cie-uline" href="#parallax">Parallax</a>
         <a class="cie-uline" href="#cycle">Cycle</a>
@@ -335,7 +337,7 @@
     <p class="demo__lede cie-rise" style="--i:1">
       Portable tokens and micro-interactions from Creativity Is Everywhere —
       Outfit + DM Mono, paper on ink, expo settles, thin scrollbar, scroll reveals,
-      optional per-section UI sound. Copy a pattern; leave the rest.
+      click-to-expand, sheets, optional per-section UI sound. Copy a pattern; leave the rest.
     </p>
 
     <!-- ── Include ───────────────────────────────────────── -->
@@ -439,12 +441,165 @@
         </div>
       </div>
       <ul class="row-list" style="margin-top:var(--cie-s-28)" id="timing">
-        <li data-cie-reveal="slide"><span class="cie-breath cie-press" tabindex="0">Rise stagger</span><span class="mono">720ms · ease-out</span></li>
-        <li data-cie-reveal="slide"><span class="cie-breath cie-press" tabindex="0">Cell settle</span><span class="mono">520ms · expo</span></li>
-        <li data-cie-reveal="slide"><span class="cie-breath cie-press" tabindex="0">Snap tick</span><span class="mono">160ms</span></li>
-        <li data-cie-reveal="pop"><span class="cie-breath cie-press" tabindex="0">Pop enter</span><span class="mono">scale 0.92→1</span></li>
+        <li data-cie-reveal="slide"><span class="cie-breath cie-press" tabindex="0">Expand / move</span><span class="mono">360ms · expo</span></li>
+        <li data-cie-reveal="slide"><span class="cie-breath cie-press" tabindex="0">Rise stagger</span><span class="mono">400ms · ease-out</span></li>
+        <li data-cie-reveal="slide"><span class="cie-breath cie-press" tabindex="0">Cell settle</span><span class="mono">320ms · expo</span></li>
+        <li data-cie-reveal="slide"><span class="cie-breath cie-press" tabindex="0">Sheet</span><span class="mono">300ms · expo/snap</span></li>
+        <li data-cie-reveal="pop"><span class="cie-breath cie-press" tabindex="0">Snap tick</span><span class="mono">120ms</span></li>
       </ul>
     </section>
+
+
+    <!-- ── Click-to-expand ───────────────────────────────── -->
+    <section class="pattern" id="expand">
+      <h2>Expand · にゅるっと but fast</h2>
+      <p class="pattern__hint">
+        Click a cell — it morphs into a panel in <code>--cie-t-move</code> (360ms) with
+        <code>--cie-ease-expo</code>. Optional <code>.cie-expand--snap</code> adds a subtle overshoot.
+        Signature move from the company board, portable.
+      </p>
+      <div
+        class="cie-expand-board cie-expand--snap"
+        data-cie-expand-board
+        data-cie-reveal="rise"
+      >
+        <button type="button" class="cie-expand-cell" data-cie-expand="exp-work">
+          <span class="mono">01</span>
+          <span style="font-size:var(--cie-text-cell);font-weight:300;letter-spacing:-0.03em">Work</span>
+        </button>
+        <button type="button" class="cie-expand-cell cie-expand-cell--ink" data-cie-expand="exp-studio">
+          <span class="mono">02</span>
+          <span style="font-size:var(--cie-text-cell);font-weight:300;letter-spacing:-0.03em">Studio</span>
+        </button>
+        <button type="button" class="cie-expand-cell" data-cie-expand="exp-about">
+          <span class="mono">03</span>
+          <span style="font-size:var(--cie-text-cell);font-weight:300;letter-spacing:-0.03em">About</span>
+        </button>
+        <button type="button" class="cie-expand-cell cie-expand-cell--ink" data-cie-expand="exp-contact">
+          <span class="mono">04</span>
+          <span style="font-size:var(--cie-text-cell);font-weight:300;letter-spacing:-0.03em">Contact</span>
+        </button>
+      </div>
+    </section>
+
+    <div
+      id="exp-work"
+      class="cie-expand-panel cie-expand--snap"
+      data-cie-expand-panel="exp-work"
+      hidden
+    >
+      <div class="cie-expand-panel__bar">
+        <button type="button" class="cie-pbtn cie-expand-close" data-cie-expand-close aria-label="Close">×</button>
+      </div>
+      <div class="cie-expand-panel__in">
+        <p class="mono" style="color:var(--cie-paper-mute);margin-bottom:var(--cie-s-12)">01 · Work</p>
+        <h3 style="font-size:clamp(32px,6vw,56px);font-weight:300;font-variation-settings:'wght' 300;letter-spacing:-0.04em;line-height:0.95;margin-bottom:var(--cie-s-16)">Selected projects</h3>
+        <ul class="cie-list-stagger" style="list-style:none;display:grid;gap:var(--cie-s-12)">
+          <li style="border-top:1px solid rgba(11,11,11,0.12);padding-top:var(--cie-s-12)">Verizon · identity system</li>
+          <li style="border-top:1px solid rgba(11,11,11,0.12);padding-top:var(--cie-s-12)">Value Frontier · Brand DNA</li>
+          <li style="border-top:1px solid rgba(11,11,11,0.12);padding-top:var(--cie-s-12)">Konosaki · bilingual site</li>
+        </ul>
+      </div>
+    </div>
+    <div
+      id="exp-studio"
+      class="cie-expand-panel cie-expand-panel--ink cie-expand--snap"
+      data-cie-expand-panel="exp-studio"
+      hidden
+    >
+      <div class="cie-expand-panel__bar">
+        <button type="button" class="cie-pbtn cie-expand-close" data-cie-expand-close aria-label="Close">×</button>
+      </div>
+      <div class="cie-expand-panel__in">
+        <p class="mono" style="color:var(--cie-ink-mute);margin-bottom:var(--cie-s-12)">02 · Studio</p>
+        <h3 style="font-size:clamp(32px,6vw,56px);font-weight:300;font-variation-settings:'wght' 300;letter-spacing:-0.04em;line-height:0.95;margin-bottom:var(--cie-s-16)">How we work</h3>
+        <p style="color:var(--cie-ink-mute);max-width:42ch">Small team. Sharp craft. The block becomes the page — same language, faster settle.</p>
+      </div>
+    </div>
+    <div
+      id="exp-about"
+      class="cie-expand-panel cie-expand--snap"
+      data-cie-expand-panel="exp-about"
+      hidden
+    >
+      <div class="cie-expand-panel__bar">
+        <button type="button" class="cie-pbtn cie-expand-close" data-cie-expand-close aria-label="Close">×</button>
+      </div>
+      <div class="cie-expand-panel__in">
+        <p class="mono" style="color:var(--cie-paper-mute);margin-bottom:var(--cie-s-12)">03 · About</p>
+        <h3 style="font-size:clamp(32px,6vw,56px);font-weight:300;font-variation-settings:'wght' 300;letter-spacing:-0.04em;line-height:0.95">Creativity is everywhere.</h3>
+      </div>
+    </div>
+    <div
+      id="exp-contact"
+      class="cie-expand-panel cie-expand-panel--ink cie-expand--snap"
+      data-cie-expand-panel="exp-contact"
+      hidden
+    >
+      <div class="cie-expand-panel__bar">
+        <button type="button" class="cie-pbtn cie-expand-close" data-cie-expand-close aria-label="Close">×</button>
+      </div>
+      <div class="cie-expand-panel__in">
+        <p class="mono" style="color:var(--cie-ink-mute);margin-bottom:var(--cie-s-12)">04 · Contact</p>
+        <h3 style="font-size:clamp(32px,6vw,56px);font-weight:300;font-variation-settings:'wght' 300;letter-spacing:-0.04em;line-height:0.95;margin-bottom:var(--cie-s-16)">Say hello</h3>
+        <p style="color:var(--cie-ink-mute)">hello@creativityiseverywhere.com</p>
+      </div>
+    </div>
+
+    <!-- ── Sheet / modal ─────────────────────────────────── -->
+    <section class="pattern" id="sheet">
+      <h2>Sheet · modal</h2>
+      <p class="pattern__hint">
+        <code>data-cie-sheet-open</code> + <code>.cie-sheet</code> · 300ms expo.
+        <code>.cie-sheet--center</code> uses subtle <code>--cie-ease-snap</code> overshoot.
+        Escape / backdrop / close button. Honour reduced-motion.
+      </p>
+      <div class="play" data-cie-reveal="rise">
+        <button type="button" class="cie-chip cie-tap" data-cie-sheet-open="demo-sheet">Open sheet</button>
+        <button type="button" class="cie-chip cie-tap" data-cie-sheet-open="demo-modal">Open modal</button>
+        <a class="cie-focus cie-uline" href="#expand" tabindex="0">Focus ring sample</a>
+      </div>
+    </section>
+
+    <div
+      id="demo-sheet"
+      class="cie-sheet"
+      data-cie-sheet
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+      tabindex="-1"
+    >
+      <div class="cie-sheet__head">
+        <h3 class="cie-sheet__title">Bottom sheet</h3>
+        <button type="button" class="cie-pbtn cie-sheet-close" data-cie-sheet-close aria-label="Close">×</button>
+      </div>
+      <p style="color:var(--cie-paper-mute);margin-bottom:var(--cie-s-16);max-width:36ch">
+        Snappy slide-up. Same ink/paper language, no shadow.
+      </p>
+      <ul class="cie-list-stagger" style="list-style:none;display:grid;gap:0">
+        <li style="border-top:1px solid rgba(11,11,11,0.12);padding:var(--cie-s-12) 0">Item one</li>
+        <li style="border-top:1px solid rgba(11,11,11,0.12);padding:var(--cie-s-12) 0">Item two</li>
+        <li style="border-top:1px solid rgba(11,11,11,0.12);padding:var(--cie-s-12) 0;border-bottom:1px solid rgba(11,11,11,0.12)">Item three</li>
+      </ul>
+    </div>
+    <div
+      id="demo-modal"
+      class="cie-sheet cie-sheet--center"
+      data-cie-sheet
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+      tabindex="-1"
+    >
+      <div class="cie-sheet__head">
+        <h3 class="cie-sheet__title">Centered modal</h3>
+        <button type="button" class="cie-pbtn cie-sheet-close" data-cie-sheet-close aria-label="Close">×</button>
+      </div>
+      <p style="color:var(--cie-paper-mute);max-width:36ch">
+        Scale + fade with a hair of overshoot. Refined, not gimmicky.
+      </p>
+    </div>
 
     <p class="scroll-pad" aria-hidden="true">↓ scroll to reveal ↓</p>
 

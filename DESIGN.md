@@ -46,26 +46,33 @@ pill only for round panel buttons.
 
 ## Motion language
 
+Snappy 「にゅるっと but fast」 — expands land in **280–420ms**, not 700ms+.
+
 | Name | Value | Use |
 |---|---|---|
-| `--cie-ease-expo` | `cubic-bezier(0.76, 0, 0.18, 1)` | Decisive settle / cell wave |
+| `--cie-ease-expo` | `cubic-bezier(0.76, 0, 0.18, 1)` | Decisive settle / expand |
 | `--cie-ease-out` | `cubic-bezier(0.16, 1, 0.3, 1)` | Rise, soft land |
-| `--cie-t-snap` | 160ms | Weight tick, press |
-| `--cie-t-fast` | 240ms | Arrow nudge |
-| `--cie-t-cell` | 520ms | Block colour change |
-| `--cie-t-move` | 720ms | Signature block→page |
-| `--cie-t-stagger` | 38ms | Per-item delay |
+| `--cie-ease-snap` | `cubic-bezier(0.34, 1.22, 0.64, 1)` | Subtle overshoot (optional) |
+| `--cie-t-snap` | 120ms | Weight tick, press |
+| `--cie-t-fast` | 180ms | Arrow nudge |
+| `--cie-t-cell` | 320ms | Block colour change |
+| `--cie-t-move` | 360ms | Signature block→page expand |
+| `--cie-t-rise` | 400ms | Reveal after open |
+| `--cie-t-sheet` | 300ms | Modal / sheet |
+| `--cie-t-stagger` | 24ms | Per-item delay |
 
 Site behaviours to echo:
 
-1. **Weight breath** — hover/focus bumps `font-variation-settings: 'wght' 300→640`.
-2. **Rise** — `translateY(22px)` → 0 over 720ms ease-out, staggered.
-3. **Press** — `translateX(3px)` on active/hover for nav labels.
-4. **Arrow** — `→` / `↗` slides 3–5px.
-5. **Away cell** — opacity 0 + scale 0.8 on expo.
-6. **Tap** — scale to `--cie-press-scale` (0.97) on `:active`.
-7. **Lift** — `translateY(-2px)` on hover for cards.
-8. **Invert** — paper↔ink swap on `--cie-t-cell` expo.
+1. **Expand / morph** — cell → panel FLIP on `--cie-t-move` expo (`data-cie-expand`).
+2. **Weight breath** — hover/focus bumps `font-variation-settings: 'wght' 300→640`.
+3. **Rise** — `translateY(22px)` → 0 over `--cie-t-rise` ease-out, staggered.
+4. **Press** — `translateX(3px)` on active/hover for nav labels.
+5. **Arrow** — `→` / `↗` slides 3–5px.
+6. **Away cell** — opacity 0 + scale 0.8 on expo.
+7. **Tap** — scale to `--cie-press-scale` (0.97) on `:active`.
+8. **Lift** — `translateY(-2px)` on hover for cards.
+9. **Invert** — paper↔ink swap on `--cie-t-cell` expo.
+10. **Sheet** — bottom sheet / center modal on `--cie-t-sheet`.
 
 **Loader (package addition):** site has none. `.cie-loader` is a paper block that
 pulses scale/radius on `--cie-t-cell` / expo, with an ink tick rotating 90° —
@@ -130,8 +137,8 @@ interaction.js (defer)
 - `scrollbar.css` — thin scrollbar  
 - `motion.css` — loader + utilities  
 - `scroll.css` — reveal + parallax CSS  
-- `interactions.css` — tap / lift / invert / cycle / sound cues  
-- `interaction.js` — observers + audio  
-- `demo.html` — visual checklist  
+- `interactions.css` — tap / lift / invert / cycle / expand / sheet / sound cues  
+- `interaction.js` — observers + expand/morph + sheet + audio  
+- `demo.html` — visual checklist (`#expand`, `#sheet`)  
 
 License: proprietary (see `LICENSE`). Internal use only.

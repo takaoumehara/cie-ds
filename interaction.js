@@ -1,6 +1,6 @@
 /*!
  * cie-ds interaction.js — vanilla, dependency-free
- * Scroll reveal · parallax · click-cycle · per-section audio
+ * Scroll reveal · parallax · click-cycle · expand/morph · sheet · per-section audio
  *
  * Include after CSS:
  *   <script src="interaction.js" defer></script>
@@ -309,9 +309,267 @@
     });
   }
 
+
+  /* ── Click-to-expand / morph (cell → panel) ─────────────── */
+  function msToken(name, fallback) {
+    if (REDUCE) return 0;
+    try {
+      const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      const n = parseFloat(raw);
+      if (!raw) return fallback;
+      if (raw.endsWith('s') && !raw.endsWith('ms')) return Math.round(n * 1000);
+      return Math.round(n) || fallback;
+    } catch (_) {
+      return fallback;
+    }
+  }
+
+  function onTransitionEnd(el, prop, fn) {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      el.removeEventListener('transitionend', h);
+      fn();
+    };
+    const h = (e) => {
+      if (e.target === el && e.propertyName === prop) finish();
+    };
+    el.addEventListener('transitionend', h);
+    const budget = msToken('--cie-t-move', 360) + 120;
+    setTimeout(finish, REDUCE ? 20 : budget);
+  }
+
+  function ensureExpandBackdrop() {
+    let bd = document.querySelector('.cie-expand-backdrop');
+    if (!bd) {
+      bd = document.createElement('div');
+      bd.className = 'cie-expand-backdrop';
+      bd.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(bd);
+    }
+    return bd;
+  }
+
+  function fitRect(el, rect, radius) {
+    Object.assign(el.style, {
+      top: `${rect.top}px`,
+      left: `${rect.left}px`,
+      width: `${rect.width}px`,
+      height: `${rect.height}px`,
+      borderRadius: radius || 'var(--cie-r)',
+    });
+  }
+
+  function fitFrame(el) {
+    Object.assign(el.style, {
+      top: 'var(--cie-edge)',
+      left: 'var(--cie-edge)',
+      width: 'calc(100% - 2 * var(--cie-edge))',
+      height: 'calc(100% - 2 * var(--cie-edge))',
+      borderRadius: 'var(--cie-r-page)',
+    });
+  }
+
+  function initExpand(root) {
+    const boards = root.querySelectorAll('[data-cie-expand-board], .cie-expand-board');
+    if (!boards.length) return;
+
+    let open = null; // { panel, cell, board, busy }
+    const backdrop = ensureExpandBackdrop();
+
+    function close() {
+      if (!open || open.busy) return;
+      const { panel, cell, board } = open;
+      open.busy = true;
+      panel.classList.remove('is-open');
+      panel.classList.add('is-moving');
+      backdrop.classList.remove('is-on');
+      const rect = cell.getBoundingClientRect();
+      fitRect(panel, rect);
+      const finish = () => {
+        panel.classList.remove('is-shown', 'is-moving', 'is-open', 'is-fading');
+        panel.style.cssText = '';
+        panel.hidden = true;
+        board.classList.remove('is-expanded');
+        cell.classList.remove('is-source');
+        cell.setAttribute('aria-expanded', 'false');
+        document.documentElement.classList.remove('cie-has-expand');
+        open = null;
+        cell.focus({ preventScroll: true });
+      };
+      if (REDUCE) {
+        finish();
+        return;
+      }
+      onTransitionEnd(panel, 'height', finish);
+    }
+
+    function openPanel(board, cell, panel) {
+      if (open && open.busy) return;
+      if (open && open.panel === panel) return;
+      if (open) {
+        // close current instantly then open
+        const prev = open;
+        prev.panel.classList.remove('is-shown', 'is-moving', 'is-open');
+        prev.panel.style.cssText = '';
+        prev.panel.hidden = true;
+        prev.board.classList.remove('is-expanded');
+        prev.cell.classList.remove('is-source');
+        prev.cell.setAttribute('aria-expanded', 'false');
+        open = null;
+      }
+
+      const record = { panel, cell, board, busy: true };
+      open = record;
+      board.classList.add('is-expanded');
+      cell.classList.add('is-source');
+      cell.setAttribute('aria-expanded', 'true');
+      document.documentElement.classList.add('cie-has-expand');
+      panel.hidden = false;
+      panel.classList.add('is-shown');
+      backdrop.classList.add('is-on');
+
+      const settle = () => {
+        panel.classList.remove('is-moving');
+        panel.classList.add('is-open');
+        panel.style.borderRadius = 'var(--cie-r-page)';
+        record.busy = false;
+        const closeBtn = panel.querySelector('[data-cie-expand-close], .cie-expand-close');
+        if (closeBtn) closeBtn.focus({ preventScroll: true });
+      };
+
+      if (REDUCE) {
+        fitFrame(panel);
+        settle();
+        return;
+      }
+
+      const rect = cell.getBoundingClientRect();
+      fitRect(panel, rect);
+      panel.getBoundingClientRect();
+      requestAnimationFrame(() => {
+        panel.classList.add('is-moving');
+        fitFrame(panel);
+        onTransitionEnd(panel, 'height', settle);
+      });
+    }
+
+    boards.forEach((board) => {
+      board.querySelectorAll('[data-cie-expand]').forEach((cell) => {
+        const id = cell.getAttribute('data-cie-expand');
+        if (!id) return;
+        const panel =
+          document.getElementById(id) ||
+          root.querySelector(`[data-cie-expand-panel="${id}"]`);
+        if (!panel) return;
+        panel.setAttribute('role', panel.getAttribute('role') || 'dialog');
+        panel.setAttribute('aria-modal', 'true');
+        if (!cell.hasAttribute('aria-expanded')) cell.setAttribute('aria-expanded', 'false');
+        cell.setAttribute('aria-controls', id);
+
+        cell.addEventListener('click', () => openPanel(board, cell, panel));
+      });
+
+      // close buttons inside panels owned by this board
+      document.querySelectorAll('[data-cie-expand-panel], .cie-expand-panel').forEach((panel) => {
+        panel.querySelectorAll('[data-cie-expand-close], .cie-expand-close').forEach((btn) => {
+          if (btn.dataset.cieExpandBound) return;
+          btn.dataset.cieExpandBound = '1';
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            close();
+          });
+        });
+      });
+    });
+
+    backdrop.addEventListener('click', () => close());
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && open) {
+        e.preventDefault();
+        close();
+      }
+    });
+  }
+
+  /* ── Sheet / modal ───────────────────────────────────────── */
+  function ensureSheetBackdrop() {
+    let bd = document.querySelector('.cie-sheet-backdrop');
+    if (!bd) {
+      bd = document.createElement('div');
+      bd.className = 'cie-sheet-backdrop';
+      bd.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(bd);
+    }
+    return bd;
+  }
+
+  function initSheet(root) {
+    const sheets = root.querySelectorAll('[data-cie-sheet], .cie-sheet');
+    if (!sheets.length && !root.querySelector('[data-cie-sheet-open]')) return;
+
+    const backdrop = ensureSheetBackdrop();
+    let openSheet = null;
+
+    function closeSheet() {
+      if (!openSheet) return;
+      const sheet = openSheet;
+      openSheet = null;
+      sheet.classList.remove('is-open');
+      sheet.setAttribute('aria-hidden', 'true');
+      backdrop.classList.remove('is-on');
+      document.documentElement.classList.remove('cie-has-sheet');
+      const opener = document.querySelector(`[data-cie-sheet-open="${sheet.id}"]`);
+      if (opener) opener.focus({ preventScroll: true });
+    }
+
+    function openSheetEl(sheet) {
+      if (openSheet && openSheet !== sheet) closeSheet();
+      openSheet = sheet;
+      sheet.classList.add('is-open');
+      sheet.setAttribute('aria-hidden', 'false');
+      backdrop.classList.add('is-on');
+      document.documentElement.classList.add('cie-has-sheet');
+      const closeBtn = sheet.querySelector('[data-cie-sheet-close], .cie-sheet-close');
+      (closeBtn || sheet).focus({ preventScroll: true });
+    }
+
+    root.querySelectorAll('[data-cie-sheet-open]').forEach((btn) => {
+      const id = btn.getAttribute('data-cie-sheet-open');
+      const sheet = document.getElementById(id);
+      if (!sheet) return;
+      sheet.setAttribute('role', sheet.getAttribute('role') || 'dialog');
+      sheet.setAttribute('aria-modal', 'true');
+      sheet.setAttribute('aria-hidden', 'true');
+      if (!sheet.hasAttribute('tabindex')) sheet.setAttribute('tabindex', '-1');
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openSheetEl(sheet);
+      });
+    });
+
+    sheets.forEach((sheet) => {
+      sheet.querySelectorAll('[data-cie-sheet-close], .cie-sheet-close').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          closeSheet();
+        });
+      });
+    });
+
+    backdrop.addEventListener('click', () => closeSheet());
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && openSheet) {
+        e.preventDefault();
+        closeSheet();
+      }
+    });
+  }
+
   /* ── Public API ──────────────────────────────────────────── */
   const Cie = {
-    version: '0.2.0',
+    version: '0.3.0',
     reducedMotion: REDUCE,
     play: playTone,
     unlock: unlockAudio,
@@ -320,6 +578,8 @@
       initReveal(root);
       initParallax(root);
       initCycle(root);
+      initExpand(root);
+      initSheet(root);
       initSound(root);
       initFlash(root);
       return Cie;

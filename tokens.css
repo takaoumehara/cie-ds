@@ -76,20 +76,23 @@
   --cie-shadow: none;
   --shadow: var(--cie-shadow);
 
-  /* Motion — site language */
-  --cie-t-snap: 160ms;   /* weight tick / instant feedback */
-  --cie-t-fast: 240ms;   /* arrow nudge, ghost fade */
-  --cie-t-cell: 520ms;   /* block colour / settle */
-  --cie-t-move: 720ms;   /* signature: block → page */
-  --cie-t-rise: 720ms;   /* reveal after open */
-  --cie-t-stagger: 38ms; /* per-item delay in a rise wave */
+  /* Motion — snappy にゅるっと (280–420ms expands, not 700ms+) */
+  --cie-t-snap: 120ms;   /* weight tick / instant feedback */
+  --cie-t-fast: 180ms;   /* arrow nudge, ghost fade */
+  --cie-t-cell: 320ms;   /* block colour / settle */
+  --cie-t-move: 360ms;   /* signature: block → page (snappy expand) */
+  --cie-t-rise: 400ms;   /* reveal after open */
+  --cie-t-sheet: 300ms;  /* modal / sheet open·close */
+  --cie-t-stagger: 24ms; /* per-item delay in a rise wave */
   --t-cell: var(--cie-t-cell);
   --t-move: var(--cie-t-move);
   --cie-ease-expo: cubic-bezier(0.76, 0, 0.18, 1); /* decisive settle */
   --cie-ease-out:  cubic-bezier(0.16, 1, 0.3, 1);  /* soft land / rise */
+  --cie-ease-snap: cubic-bezier(0.34, 1.22, 0.64, 1); /* subtle overshoot */
   --cie-ease-linear: linear;
   --ease-expo: var(--cie-ease-expo);
   --ease-out:  var(--cie-ease-out);
+  --ease-snap: var(--cie-ease-snap);
 
   /* Scroll / parallax / micro-interaction */
   --cie-reveal-y: 22px;
