@@ -253,10 +253,13 @@
     <h3>Live values</h3>
     <p style="margin-bottom: var(--cie-s-12);">
       Theme progress: <code id="progress-val">0.000</code><br>
+      Background: <code id="bg-hex">#0b0b0b</code><br>
       Parallax active: <code id="px-active">Yes</code>
     </p>
     <p style="opacity: 0.7; margin: 0; font-size: 11px;">
-      Scroll to see theme morph. Layers move at different speeds (data-cie-parallax).
+      Scroll to see smooth ink → grey → paper morph. Layers move at different speeds.
+      <br><br>
+      <strong>v0.4.1 fix</strong>: Colors now computed in JS with smooth continuous lerp. No longer relying on broken CSS calc().
     </p>
   </aside>
   
@@ -265,17 +268,15 @@
     // Live progress indicator
     const container = document.querySelector('[data-cie-theme-morph]');
     const progressVal = document.getElementById('progress-val');
+    const bgHex = document.getElementById('bg-hex');
     const pxActive = document.getElementById('px-active');
     
-    if (container && progressVal) {
-      const observer = new MutationObserver(() => {
-        const val = container.style.getPropertyValue('--cie-theme-progress');
-        if (val) progressVal.textContent = val;
-      });
-      
+    if (container && progressVal && bgHex) {
       setInterval(() => {
         const val = getComputedStyle(container).getPropertyValue('--cie-theme-progress').trim();
+        const bg = getComputedStyle(container).getPropertyValue('--cie-theme-bg').trim();
         if (val) progressVal.textContent = val;
+        if (bg) bgHex.textContent = bg;
       }, 100);
     }
     

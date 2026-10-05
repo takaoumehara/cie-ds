@@ -827,6 +827,10 @@
             <span class="tag">confirm</span>
             <span>Confirm</span>
           </button>
+          <button type="button" class="cie-tap" data-cie-sfx="toggle" style="background: var(--cie-ink); color: var(--cie-paper); box-shadow: inset 0 0 0 1px var(--cie-stroke);">
+            <span class="tag" style="color: var(--cie-ink-mute);">Test Beep</span>
+            <span>Play Test</span>
+          </button>
           <button type="button" class="cie-tap cie-flash" data-cie-cycle="One|Two|Three" data-cie-sfx="cycle">
             <span class="tag">cycle</span>
             <span class="cie-cycle-label">One</span>
@@ -834,8 +838,11 @@
           <button type="button" class="cie-pbtn cie-tap" data-cie-sfx="click" aria-label="Next" style="justify-self:start">→</button>
         </div>
         <p style="margin-top:var(--cie-s-20);color:var(--cie-ink-mute);font-size:13px;max-width:48ch">
-          Toggle Sound on, choose a preset, then hover and click the controls above.
+          <strong>Toggle Sound ON first</strong> (you'll hear an immediate test beep), then choose a preset and click the controls above.
+          The "Play Test" button (dark) lets you verify sound without changing state. 
           Outside this panel, the rest of the page stays silent. Presets: soft-tick, paper-snap (default), glass-pip, low-thud, bright-confirm.
+          <br><br>
+          <strong>v0.4.1 fix</strong>: Sound now plays clearly (~0.4 gain), works with reduced-motion, robust unlock with retry.
         </p>
       </div>
     </section>
