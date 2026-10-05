@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Parallax + Theme Morph — cie-ds</title>
-<meta name="description" content="Scroll-linked theme morph with subtle parallax layers. Ink ↔ paper transition.">
+<title>Parallax Journey — cie-ds</title>
+<meta name="description" content="Extended scroll-linked theme morph: ink → grey → white → grey → ink. UI-rich journey.">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,15 +14,17 @@
 <link rel="stylesheet" href="scrollbar.css">
 <link rel="stylesheet" href="motion.css">
 <link rel="stylesheet" href="scroll.css">
+<link rel="stylesheet" href="interactions.css">
 <link rel="stylesheet" href="theme-morph.css">
 <link rel="stylesheet" href="organic.css">
+<link rel="stylesheet" href="text-load.css">
 <style>
   body {
     margin: 0;
     overflow-x: hidden;
   }
   
-  /* Fixed header with back link */
+  /* Fixed header */
   .px-header {
     position: fixed;
     top: 0;
@@ -33,255 +35,446 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--cie-ink);
-    border-bottom: 1px solid var(--cie-stroke);
+    background: var(--cie-theme-bg);
+    border-bottom: 1px solid var(--cie-theme-mute);
+    transition: none;
   }
   .px-header a {
     font-family: var(--cie-mono);
     font-size: var(--cie-text-mono);
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--cie-paper);
+    color: var(--cie-theme-fg);
   }
   
-  /* Theme morph scroll container */
+  /* Main scroll container - MUCH LONGER */
   .px-scroll-container {
-    min-height: 400vh;
+    min-height: 1100vh;
+    padding-top: 60px;
   }
   
-  /* Stage sections */
-  .px-stage {
-    position: relative;
-    padding: var(--cie-s-64);
+  /* Journey sections */
+  .px-section {
+    min-height: 100vh;
+    padding: var(--cie-s-64) var(--cie-edge);
     display: grid;
     place-items: center;
-    text-align: center;
-    isolation: isolate;
   }
-  .px-stage__content {
-    position: relative;
-    z-index: 2;
-    max-width: 720px;
+  
+  .px-content {
+    max-width: 840px;
+    width: 100%;
   }
-  .px-stage h1 {
-    font-size: clamp(48px, 10vw, 112px);
+  
+  /* Typography variants */
+  .px-title {
+    font-size: clamp(56px, 10vw, 128px);
     font-weight: 300;
     font-variation-settings: 'wght' 300;
     letter-spacing: -0.045em;
-    line-height: 0.9;
-    margin-bottom: var(--cie-s-16);
+    line-height: 0.88;
+    margin-bottom: var(--cie-s-24);
   }
-  .px-stage p {
+  
+  .px-subtitle {
     font-family: var(--cie-mono);
     font-size: var(--cie-text-mono);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     opacity: 0.7;
+    margin-bottom: var(--cie-s-40);
+  }
+  
+  .px-body {
+    font-size: var(--cie-text-body);
+    line-height: 1.5;
+    max-width: 60ch;
+    opacity: 0.85;
+  }
+  
+  /* Component grid */
+  .px-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--cie-s-16);
+    margin-top: var(--cie-s-40);
+  }
+  
+  .px-card {
+    border-radius: var(--cie-r);
+    padding: var(--cie-s-24);
+    background: var(--cie-theme-mute);
+    color: var(--cie-theme-fg);
+    opacity: 0.9;
+    display: grid;
+    gap: var(--cie-s-12);
+    align-content: start;
+    transition: opacity 200ms ease-out;
+  }
+  .px-card:hover {
+    opacity: 1;
+  }
+  
+  .px-card h3 {
+    font-size: var(--cie-text-cell);
+    font-weight: 300;
+    letter-spacing: -0.03em;
+  }
+  
+  /* Button row */
+  .px-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--cie-s-12);
+    margin-top: var(--cie-s-28);
+  }
+  
+  .px-btn {
+    padding: 0.7em 1.4em;
+    border-radius: var(--cie-r-pill);
+    background: var(--cie-theme-fg);
+    color: var(--cie-theme-bg);
+    font-family: var(--cie-mono);
+    font-size: var(--cie-text-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition:
+      transform var(--cie-t-snap) var(--cie-ease-out),
+      opacity 200ms linear;
+  }
+  .px-btn:hover {
+    opacity: 0.9;
+  }
+  .px-btn:active {
+    transform: scale(0.96);
+  }
+  
+  /* Progress indicator */
+  .px-progress {
+    position: fixed;
+    bottom: var(--cie-s-24);
+    right: var(--cie-s-24);
+    background: var(--cie-theme-fg);
+    color: var(--cie-theme-bg);
+    padding: var(--cie-s-16) var(--cie-s-20);
+    border-radius: var(--cie-r);
+    font-size: 11px;
+    font-family: var(--cie-mono);
+    z-index: 50;
+    opacity: 0.8;
+    line-height: 1.6;
+  }
+  .px-progress code {
+    font-weight: 700;
   }
   
   /* Floating parallax elements */
   .px-float {
     position: absolute;
     border-radius: var(--cie-r);
-    opacity: 0.15;
+    opacity: 0.12;
     pointer-events: none;
-  }
-  .px-float--1 {
-    top: 15%;
-    left: 8%;
-    width: 120px;
-    height: 120px;
-    background: var(--cie-theme-fg);
-  }
-  .px-float--2 {
-    top: 65%;
-    right: 12%;
-    width: 80px;
-    height: 80px;
-    background: var(--cie-theme-fg);
-  }
-  .px-float--3 {
-    bottom: 20%;
-    left: 15%;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: var(--cie-theme-fg);
-  }
-  .px-float--4 {
-    top: 40%;
-    right: 18%;
-    width: 40px;
-    height: 40px;
-    background: var(--cie-theme-fg);
-  }
-  
-  /* Ambient organic shapes */
-  .px-ambient {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    overflow: hidden;
-  }
-  .px-blob {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-  }
-  .px-blob--1 { top: 10%; left: 5%; }
-  .px-blob--2 { top: 50%; right: 8%; width: 280px; height: 280px; }
-  .px-blob--3 { bottom: 15%; left: 20%; width: 160px; height: 160px; }
-  
-  /* Info card */
-  .px-info {
-    position: fixed;
-    bottom: var(--cie-s-24);
-    right: var(--cie-s-24);
-    background: var(--cie-paper);
-    color: var(--cie-ink);
-    padding: var(--cie-s-20);
-    border-radius: var(--cie-r);
-    max-width: 280px;
-    font-size: 13px;
-    line-height: 1.5;
-    box-shadow: 0 4px 16px rgba(11, 11, 11, 0.16);
-    z-index: 50;
-  }
-  .px-info h3 {
-    font-family: var(--cie-mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--cie-paper-mute);
-    margin-bottom: var(--cie-s-8);
-  }
-  .px-info code {
-    font-family: var(--cie-mono);
-    font-size: 11px;
-    background: var(--cie-ink);
-    color: var(--cie-paper);
-    padding: 2px 6px;
-    border-radius: 4px;
   }
   
   @media (max-width: 760px) {
-    .px-info {
+    .px-progress {
       display: none;
     }
-    .px-stage {
-      padding: var(--cie-s-40) var(--cie-s-24);
+    .px-title {
+      font-size: clamp(40px, 12vw, 72px);
     }
   }
 </style>
 </head>
 <body>
   <header class="px-header">
-    <a href="/" class="cie-uline">← Back to demo</a>
-    <span style="color: var(--cie-ink-mute);">Parallax + Theme</span>
+    <a href="/" class="cie-uline">← Back</a>
+    <span style="opacity: 0.7;">Parallax Journey</span>
   </header>
   
   <main 
     class="px-scroll-container" 
     data-cie-theme-morph
-    style="margin-top: 60px;"
   >
-    <!-- Stage 1: Ink (start) -->
-    <section class="px-stage cie-theme-stage" style="min-height: 100vh;">
-      <div class="px-ambient">
-        <div class="px-blob px-blob--1 cie-ambient-blob" style="--blob-i: 0;"></div>
-        <div class="px-blob px-blob--2 cie-ambient-blob" style="--blob-i: 1;"></div>
-        <div class="px-blob px-blob--3 cie-ambient-blob" style="--blob-i: 2;"></div>
-      </div>
-      <div class="px-float px-float--1" data-cie-parallax="0.3"></div>
-      <div class="px-float px-float--2" data-cie-parallax="0.55"></div>
-      <div class="px-float px-float--3" data-cie-parallax="0.4"></div>
-      <div class="px-float px-float--4" data-cie-parallax="0.7"></div>
-      <div class="px-stage__content">
-        <h1 class="cie-theme-text" data-cie-parallax="0.15">Shift</h1>
-        <p class="cie-theme-mute" data-cie-parallax="0.35">Scroll-linked · theme morph · subtle</p>
-      </div>
-    </section>
-    
-    <!-- Stage 2: Grey (middle) -->
-    <section class="px-stage cie-theme-stage" style="min-height: 100vh;">
-      <div class="px-ambient">
-        <div class="px-blob px-blob--1 cie-ambient-blob" style="--blob-i: 0.5;"></div>
-        <div class="px-blob px-blob--2 cie-ambient-blob" style="--blob-i: 1.5;"></div>
-      </div>
-      <div class="px-float px-float--1" data-cie-parallax="0.25" style="top: 20%; left: 10%;"></div>
-      <div class="px-float px-float--2" data-cie-parallax="0.45" style="top: 70%; right: 8%;"></div>
-      <div class="px-float px-float--3" data-cie-parallax="0.35" style="bottom: 15%; left: 12%;"></div>
-      <div class="px-stage__content">
-        <h1 class="cie-theme-text" data-cie-parallax="0.2">Between</h1>
-        <p class="cie-theme-mute" data-cie-parallax="0.4">Ink ↔ paper · contrast safe</p>
-      </div>
-    </section>
-    
-    <!-- Stage 3: Paper (end) -->
-    <section class="px-stage cie-theme-stage" style="min-height: 100vh;">
-      <div class="px-ambient">
-        <div class="px-blob px-blob--1 cie-ambient-blob" style="--blob-i: 1;"></div>
-        <div class="px-blob px-blob--3 cie-ambient-blob" style="--blob-i: 2;"></div>
-      </div>
-      <div class="px-float px-float--1" data-cie-parallax="0.35" style="top: 25%; left: 15%;"></div>
-      <div class="px-float px-float--2" data-cie-parallax="0.6" style="top: 60%; right: 10%;"></div>
-      <div class="px-float px-float--4" data-cie-parallax="0.5" style="top: 45%; right: 20%;"></div>
-      <div class="px-stage__content">
-        <h1 class="cie-theme-text" data-cie-parallax="0.18">Light</h1>
-        <p class="cie-theme-mute" data-cie-parallax="0.38">Continuous · readable · refined</p>
-      </div>
-    </section>
-    
-    <!-- Final stage: Loop back info -->
-    <section class="px-stage" style="min-height: 50vh; background: var(--cie-paper); color: var(--cie-ink);">
-      <div class="px-stage__content">
-        <h2 style="font-size: var(--cie-text-cell); font-weight: 300; margin-bottom: var(--cie-s-16);">
-          Scroll-linked theme morph
-        </h2>
-        <p style="opacity: 0.7; max-width: 48ch; margin: 0 auto;">
-          Background shifts from ink → grey → paper. Text and UI stay contrast-safe.
-          Subtle parallax layers add depth without overwhelming. Reduced-motion disables all movement.
+    <!-- Stage 1: Ink (Opening) -->
+    <section class="px-section">
+      <div class="px-content">
+        <h1 class="px-title" data-cie-text="fade-up">Shift</h1>
+        <p class="px-subtitle" data-cie-text="fade-up" style="--i: 1;">
+          Scroll-linked · Multi-stop journey
         </p>
-        <div style="margin-top: var(--cie-s-28);">
-          <a href="/" class="cie-chip cie-tap">Back to demo</a>
+        <p class="px-body" data-cie-text="fade-up" style="--i: 2;">
+          This page demonstrates a scroll-linked theme morph through five color stops: 
+          <strong>ink → grey → white → grey → ink</strong>. Each zone contains real UI components 
+          from the CIE design system. Text and controls remain readable throughout.
+        </p>
+        <div class="px-btns" data-cie-text="fade-up" style="--i: 3;">
+          <button class="px-btn cie-tap">Start Journey</button>
+          <button class="px-btn cie-tap">Learn More</button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Stage 2: Ink → Grey Transition -->
+    <section class="px-section">
+      <div class="px-content">
+        <h2 class="px-title" style="font-size: clamp(32px, 6vw, 64px);" data-cie-text="soft-wipe">
+          Foundations
+        </h2>
+        <div class="px-grid">
+          <div class="px-card cie-lift">
+            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Tokens</span>
+            <h3>Two Inks</h3>
+            <p style="font-size: 14px; opacity: 0.8;">Hierarchy via size + weight. No accent.</p>
+          </div>
+          <div class="px-card cie-lift">
+            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Motion</span>
+            <h3>Snappy Settle</h3>
+            <p style="font-size: 14px; opacity: 0.8;">280–420ms expands. Expo + out.</p>
+          </div>
+          <div class="px-card cie-lift">
+            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Type</span>
+            <h3>Outfit + DM Mono</h3>
+            <p style="font-size: 14px; opacity: 0.8;">Variable weight 300–900.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Stage 3: Mid Grey Plateau -->
+    <section class="px-section">
+      <div class="px-content">
+        <h2 class="px-title" style="font-size: clamp(40px, 8vw, 88px);" data-cie-text="letter-fade">
+          Interactions
+        </h2>
+        <p class="px-subtitle">Tap · Lift · Invert · Cycle</p>
+        <div class="px-grid">
+          <button class="px-card cie-tap cie-lift">
+            <h3>Hover</h3>
+            <p style="font-size: 14px; opacity: 0.8;">Lift 2px, subtle shadow</p>
+          </button>
+          <button class="px-card cie-tap cie-lift">
+            <h3>Press</h3>
+            <p style="font-size: 14px; opacity: 0.8;">Scale 0.97 on active</p>
+          </button>
+          <button class="px-card cie-tap cie-lift">
+            <h3>Settle</h3>
+            <p style="font-size: 14px; opacity: 0.8;">320ms expo ease</p>
+          </button>
+        </div>
+        <div class="px-btns">
+          <button class="px-btn cie-tap cie-flash" data-cie-cycle="One|Two|Three">
+            <span class="cie-cycle-label">One</span>
+          </button>
+          <button class="px-btn cie-tap cie-flash" data-cie-cycle="Draft|Review|Done">
+            <span class="cie-cycle-label">Draft</span>
+          </button>
+          <button class="px-btn cie-tap cie-flash" data-cie-cycle="EN|JA|両方">
+            <span class="cie-cycle-label">EN</span>
+          </button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Stage 4: Grey → White Transition -->
+    <section class="px-section">
+      <div class="px-content">
+        <h2 class="px-title" style="font-size: clamp(48px, 9vw, 96px);">
+          Morphing
+        </h2>
+        <p class="px-body">
+          The background shifts through smooth gradients. Text inverts automatically 
+          to maintain contrast. No hard cuts—only continuous lerp between stops.
+        </p>
+        <div style="margin-top: var(--cie-s-40); padding: var(--cie-s-28); border-radius: var(--cie-r-page); background: var(--cie-theme-mute); opacity: 0.8;">
+          <p style="font-family: var(--cie-mono); font-size: 11px; opacity: 0.7; margin-bottom: var(--cie-s-12);">
+            Current Stop
+          </p>
+          <p style="font-size: var(--cie-text-cell); font-weight: 300; letter-spacing: -0.02em;">
+            Approaching white plateau
+          </p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Stage 5: White Plateau (Middle) -->
+    <section class="px-section" style="min-height: 150vh;">
+      <div class="px-content">
+        <h2 class="px-title" data-cie-text="fade-up">Light</h2>
+        <p class="px-subtitle" data-cie-text="fade-up" style="--i: 1;">
+          Paper plateau · Maximum brightness
+        </p>
+        <p class="px-body" data-cie-text="fade-up" style="--i: 2;">
+          This is the white middle of the journey. Text is dark (ink) for maximum contrast. 
+          All UI elements remain functional and clearly visible. The aesthetic stays consistent 
+          even when the canvas is brightest.
+        </p>
+        
+        <div class="px-grid" style="margin-top: var(--cie-s-40);">
+          <div class="px-card cie-lift cie-tap">
+            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Component</span>
+            <h3 class="cie-breath">Cards</h3>
+            <p style="font-size: 14px; opacity: 0.8;">Lift on hover, tap on press</p>
+          </div>
+          <div class="px-card cie-lift cie-tap">
+            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Component</span>
+            <h3 class="cie-breath">Buttons</h3>
+            <p style="font-size: 14px; opacity: 0.8;">Snappy feedback, expo settle</p>
+          </div>
+          <div class="px-card cie-lift cie-tap">
+            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Component</span>
+            <h3 class="cie-breath">Typography</h3>
+            <p style="font-size: 14px; opacity: 0.8;">Weight breath 300→640</p>
+          </div>
+          <div class="px-card cie-lift cie-tap">
+            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Component</span>
+            <h3 class="cie-breath">Reveals</h3>
+            <p style="font-size: 14px; opacity: 0.8;">Scroll-linked rise + stagger</p>
+          </div>
+        </div>
+        
+        <div style="margin-top: var(--cie-s-64); text-align: center;">
+          <p style="font-family: var(--cie-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.6; margin-bottom: var(--cie-s-16);">
+            Continue scrolling
+          </p>
+          <div style="width: 2px; height: 40px; background: currentColor; opacity: 0.3; margin: 0 auto; animation: cie-float 2s ease-in-out infinite;"></div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Stage 6: White → Grey Transition -->
+    <section class="px-section">
+      <div class="px-content">
+        <h2 class="px-title" style="font-size: clamp(40px, 8vw, 88px);" data-cie-text="soft-wipe">
+          Patterns
+        </h2>
+        <p class="px-body">
+          Expand panels, sheets, scroll reveals, click-cycle, per-section sound. 
+          Copy what you need; leave the rest.
+        </p>
+        <div class="px-btns" style="margin-top: var(--cie-s-28);">
+          <button class="px-btn cie-tap">Expand</button>
+          <button class="px-btn cie-tap">Sheet</button>
+          <button class="px-btn cie-tap">Reveal</button>
+          <button class="px-btn cie-tap">Sound</button>
+          <button class="px-btn cie-tap">Nav</button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Stage 7: Grey Plateau (Return) -->
+    <section class="px-section">
+      <div class="px-content">
+        <h2 class="px-title" style="font-size: clamp(44px, 8vw, 92px);">
+          Reduced Motion
+        </h2>
+        <p class="px-body">
+          Under <code style="font-family: var(--cie-mono); background: var(--cie-theme-mute); padding: 2px 6px; border-radius: 4px;">prefers-reduced-motion: reduce</code>, 
+          all animations collapse to instant or fade-only. Parallax transforms disable. 
+          Main sound effects (click, confirm, cycle) still play when armed—only hover SFX gate on motion preference.
+        </p>
+        <div style="margin-top: var(--cie-s-40); padding: var(--cie-s-24); border-radius: var(--cie-r); background: var(--cie-theme-mute); opacity: 0.7;">
+          <p style="font-size: 14px; line-height: 1.6;">
+            <strong>Color morph continues</strong> even with reduced-motion. 
+            Only decorative transforms (parallax layers, organic loops) respect the preference. 
+            Core functionality and the scroll-linked background transition remain active.
+          </p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Stage 8: Grey → Ink Transition -->
+    <section class="px-section">
+      <div class="px-content">
+        <h2 class="px-title" style="font-size: clamp(36px, 7vw, 72px);" data-cie-text="letter-fade">
+          Organic Motion
+        </h2>
+        <p class="px-subtitle">Slow · Soft · Ambient</p>
+        <div class="px-grid">
+          <div class="px-card">
+            <div style="width: 60px; height: 60px; background: var(--cie-theme-fg); opacity: 0.3; border-radius: var(--cie-r);" class="cie-drift"></div>
+            <h3>Drift</h3>
+            <p style="font-size: 14px; opacity: 0.8;">Gentle float · 8s loop</p>
+          </div>
+          <div class="px-card">
+            <div style="width: 60px; height: 60px; background: var(--cie-theme-fg); opacity: 0.3; border-radius: var(--cie-r);" class="cie-organic-breath"></div>
+            <h3>Breath</h3>
+            <p style="font-size: 14px; opacity: 0.8;">Soft pulse · 6s loop</p>
+          </div>
+          <div class="px-card">
+            <div style="width: 60px; height: 60px; background: var(--cie-theme-fg); opacity: 0.3; border-radius: var(--cie-r);" class="cie-float"></div>
+            <h3>Float</h3>
+            <p style="font-size: 14px; opacity: 0.8;">Vertical drift · 10s loop</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Stage 9: Ink Plateau (Closing) -->
+    <section class="px-section" style="min-height: 120vh;">
+      <div class="px-content">
+        <h2 class="px-title">Loop</h2>
+        <p class="px-subtitle">Back to ink · Complete journey</p>
+        <p class="px-body">
+          The morph returns to where it began. Five stops traversed: 
+          ink → grey → white → grey → ink. Over <strong>1000vh</strong> of scroll, 
+          with real UI at every stage. Text stayed readable. Controls stayed functional.
+        </p>
+        <div class="px-btns" style="margin-top: var(--cie-s-40);">
+          <a href="/demo" class="px-btn cie-tap">View Demo</a>
+          <a href="/" class="px-btn cie-tap">Catalog</a>
+        </div>
+        
+        <div style="margin-top: var(--cie-s-64); padding: var(--cie-s-28); border-radius: var(--cie-r-page); background: var(--cie-theme-mute); opacity: 0.6;">
+          <p style="font-family: var(--cie-mono); font-size: 11px; opacity: 0.7; margin-bottom: var(--cie-s-12); letter-spacing: 0.06em; text-transform: uppercase;">
+            v0.4.2 Enhancement
+          </p>
+          <p style="font-size: 14px; line-height: 1.6;">
+            Multi-stop color interpolation with plateau effect. Smooth lerp between each stop. 
+            Easing applied for gradual transitions. UI-rich journey with real components at every zone.
+          </p>
         </div>
       </div>
     </section>
   </main>
   
-  <aside class="px-info">
-    <h3>Live values</h3>
-    <p style="margin-bottom: var(--cie-s-12);">
-      Theme progress: <code id="progress-val">0.000</code><br>
-      Background: <code id="bg-hex">#0b0b0b</code><br>
-      Parallax active: <code id="px-active">Yes</code>
-    </p>
-    <p style="opacity: 0.7; margin: 0; font-size: 11px;">
-      Scroll to see smooth ink → grey → paper morph. Layers move at different speeds.
-      <br><br>
-      <strong>v0.4.1 fix</strong>: Colors now computed in JS with smooth continuous lerp. No longer relying on broken CSS calc().
-    </p>
+  <aside class="px-progress">
+    Progress: <code id="progress-val">0.000</code><br>
+    BG: <code id="bg-hex">#0b0b0b</code><br>
+    Zone: <code id="zone-name">Ink (start)</code>
   </aside>
   
   <script src="interaction.js"></script>
   <script>
-    // Live progress indicator
+    // Live progress + zone indicator
     const container = document.querySelector('[data-cie-theme-morph]');
     const progressVal = document.getElementById('progress-val');
     const bgHex = document.getElementById('bg-hex');
-    const pxActive = document.getElementById('px-active');
+    const zoneName = document.getElementById('zone-name');
     
-    if (container && progressVal && bgHex) {
+    const zones = [
+      { min: 0.00, max: 0.12, name: 'Ink (start)' },
+      { min: 0.12, max: 0.25, name: 'Ink → Grey' },
+      { min: 0.25, max: 0.38, name: 'Grey plateau' },
+      { min: 0.38, max: 0.50, name: 'Grey → White' },
+      { min: 0.50, max: 0.62, name: 'White plateau' },
+      { min: 0.62, max: 0.75, name: 'White → Grey' },
+      { min: 0.75, max: 0.88, name: 'Grey plateau' },
+      { min: 0.88, max: 1.00, name: 'Grey → Ink' },
+    ];
+    
+    if (container && progressVal && bgHex && zoneName) {
       setInterval(() => {
-        const val = getComputedStyle(container).getPropertyValue('--cie-theme-progress').trim();
+        const val = parseFloat(getComputedStyle(container).getPropertyValue('--cie-theme-progress').trim()) || 0;
         const bg = getComputedStyle(container).getPropertyValue('--cie-theme-bg').trim();
-        if (val) progressVal.textContent = val;
+        
+        progressVal.textContent = val.toFixed(3);
         if (bg) bgHex.textContent = bg;
+        
+        // Find current zone
+        const zone = zones.find(z => val >= z.min && val < z.max) || zones[zones.length - 1];
+        zoneName.textContent = zone.name;
       }, 100);
-    }
-    
-    if (pxActive) {
-      pxActive.textContent = Cie.reducedMotion ? 'No (reduced-motion)' : 'Yes';
     }
   </script>
 </body>

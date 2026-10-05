@@ -817,16 +817,49 @@
     const containers = root.querySelectorAll('[data-cie-theme-morph]');
     if (!containers.length) return;
 
-    // Color interpolation: ink #0b0b0b → grey → paper #f3f2ee
-    const inkRGB = { r: 11, g: 11, b: 11 };
-    const paperRGB = { r: 243, g: 242, b: 238 };
+    // Color stops for journey: ink → grey → WHITE → grey → ink
+    // Each stop: { pos: 0-1, rgb: {r, g, b} }
+    const colorStops = [
+      { pos: 0.00, rgb: { r: 11, g: 11, b: 11 } },       // Ink (start)
+      { pos: 0.25, rgb: { r: 96, g: 96, b: 94 } },       // Mid grey
+      { pos: 0.50, rgb: { r: 243, g: 242, b: 238 } },    // Paper/white (middle)
+      { pos: 0.75, rgb: { r: 96, g: 96, b: 94 } },       // Mid grey again
+      { pos: 1.00, rgb: { r: 11, g: 11, b: 11 } },       // Ink (end/loop)
+    ];
     
-    function lerpColor(progress) {
-      // 0 → 1: ink → paper via linear interpolation
-      const r = Math.round(inkRGB.r + (paperRGB.r - inkRGB.r) * progress);
-      const g = Math.round(inkRGB.g + (paperRGB.g - inkRGB.g) * progress);
-      const b = Math.round(inkRGB.b + (paperRGB.b - inkRGB.b) * progress);
-      return { r, g, b };
+    function lerpRGB(rgb1, rgb2, t) {
+      // Linear interpolate between two RGB colors
+      return {
+        r: Math.round(rgb1.r + (rgb2.r - rgb1.r) * t),
+        g: Math.round(rgb1.g + (rgb2.g - rgb1.g) * t),
+        b: Math.round(rgb1.b + (rgb2.b - rgb1.b) * t)
+      };
+    }
+    
+    function getColorAtProgress(progress) {
+      // Find which two stops we're between
+      let stop1 = colorStops[0];
+      let stop2 = colorStops[colorStops.length - 1];
+      
+      for (let i = 0; i < colorStops.length - 1; i++) {
+        if (progress >= colorStops[i].pos && progress <= colorStops[i + 1].pos) {
+          stop1 = colorStops[i];
+          stop2 = colorStops[i + 1];
+          break;
+        }
+      }
+      
+      // Calculate local progress between these two stops
+      const range = stop2.pos - stop1.pos;
+      const localProgress = range > 0 ? (progress - stop1.pos) / range : 0;
+      
+      // Apply easing for plateau effect (spend more time at stops, smooth transitions)
+      // Ease in-out cubic for smoother color transitions
+      const eased = localProgress < 0.5
+        ? 4 * localProgress * localProgress * localProgress
+        : 1 - Math.pow(-2 * localProgress + 2, 3) / 2;
+      
+      return lerpRGB(stop1.rgb, stop2.rgb, eased);
     }
     
     function rgbToHex(rgb) {
@@ -837,9 +870,11 @@
     }
     
     function getContrast(rgb) {
-      // Simple luminance check: if bg is dark, return light; if light, return dark
+      // Luminance check: if bg is dark, return light; if light, return dark
       const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
-      return luminance > 0.5 ? inkRGB : paperRGB;
+      return luminance > 0.5 
+        ? { r: 11, g: 11, b: 11 }      // Ink for light backgrounds
+        : { r: 243, g: 242, b: 238 };  // Paper for dark backgrounds
     }
 
     let ticking = false;
@@ -862,13 +897,13 @@
           progress = Math.max(0, Math.min(1, (vh - top) / vh));
         }
         
-        // Compute colors directly
-        const bgRGB = lerpColor(progress);
+        // Get color at current progress through stops
+        const bgRGB = getColorAtProgress(progress);
         const fgRGB = getContrast(bgRGB);
         const bgHex = rgbToHex(bgRGB);
         const fgHex = rgbToHex(fgRGB);
         
-        // Mute color (mid-tone between bg and fg)
+        // Mute color (blend bg and fg)
         const muteRGB = {
           r: Math.round((bgRGB.r + fgRGB.r) / 2),
           g: Math.round((bgRGB.g + fgRGB.g) / 2),
@@ -905,9 +940,70 @@
     global.addEventListener('resize', onScroll, { passive: true });
   }
 
+  /* ── Animation Replay ────────────────────────────────────────── */
+  function initReplay(root) {
+    root.querySelectorAll('[data-cie-replay]').forEach((btn) => {
+      const targetId = btn.getAttribute('data-cie-replay');
+      const target = document.getElementById(targetId) || document.querySelector(`[data-cie-replay-target="${targetId}"]`);
+      if (!target) return;
+
+      btn.addEventListener('click', () => {
+        // Remove all reveal classes and force reflow
+        const reveals = target.querySelectorAll('[data-cie-reveal], [data-cie-text]');
+        reveals.forEach(el => {
+          el.classList.remove('is-in', 'is-loaded', 'is-loading');
+        });
+        
+        // Force reflow
+        target.offsetHeight;
+        
+        // Re-trigger animations
+        requestAnimationFrame(() => {
+          reveals.forEach((el, i) => {
+            requestAnimationFrame(() => {
+              if (el.hasAttribute('data-cie-text')) {
+                el.classList.add('is-loaded');
+              } else {
+                el.classList.add('is-in');
+              }
+            });
+          });
+        });
+      });
+    });
+  }
+
+  /* ── Viewport-triggered animations ───────────────────────────── */
+  function initViewportTrigger(root) {
+    const sections = root.querySelectorAll('[data-cie-viewport-trigger]');
+    if (!sections.length) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const section = entry.target;
+            const reveals = section.querySelectorAll('[data-cie-reveal], [data-cie-text]');
+            reveals.forEach((el) => {
+              if (el.hasAttribute('data-cie-text')) {
+                el.classList.add('is-loaded');
+              } else {
+                el.classList.add('is-in');
+              }
+            });
+            // Don't unobserve - allow re-triggering if scrolled away and back
+          }
+        });
+      },
+      { root: null, rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
+    );
+
+    sections.forEach((section) => io.observe(section));
+  }
+
   /* ── Public API ──────────────────────────────────────────── */
   const Cie = {
-    version: '0.4.1',
+    version: '0.4.2',
     reducedMotion: REDUCE,
     play: playTone,
     unlock: unlockAudio,
@@ -934,6 +1030,8 @@
       initNav(root);
       initTextLoad(root);
       initThemeMorph(root);
+      initReplay(root);
+      initViewportTrigger(root);
       return Cie;
     },
   };

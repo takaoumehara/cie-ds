@@ -536,6 +536,104 @@
       </div>
     </section>
 
+    <!-- ── Animation Gallery (with Replay) ──────────────────── -->
+    <section class="pattern" id="animations">
+      <h2>Animation Gallery · Replay</h2>
+      <p class="pattern__hint">
+        Interactive demos with replay controls. Each sample can be triggered again.
+        IntersectionObserver auto-plays when scrolled into view. Snappy CIE aesthetic—no flashy AI scramble.
+      </p>
+      
+      <!-- Expand morph demo -->
+      <div style="margin-top: var(--cie-s-28);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--cie-s-16);">
+          <p class="mono" style="color: var(--cie-ink-mute);">Expand Morph (cell → panel)</p>
+          <button class="cie-chip cie-tap" data-cie-replay="expand-demo">
+            ↻ Replay
+          </button>
+        </div>
+        <div 
+          id="expand-demo" 
+          data-cie-replay-target="expand-demo"
+          data-cie-viewport-trigger
+          class="cie-expand-board cie-expand--snap"
+          data-cie-expand-board
+          style="grid-template-columns: repeat(2, 1fr);"
+        >
+          <button type="button" class="cie-expand-cell" data-cie-expand="anim-one" data-cie-reveal="rise">
+            <span class="mono">01</span>
+            <span style="font-size:var(--cie-text-cell);font-weight:300;">Quick</span>
+          </button>
+          <button type="button" class="cie-expand-cell cie-expand-cell--ink" data-cie-expand="anim-two" data-cie-reveal="rise">
+            <span class="mono">02</span>
+            <span style="font-size:var(--cie-text-cell);font-weight:300;">Smooth</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Stagger list demo -->
+      <div style="margin-top: var(--cie-s-40);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--cie-s-16);">
+          <p class="mono" style="color: var(--cie-ink-mute);">List Stagger (rise + delay)</p>
+          <button class="cie-chip cie-tap" data-cie-replay="stagger-demo">
+            ↻ Replay
+          </button>
+        </div>
+        <div id="stagger-demo" data-cie-replay-target="stagger-demo" data-cie-viewport-trigger>
+          <ul class="row-list cie-reveal-stagger">
+            <li data-cie-reveal="slide"><span>First item</span><span class="mono">0ms</span></li>
+            <li data-cie-reveal="slide"><span>Second item</span><span class="mono">24ms</span></li>
+            <li data-cie-reveal="slide"><span>Third item</span><span class="mono">48ms</span></li>
+            <li data-cie-reveal="slide"><span>Fourth item</span><span class="mono">72ms</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card rise demo -->
+      <div style="margin-top: var(--cie-s-40);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--cie-s-16);">
+          <p class="mono" style="color: var(--cie-ink-mute);">Card Rise (pop + lift)</p>
+          <button class="cie-chip cie-tap" data-cie-replay="card-demo">
+            ↻ Replay
+          </button>
+        </div>
+        <div id="card-demo" data-cie-replay-target="card-demo" data-cie-viewport-trigger class="grid-demo cie-reveal-stagger">
+          <div class="card cie-lift cie-tap" data-cie-reveal="pop">
+            <p class="mono">Pop</p>
+            <h3 class="cie-breath">Scale 0.8 → 1</h3>
+          </div>
+          <div class="card card--ink cie-lift cie-tap" data-cie-reveal="pop">
+            <p class="mono">Staggered</p>
+            <h3 class="cie-breath">24ms delay</h3>
+          </div>
+          <div class="card cie-lift cie-tap" data-cie-reveal="pop">
+            <p class="mono">Lift</p>
+            <h3 class="cie-breath">-2px on hover</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text loading replays -->
+      <div style="margin-top: var(--cie-s-40);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--cie-s-16);">
+          <p class="mono" style="color: var(--cie-ink-mute);">Text Load Variants</p>
+          <button class="cie-chip cie-tap" data-cie-replay="text-demo">
+            ↻ Replay
+          </button>
+        </div>
+        <div id="text-demo" data-cie-replay-target="text-demo" data-cie-viewport-trigger style="display: grid; gap: var(--cie-s-20);">
+          <div class="card">
+            <p class="mono" style="margin-bottom: var(--cie-s-8); font-size: 10px; opacity: 0.7;">fade-up</p>
+            <h3 data-cie-text="fade-up" style="font-size: var(--cie-text-cell); font-weight: 300;">Block becomes page</h3>
+          </div>
+          <div class="card card--ink">
+            <p class="mono" style="margin-bottom: var(--cie-s-8); font-size: 10px; opacity: 0.7; color: var(--cie-ink-mute);">soft-wipe</p>
+            <h3 data-cie-text="soft-wipe" style="font-size: var(--cie-text-cell); font-weight: 300;">Smooth reveal</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
 
     <!-- ── Click-to-expand ───────────────────────────────── -->
     <section class="pattern" id="expand">
@@ -630,6 +728,38 @@
         <p class="mono" style="color:var(--cie-ink-mute);margin-bottom:var(--cie-s-12)">04 · Contact</p>
         <h3 style="font-size:clamp(32px,6vw,56px);font-weight:300;font-variation-settings:'wght' 300;letter-spacing:-0.04em;line-height:0.95;margin-bottom:var(--cie-s-16)">Say hello</h3>
         <p style="color:var(--cie-ink-mute)">hello@creativityiseverywhere.com</p>
+      </div>
+    </div>
+
+    <!-- Animation demo panels -->
+    <div
+      id="anim-one"
+      class="cie-expand-panel cie-expand--snap"
+      data-cie-expand-panel="anim-one"
+      hidden
+    >
+      <div class="cie-expand-panel__bar">
+        <button type="button" class="cie-pbtn cie-expand-close" data-cie-expand-close aria-label="Close">×</button>
+      </div>
+      <div class="cie-expand-panel__in">
+        <p class="mono" style="color:var(--cie-paper-mute);margin-bottom:var(--cie-s-12)">01 · Quick</p>
+        <h3 style="font-size:clamp(32px,6vw,56px);font-weight:300;font-variation-settings:'wght' 300;letter-spacing:-0.04em;line-height:0.95;margin-bottom:var(--cie-s-16)">360ms Expo</h3>
+        <p style="color:var(--cie-paper-mute);max-width:42ch">Snappy expand. Block becomes page on expo settle. Signature CIE motion.</p>
+      </div>
+    </div>
+    <div
+      id="anim-two"
+      class="cie-expand-panel cie-expand-panel--ink cie-expand--snap"
+      data-cie-expand-panel="anim-two"
+      hidden
+    >
+      <div class="cie-expand-panel__bar">
+        <button type="button" class="cie-pbtn cie-expand-close" data-cie-expand-close aria-label="Close">×</button>
+      </div>
+      <div class="cie-expand-panel__in">
+        <p class="mono" style="color:var(--cie-ink-mute);margin-bottom:var(--cie-s-12)">02 · Smooth</p>
+        <h3 style="font-size:clamp(32px,6vw,56px);font-weight:300;font-variation-settings:'wght' 300;letter-spacing:-0.04em;line-height:0.95;margin-bottom:var(--cie-s-16)">Refined Morph</h3>
+        <p style="color:var(--cie-ink-mute);max-width:42ch">Optional subtle overshoot (.cie-expand--snap). にゅるっと but fast.</p>
       </div>
     </div>
 
@@ -770,14 +900,14 @@
       </div>
     </section>
 
-    <!-- ── Section sound ─────────────────────────────────── -->
+    <!-- ── Section sound (Hover + Click) ────────────────────── -->
     <section class="pattern" id="sound">
-      <h2>Section sound</h2>
+      <h2>Section sound · Hover + Click</h2>
       <p class="pattern__hint">
         Not a global mute. Wrap a region in <code>data-cie-sound</code>,
-        add <code>data-cie-sound-toggle</code>. When ON, interactions inside
-        play short Web Audio tones (no files). Multiple presets available.
-        Opt into hover with <code>data-cie-hover-sfx</code>. Respects reduced-motion; unlocks after gesture.
+        add <code>data-cie-sound-toggle</code>, enable <code>data-cie-hover-sfx</code>.
+        When ON, interactions inside play short Web Audio tones (no files). Multiple presets available.
+        <strong>This section plays sound on both hover AND click.</strong> Respects reduced-motion; unlocks after gesture.
       </p>
 
       <div
@@ -843,6 +973,78 @@
           Outside this panel, the rest of the page stays silent. Presets: soft-tick, paper-snap (default), glass-pip, low-thud, bright-confirm.
           <br><br>
           <strong>v0.4.1 fix</strong>: Sound now plays clearly (~0.4 gain), works with reduced-motion, robust unlock with retry.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Section sound (Click Only) ────────────────────────── -->
+    <section class="pattern" id="sound-click-only">
+      <h2>Section sound · Click Only</h2>
+      <p class="pattern__hint">
+        <strong>No hover SFX</strong> — sound plays ONLY on click/activate, not on hover.
+        Same preset system. Toggle ON and click controls—you'll hear clear tones without hover noise.
+        Verify with "Play Test". Gain 0.4 (clearly audible).
+      </p>
+
+      <div
+        class="sound-panel"
+        data-cie-sound
+        data-cie-reveal="rise"
+      >
+        <div class="sound-panel__head">
+          <div>
+            <h3>Click-only section</h3>
+            <p class="mono" style="color:var(--cie-ink-mute);margin-top:6px">No hover · Click/tap only</p>
+          </div>
+          <div style="display: flex; gap: var(--cie-s-12); align-items: center;">
+            <button
+              type="button"
+              class="cie-chip"
+              data-cie-sound-toggle
+              aria-pressed="false"
+              aria-label="Toggle section sound"
+            >
+              <span class="cie-sound-icon" aria-hidden="true"></span>
+              <span>Sound</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Preset picker -->
+        <div style="margin-bottom: var(--cie-s-20);" data-cie-sfx-picker>
+          <p class="mono" style="color: var(--cie-ink-mute); margin-bottom: var(--cie-s-8); font-size: 11px;">Preset:</p>
+          <button 
+            type="button" 
+            class="cie-chip cie-tap cie-flash" 
+            data-cie-cycle="soft-tick|paper-snap|glass-pip|low-thud|bright-confirm"
+            data-cie-sfx="cycle"
+          >
+            <span class="cie-cycle-label">paper-snap</span>
+          </button>
+        </div>
+
+        <div class="sound-grid">
+          <button type="button" class="cie-tap" data-cie-sfx="click">
+            <span class="tag">click</span>
+            <span>Click Me</span>
+          </button>
+          <button type="button" class="cie-tap" data-cie-sfx="confirm">
+            <span class="tag">confirm</span>
+            <span>Confirm</span>
+          </button>
+          <button type="button" class="cie-tap" data-cie-sfx="toggle" style="background: var(--cie-ink); color: var(--cie-paper); box-shadow: inset 0 0 0 1px var(--cie-stroke);">
+            <span class="tag" style="color: var(--cie-ink-mute);">Test</span>
+            <span>Play Test</span>
+          </button>
+          <button type="button" class="cie-tap cie-flash" data-cie-cycle="Alpha|Beta|Gamma" data-cie-sfx="cycle">
+            <span class="tag">cycle</span>
+            <span class="cie-cycle-label">Alpha</span>
+          </button>
+        </div>
+        <p style="margin-top:var(--cie-s-20);color:var(--cie-ink-mute);font-size:13px;max-width:48ch">
+          <strong>Toggle Sound ON</strong>, then <strong>click</strong> the controls above.
+          No sound on hover in this section (no <code>data-cie-hover-sfx</code> attribute).
+          Perfect for users who find hover SFX distracting. Immediate test beep on toggle, loud "Play Test" confirms audio works.
         </p>
       </div>
     </section>

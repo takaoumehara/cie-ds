@@ -134,6 +134,56 @@ interaction.js (defer)
 
 ## New in 0.4.0
 
+### Animation Replay / Loop (v0.4.2)
+
+**Replay Controls**:
+- `data-cie-replay="target-id"` on button triggers replay of animations in target
+- `data-cie-replay-target="id"` on container marks replay scope
+- Button click removes `.is-in` / `.is-loaded`, forces reflow, re-triggers animations
+
+**Viewport-triggered Animations**:
+- `data-cie-viewport-trigger` on section auto-plays animations when scrolled into view
+- IntersectionObserver watches entry (10% threshold, -10% bottom margin)
+- Doesn't unobserve—allows re-trigger if scrolled away and back
+- Combine with replay buttons for manual control
+
+**Pattern**:
+```html
+<button data-cie-replay="demo-1">↻ Replay</button>
+<div id="demo-1" data-cie-replay-target="demo-1" data-cie-viewport-trigger>
+  <div data-cie-reveal="rise">Animates on scroll, replay on button</div>
+</div>
+```
+
+Use for:
+- Animation galleries where user might miss first play
+- Looping ambient samples (organic motion already loops via CSS)
+- Teaching/demo sections where replay helps comprehension
+
+### Sound Modes (v0.4.2)
+
+**Two Section Types**:
+
+1. **Hover + Click** (original):
+   - Add `data-cie-hover-sfx` to section
+   - Plays on hover AND click/activate
+   - Good for rich interaction feedback
+
+2. **Click Only** (new):
+   - Omit `data-cie-hover-sfx`
+   - Sound ONLY on click/activate, never on hover
+   - Reduces noise for users who find hover SFX distracting
+   - Same preset system, toggle, test button
+   - Gain 0.4 (clearly audible)
+
+Both modes:
+- Per-section toggle (not global mute)
+- Immediate test beep on toggle ON
+- Preset picker (5 options, localStorage-persisted)
+- Robust unlock with retry (v0.4.1 fix)
+- Click/confirm/cycle always play when armed (not gated by `prefers-reduced-motion`)
+- Only hover SFX respects reduced-motion preference
+
 ### Text Loading Family (CIE company site, NOT portfolio)
 
 Portfolio (takaoumehara.com) has flashy modes: scramble-typewriter, katakana, pixelate.  
@@ -189,12 +239,21 @@ Complement to snappy UI chrome. CSS-driven loops, reduced-motion safe:
 Replaces weak parallax with convincing scroll color shift:
 
 - `data-cie-theme-morph` on container
-- JS sets `--cie-theme-progress` (0..1) based on scroll position
-- CSS: background shifts `hsl(0, 0%, 4% → 95%)` ink → grey → paper
+- **v0.4.2**: Multi-stop interpolation with plateau effect
+- JS sets concrete hex colors via smooth lerp
+- **Color stops**: ink → grey → **white** → grey → ink (5 stops, 0/0.25/0.5/0.75/1)
+- Smooth gradient between each stop (ease in-out cubic for plateau feel)
 - Text/controls invert automatically via `--cie-theme-fg` / `--cie-theme-bg`
 - Contrast-safe at every scroll position
 - Optional subtle layer parallax (`data-cie-parallax`) inside theme sections
-- See `parallax.html` for full-page demo
+- See `parallax.html` for extended 1100vh journey with UI-rich sections
+
+**v0.4.2 enhancements**:
+- Multi-stop color sequence (not just ink → paper)
+- White middle plateau sandwiched by greys
+- Easing between stops for gradual zone transitions
+- Much longer scroll (~1100vh vs. ~400vh)
+- Real UI components throughout (cards, buttons, chips, text samples)
 
 ## Files
 
