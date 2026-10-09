@@ -6,7 +6,7 @@ Portable CSS tokens + snappy motion + scroll/parallax + per-section UI sound,
 extracted from [creativityiseverywhere.com](https://creativityiseverywhere.com)
 (`takaoumehara/creativityiseverywhere.com` · `main`).
 
-**Version 0.4.0** — New: hamburger nav, text loading family, sound presets, organic motion, theme morph.
+**Version 0.5.0** — New: **shadcn registry** (`/r/*.json`) + React preview at `/registry`. 0.4.x vanilla files are unchanged.
 
 > **JA** — 社内・個人用のトークン一式です。公開リポジトリは自分（と許可した人／エージェント）が取りに来るためのもの。第三者のプロダクト採用・再配布は想定していません。`LICENSE` 参照。
 
@@ -15,6 +15,57 @@ extracted from [creativityiseverywhere.com](https://creativityiseverywhere.com)
 - Catalog: https://cie-ds.vercel.app/
 - Comprehensive: https://cie-ds.vercel.app/demo
 - Parallax + Theme: https://cie-ds.vercel.app/parallax
+- **Registry preview (React / shadcn):** https://cie-ds.vercel.app/registry
+
+## shadcn registry (React projects)
+
+The same tokens, as installable shadcn source. `tokens.json` stays the single source of truth —
+`scripts/sync-tokens.mjs` generates the theme item, the motion constants and the preview CSS from it.
+
+```bash
+# 1. Theme first (overwrites the project's shadcn colour/radius/font variables with cie ones)
+npx shadcn@latest add https://cie-ds.vercel.app/r/cie-theme.json
+# …or everything at once (theme + libs + all components)
+npx shadcn@latest add https://cie-ds.vercel.app/r/cie-all.json
+
+# 2. Any component
+npx shadcn@latest add https://cie-ds.vercel.app/r/shader-field.json
+```
+
+Optional namespace in `components.json` → `npx shadcn@latest add @cie/border-beam`:
+
+```json
+{ "registries": { "@cie": "https://cie-ds.vercel.app/r/{name}.json" } }
+```
+
+- Requires a shadcn-initialised project (Tailwind v4, `tw-animate-css`). Load Outfit 100–900 + DM Mono 400.
+- `class="dark"` on `<html>` = CIE ink ground; without it = paper ground.
+- Install `cie-theme` (or `cie-all`) **explicitly** once: shadcn only overwrites existing theme variables
+  for theme/style items you add directly, not for ones pulled in as dependencies.
+
+| Category | Items |
+|---|---|
+| Foundation | `button` · `input` · `dialog` · `sheet` (shadcn API, cie styling) |
+| Atmosphere | `grid-pattern` (SVG) · `noise` (SVG) · `particles` (Canvas 2D) · `shader-field` (WebGL) · `spotlight` |
+| Micro | `border-beam` · `shimmer-button` · `text-shimmer` · `animated-tabs` · `smooth-accordion` |
+| Showcase | `parallax` (+ `ScrollExpand`) · `reveal` · `split-text` · `word-rotate` · `number-ticker` · `expand-card` |
+| Libs | `cie-theme` · `cie-motion` (easings/durations for motion) · `cie-color` (theme colours for Canvas/WebGL) |
+
+Rules enforced by `npm run check` (`scripts/check-tokens.mjs`): no hex / colour literals, no Tailwind palette
+colours, no drop shadows, no animation library other than `motion`.
+
+### Develop
+
+```bash
+npm install
+npm run dev      # preview at http://localhost:5173/registry/
+npm run check    # tokens in sync + token guard + typecheck
+npm run build    # dist/ = vanilla catalog + dist/r/*.json + dist/registry/
+```
+
+Edit tokens in `tokens.json` (semantic mapping under `semantic`), then `npm run tokens`.
+Add a component: write `registry/cie/ui/<name>.tsx`, add an item to `registry.json`, add a demo in
+`preview/src/demos.tsx`.
 
 ## One-line include
 
@@ -39,7 +90,8 @@ extracted from [creativityiseverywhere.com](https://creativityiseverywhere.com)
 <script src="https://cie-ds.vercel.app/interaction.js" defer></script>
 ```
 
-Or copy the files into your project and link locally. Plain CSS + one vanilla JS file. No npm package. No build step.
+Or copy the files into your project and link locally. Plain CSS + one vanilla JS file — these files still need no build step
+(the repo's build only adds the React registry next to them).
 
 Minimal (tokens + motion only):
 
@@ -65,6 +117,9 @@ Minimal (tokens + motion only):
 | `interaction.js` | Observers, parallax, cycle, expand, sheet, nav, text-load, theme-morph, Web Audio |
 | `tokens.json` | Same tokens for tooling / AIs |
 | `DESIGN.md` | Compact system summary for agents |
+| `registry.json` · `registry/cie/` | shadcn registry source (React + Tailwind v4 + motion) |
+| `preview/` | React preview app → `/registry` |
+| `scripts/` | `sync-tokens` (tokens.json → registry), `check-tokens` (guard), `build` |
 | `guide.md` | Same as README (Vercel serves this; `README.md` is blocked at the edge) |
 | `demo.html` | Comprehensive pattern showcase |
 | `parallax.html` | Dedicated scroll-linked theme morph demo |
@@ -341,4 +396,5 @@ Proprietary — see `LICENSE`. Viewing the public repo is fine. Redistribution, 
 - Catalog: https://cie-ds.vercel.app/
 - Demo: https://cie-ds.vercel.app/demo
 - Parallax: https://cie-ds.vercel.app/parallax
+- Registry: https://cie-ds.vercel.app/registry
 - Repo: https://github.com/takaoumehara/cie-ds

@@ -1,0 +1,702 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "cie",
+  "homepage": "https://cie-ds.vercel.app/registry",
+  "items": [
+    {
+      "name": "cie-theme",
+      "type": "registry:theme",
+      "title": "cie theme",
+      "description": "cie-ds tokens as shadcn semantic variables (ink / paper), Outfit + DM Mono stacks, cie easings, keyframes and utilities. Generated from tokens.json.",
+      "categories": [
+        "foundation"
+      ],
+      "cssVars": {
+        "theme": {
+          "font-sans": "'Outfit', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+          "font-mono": "'DM Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
+          "font-ja": "'Zen Kaku Gothic New', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic', sans-serif",
+          "ease-cie-expo": "cubic-bezier(0.76, 0, 0.18, 1)",
+          "ease-cie-out": "cubic-bezier(0.16, 1, 0.3, 1)",
+          "ease-cie-snap": "cubic-bezier(0.34, 1.22, 0.64, 1)",
+          "radius-page": "clamp(22px, 3.2vmin, 44px)",
+          "color-stroke": "var(--stroke)",
+          "animate-cie-shimmer": "cie-shimmer var(--cie-shimmer-duration, 2.4s) linear infinite",
+          "animate-cie-grain": "cie-grain 0.9s steps(4) infinite"
+        },
+        "light": {
+          "radius": "clamp(12px, 1.7vmin, 24px)",
+          "background": "#f3f2ee",
+          "foreground": "#0b0b0b",
+          "card": "#0b0b0b",
+          "card-foreground": "#f3f2ee",
+          "popover": "#f3f2ee",
+          "popover-foreground": "#0b0b0b",
+          "primary": "#0b0b0b",
+          "primary-foreground": "#f3f2ee",
+          "secondary": "rgba(128, 128, 128, 0.32)",
+          "secondary-foreground": "#0b0b0b",
+          "muted": "rgba(11, 11, 11, 0.05)",
+          "muted-foreground": "#66665f",
+          "accent": "rgba(11, 11, 11, 0.08)",
+          "accent-foreground": "#0b0b0b",
+          "destructive": "#c62f35",
+          "border": "rgba(11, 11, 11, 0.14)",
+          "input": "rgba(11, 11, 11, 0.22)",
+          "ring": "#66665f",
+          "stroke": "rgba(11, 11, 11, 0.42)",
+          "sidebar": "#f3f2ee",
+          "sidebar-foreground": "#0b0b0b",
+          "sidebar-primary": "#0b0b0b",
+          "sidebar-primary-foreground": "#f3f2ee",
+          "sidebar-accent": "rgba(11, 11, 11, 0.08)",
+          "sidebar-accent-foreground": "#0b0b0b",
+          "sidebar-border": "rgba(11, 11, 11, 0.14)",
+          "sidebar-ring": "#66665f",
+          "chart-1": "#0b0b0b",
+          "chart-2": "#3a3a36",
+          "chart-3": "#66665f",
+          "chart-4": "#8f8f88",
+          "chart-5": "#b8b7b1"
+        },
+        "dark": {
+          "background": "#0b0b0b",
+          "foreground": "#f3f2ee",
+          "card": "#f3f2ee",
+          "card-foreground": "#0b0b0b",
+          "popover": "#0b0b0b",
+          "popover-foreground": "#f3f2ee",
+          "primary": "#f3f2ee",
+          "primary-foreground": "#0b0b0b",
+          "secondary": "rgba(128, 128, 128, 0.32)",
+          "secondary-foreground": "#f3f2ee",
+          "muted": "rgba(243, 242, 238, 0.06)",
+          "muted-foreground": "#9c9c98",
+          "accent": "rgba(243, 242, 238, 0.10)",
+          "accent-foreground": "#f3f2ee",
+          "destructive": "#e5484d",
+          "border": "rgba(243, 242, 238, 0.16)",
+          "input": "rgba(243, 242, 238, 0.24)",
+          "ring": "#9c9c98",
+          "stroke": "rgba(243, 242, 238, 0.42)",
+          "sidebar": "#0b0b0b",
+          "sidebar-foreground": "#f3f2ee",
+          "sidebar-primary": "#f3f2ee",
+          "sidebar-primary-foreground": "#0b0b0b",
+          "sidebar-accent": "rgba(243, 242, 238, 0.10)",
+          "sidebar-accent-foreground": "#f3f2ee",
+          "sidebar-border": "rgba(243, 242, 238, 0.16)",
+          "sidebar-ring": "#9c9c98",
+          "chart-1": "#f3f2ee",
+          "chart-2": "#c9c8c4",
+          "chart-3": "#9c9c98",
+          "chart-4": "#6f6f6b",
+          "chart-5": "#46463f"
+        }
+      },
+      "css": {
+        ":root": {
+          "--cie-ink": "#0b0b0b",
+          "--cie-paper": "#f3f2ee",
+          "--cie-ink-mute": "#9c9c98",
+          "--cie-paper-mute": "#66665f",
+          "--cie-sans": "'Outfit', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+          "--cie-mono": "'DM Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
+          "--cie-sans-ja": "'Zen Kaku Gothic New', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic', sans-serif",
+          "--cie-r": "clamp(12px, 1.7vmin, 24px)",
+          "--cie-r-page": "clamp(22px, 3.2vmin, 44px)",
+          "--cie-t-snap": "120ms",
+          "--cie-t-fast": "180ms",
+          "--cie-t-cell": "320ms",
+          "--cie-t-move": "360ms",
+          "--cie-t-rise": "400ms",
+          "--cie-t-sheet": "300ms",
+          "--cie-t-stagger": "24ms",
+          "--cie-ease-expo": "cubic-bezier(0.76, 0, 0.18, 1)",
+          "--cie-ease-out": "cubic-bezier(0.16, 1, 0.3, 1)",
+          "--cie-ease-snap": "cubic-bezier(0.34, 1.22, 0.64, 1)",
+          "--cie-parallax-max": "48px",
+          "--cie-press-scale": "0.97",
+          "--cie-hover-nudge": "3px"
+        },
+        "@keyframes cie-shimmer": {
+          "0%": {
+            "background-position": "200% 0"
+          },
+          "100%": {
+            "background-position": "-200% 0"
+          }
+        },
+        "@keyframes cie-grain": {
+          "0%, 100%": {
+            "transform": "translate(0, 0)"
+          },
+          "25%": {
+            "transform": "translate(-2%, 1%)"
+          },
+          "50%": {
+            "transform": "translate(1%, -2%)"
+          },
+          "75%": {
+            "transform": "translate(2%, 2%)"
+          }
+        },
+        "@utility cie-ring-mask": {
+          "mask-image": "linear-gradient(var(--foreground) 0 0), linear-gradient(var(--foreground) 0 0)",
+          "mask-clip": "content-box, border-box",
+          "mask-composite": "exclude",
+          "-webkit-mask-composite": "xor"
+        },
+        "@layer base": {
+          "body": {
+            "font-feature-settings": "'palt' 0",
+            "-webkit-font-smoothing": "antialiased"
+          },
+          ":lang(ja)": {
+            "--cie-sans": "'Zen Kaku Gothic New', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic', sans-serif",
+            "font-family": "'Zen Kaku Gothic New', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic', sans-serif",
+            "font-feature-settings": "'palt' 1",
+            "letter-spacing": "0"
+          },
+          "::selection": {
+            "background": "var(--foreground)",
+            "color": "var(--background)"
+          }
+        }
+      }
+    },
+    {
+      "name": "cie-motion",
+      "type": "registry:lib",
+      "title": "cie motion",
+      "description": "cie easing curves, durations and transitions for motion/react. Generated from tokens.json.",
+      "categories": [
+        "foundation"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/lib/cie-motion.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "cie-color",
+      "type": "registry:lib",
+      "title": "cie color",
+      "description": "Resolve theme colours (CSS variables) for Canvas / WebGL, and react to theme changes.",
+      "categories": [
+        "foundation"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/lib/cie-color.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "shadcn Button in cie style: pill, weight breath, tap scale.",
+      "categories": [
+        "foundation"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "shadcn Input in cie style: block radius, hairline border, quiet focus.",
+      "categories": [
+        "foundation"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "shadcn Dialog: page-radius block, snappy settle on --cie-ease-snap.",
+      "categories": [
+        "foundation"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Sheet",
+      "description": "shadcn Sheet: floating page-radius panel on the signature --cie-t-move / expo.",
+      "categories": [
+        "foundation"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "grid-pattern",
+      "type": "registry:ui",
+      "title": "Grid Pattern",
+      "description": "SVG grid / dots / cross field with edge fade and breathing cells.",
+      "categories": [
+        "atmosphere"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/grid-pattern.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "tech": "svg"
+      }
+    },
+    {
+      "name": "noise",
+      "type": "registry:ui",
+      "title": "Noise",
+      "description": "Film-grain overlay tinted by the theme. SVG filter, CSS-only animation.",
+      "categories": [
+        "atmosphere"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/noise.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "tech": "svg"
+      }
+    },
+    {
+      "name": "particles",
+      "type": "registry:ui",
+      "title": "Particles",
+      "description": "Canvas 2D drifting particle field with cursor repel and twinkle.",
+      "categories": [
+        "atmosphere"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-color.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/particles.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "tech": "canvas2d"
+      }
+    },
+    {
+      "name": "shader-field",
+      "type": "registry:ui",
+      "title": "Shader Field",
+      "description": "WebGL domain-warped noise in two inks: flow, contour or dither modes, cursor-reactive.",
+      "categories": [
+        "atmosphere"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-color.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/shader-field.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "tech": "webgl"
+      }
+    },
+    {
+      "name": "spotlight",
+      "type": "registry:ui",
+      "title": "Spotlight",
+      "description": "Cursor-following light pool and rim on any block.",
+      "categories": [
+        "atmosphere"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/spotlight.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "tech": "css"
+      }
+    },
+    {
+      "name": "border-beam",
+      "type": "registry:ui",
+      "title": "Border Beam",
+      "description": "A foreground comet travelling the rounded border of its parent.",
+      "categories": [
+        "micro"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/border-beam.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "shimmer-button",
+      "type": "registry:ui",
+      "title": "Shimmer Button",
+      "description": "cie Button with a sweeping light band and orbiting rim.",
+      "categories": [
+        "micro"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/shimmer-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "text-shimmer",
+      "type": "registry:ui",
+      "title": "Text Shimmer",
+      "description": "Muted text with a bright band passing through — status lines, eyebrows.",
+      "categories": [
+        "micro"
+      ],
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/text-shimmer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "animated-tabs",
+      "type": "registry:ui",
+      "title": "Animated Tabs",
+      "description": "Radix Tabs with a gliding shared-layout pill and smooth panel height.",
+      "categories": [
+        "micro"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/animated-tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "smooth-accordion",
+      "type": "registry:ui",
+      "title": "Smooth Accordion",
+      "description": "Radix Accordion with expo height, blur-rise body and + → × toggle.",
+      "categories": [
+        "micro"
+      ],
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/smooth-accordion.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "parallax",
+      "type": "registry:ui",
+      "title": "Parallax",
+      "description": "Scroll-linked drift (token-ranged) and the ScrollExpand block → page hero.",
+      "categories": [
+        "showcase"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/parallax.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "reveal",
+      "type": "registry:ui",
+      "title": "Reveal",
+      "description": "In-view reveals (rise, fade, blur, slide, scale, clip) with staggered groups.",
+      "categories": [
+        "showcase"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/reveal.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "split-text",
+      "type": "registry:ui",
+      "title": "Split Text",
+      "description": "Word / character text reveal: rise, blur, mask or weight motion.",
+      "categories": [
+        "showcase"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/split-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "word-rotate",
+      "type": "registry:ui",
+      "title": "Word Rotate",
+      "description": "Rotating word with a gliding width and masked roll.",
+      "categories": [
+        "showcase"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/word-rotate.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "number-ticker",
+      "type": "registry:ui",
+      "title": "Number Ticker",
+      "description": "Spring count-up on view with tabular figures.",
+      "categories": [
+        "showcase"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/number-ticker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "expand-card",
+      "type": "registry:ui",
+      "title": "Expand Card",
+      "description": "The cie signature: a board cell morphs into a full page panel.",
+      "categories": [
+        "showcase"
+      ],
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/expand-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "cie-all",
+      "type": "registry:style",
+      "title": "cie (everything)",
+      "description": "Theme, libs and every cie component in one command.",
+      "categories": [
+        "foundation"
+      ],
+      "registryDependencies": [
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json",
+        "https://cie-ds.vercel.app/r/cie-color.json",
+        "https://cie-ds.vercel.app/r/button.json",
+        "https://cie-ds.vercel.app/r/input.json",
+        "https://cie-ds.vercel.app/r/dialog.json",
+        "https://cie-ds.vercel.app/r/sheet.json",
+        "https://cie-ds.vercel.app/r/grid-pattern.json",
+        "https://cie-ds.vercel.app/r/noise.json",
+        "https://cie-ds.vercel.app/r/particles.json",
+        "https://cie-ds.vercel.app/r/shader-field.json",
+        "https://cie-ds.vercel.app/r/spotlight.json",
+        "https://cie-ds.vercel.app/r/border-beam.json",
+        "https://cie-ds.vercel.app/r/shimmer-button.json",
+        "https://cie-ds.vercel.app/r/text-shimmer.json",
+        "https://cie-ds.vercel.app/r/animated-tabs.json",
+        "https://cie-ds.vercel.app/r/smooth-accordion.json",
+        "https://cie-ds.vercel.app/r/parallax.json",
+        "https://cie-ds.vercel.app/r/reveal.json",
+        "https://cie-ds.vercel.app/r/split-text.json",
+        "https://cie-ds.vercel.app/r/word-rotate.json",
+        "https://cie-ds.vercel.app/r/number-ticker.json",
+        "https://cie-ds.vercel.app/r/expand-card.json"
+      ]
+    }
+  ]
+}

@@ -9,6 +9,7 @@ Fetch this file + `tokens.css` / `tokens.json` / `interaction.js` when styling T
 - Tokens CSS: https://cie-ds.vercel.app/tokens.css
 - JS: https://cie-ds.vercel.app/interaction.js
 - This brief: https://cie-ds.vercel.app/DESIGN.md
+- Registry (React / shadcn): https://cie-ds.vercel.app/registry · items at `/r/<name>.json`
 - Repo: https://github.com/takaoumehara/cie-ds
 
 ## Surface
@@ -117,6 +118,65 @@ holds the text when the control has richer markup.
 - Kinds: `hover` · `click` · `confirm` · `cycle` · `toggle`.
 - API: `window.Cie` → `init()`, `play(kind)`, `unlock()`, `reducedMotion`.
 
+## Registry (v0.5.0) — React / shadcn
+
+For React + Tailwind v4 projects, prefer the registry over hand-copying CSS:
+
+```bash
+npx shadcn@latest add https://cie-ds.vercel.app/r/cie-theme.json   # once, explicitly
+npx shadcn@latest add https://cie-ds.vercel.app/r/<name>.json
+```
+
+**Token mapping** (generated from `tokens.json → semantic`; `class="dark"` = ink ground, default for CIE):
+
+| shadcn var | ink ground (`.dark`) | paper ground (`:root`) |
+|---|---|---|
+| `--background` / `--foreground` | ink / paper | paper / ink |
+| `--card` / `--card-foreground` | paper / ink (a block on the board) | ink / paper |
+| `--primary` / `--primary-foreground` | paper / ink | ink / paper |
+| `--secondary` | `--cie-btn` (round panel button grey) | same |
+| `--muted-foreground` | ink-mute | paper-mute |
+| `--border` / `--input` | paper @16% / 24% | ink @14% / 22% |
+| `--radius` / `rounded-page` | `--cie-r` / `--cie-r-page` | same |
+| `--destructive` | the **only** extra hue — errors / destructive actions only | |
+
+Tailwind utilities from the theme: `font-sans` (Outfit) · `font-mono` (DM Mono) · `ease-cie-expo|out|snap` ·
+`rounded-page` · `border-stroke` · `animate-cie-shimmer|grain` · `cie-ring-mask`.
+In motion code import `cieEase`, `cieDuration`, `cieTransition`, `cieScroll` from `@/lib/cie-motion`
+(never type bezier numbers by hand).
+
+### Expression rules for the registry (v0.5 update)
+
+The board language above still wins. These are allowed **because they stay inside two inks**:
+
+- **Alpha of an ink** — `from-foreground to-transparent`, `color-mix(in oklab, var(--foreground) 12%, transparent)`.
+  A gradient *between hues* is still out.
+- **Backdrop blur** on overlays (dialog / sheet / sticky header).
+- **Springs** for physical follow-through (layout pills, cursor follow) when they settle in ≈ 300–420ms
+  (`cieTransition.spring`). Long wobbly springs are still out — snappy にゅるっと.
+- **Parallax beyond 48px** when asked for: `<Parallax speed={2.5}>` scales the token range. 48px stays the default.
+- **Atmospheres** (shader fields, particles, grain) as backgrounds behind content, never on UI chrome.
+- No drop shadows, no Tailwind palette colours, no hex in components — `npm run check` fails the build otherwise.
+
+### Choosing a renderer (agents: decide per site)
+
+| Need | Use | Registry item |
+|---|---|---|
+| Static / slow texture, many per page, crisp at any DPR | CSS / SVG | `grid-pattern`, `noise`, `spotlight`, `border-beam` |
+| Hundreds–thousands of independent marks with per-frame logic | Canvas 2D | `particles` |
+| Per-pixel fields (noise, flow, dither, distortion), full-bleed hero | WebGL | `shader-field` |
+| True 3D scenes / models | three.js / R3F (not in registry yet) | — |
+
+Modern phones run one full-screen fragment shader comfortably; the cost is battery and heat, not frames.
+So: **one WebGL surface per viewport**, render scale `quality` ≈ 0.5–0.75 for soft fields, and pause off-screen
+(all cie atmospheres already do this and honour reduced motion). Stack SVG/CSS layers on top freely.
+
+### Where the patterns come from
+
+Rewritten from scratch on cie tokens + `motion`, after patterns popularised by Aceternity UI (backgrounds,
+spotlight, expandable card), Magic UI (border beam, shimmer, particles, number ticker, word rotate),
+SmoothUI (reveal, parallax, text effects) and transitions.dev (tab / accordion transitions). No upstream code is vendored.
+
 ## Include order (recommended)
 
 ```
@@ -129,7 +189,7 @@ interaction.js (defer)
 - Do: ink/paper only; Outfit + DM Mono; block radius; snappy expo/out; thin scrollbar;
   per-section sound opt-in; honour reduced-motion in CSS **and** JS.
 - Don’t: coral/orange accents from older deploys; Inter as primary; drop shadows;
-  rainbow loaders; springy bouncy easings; global site-mute UX for sound;
+  rainbow loaders; long wobbly springs (short settling springs are fine, see Registry); global site-mute UX for sound;
   chunky scrollbars; heavy parallax; royalty audio files.
 
 ## New in 0.4.0
@@ -271,5 +331,7 @@ Replaces weak parallax with convincing scroll color shift:
 - `demo.html` — comprehensive catalog with all patterns  
 - `parallax.html` — dedicated scroll-linked theme morph + parallax demo  
 - `index.html` — catalog navigation hub  
+- `registry.json` + `registry/cie/` — shadcn registry source → `/r/*.json`  
+- `preview/` — React registry preview → `/registry`  
 
 License: proprietary (see `LICENSE`). Internal use only.

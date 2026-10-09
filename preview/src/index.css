@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "../../registry/cie/styles/cie-theme.css";
+
+@source "../../registry/cie";
+
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--muted-foreground) transparent; }
+body { font-family: var(--font-sans); }
