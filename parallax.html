@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Parallax Journey — cie-ds</title>
-<meta name="description" content="Extended scroll-linked theme morph: ink → grey → white → grey → ink. UI-rich journey.">
+<meta name="description" content="Scroll journey: ink → grey → paper → grey → ink → paper → ink, with visible multi-speed parallax and high-contrast UI.">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,470 +12,379 @@
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="base.css">
 <link rel="stylesheet" href="scrollbar.css">
-<link rel="stylesheet" href="motion.css">
-<link rel="stylesheet" href="scroll.css">
-<link rel="stylesheet" href="interactions.css">
-<link rel="stylesheet" href="theme-morph.css">
-<link rel="stylesheet" href="organic.css">
-<link rel="stylesheet" href="text-load.css">
 <style>
-  body {
-    margin: 0;
-    overflow-x: hidden;
+  /* Theme vars are driven by the scroll script below. Every chapter HOLDS its colour,
+     then flips quickly at the seam — ink · grey · paper · grey · ink · paper · ink. */
+  :root {
+    --bg: var(--cie-ink);
+    --fg: var(--cie-paper);
+    --on: var(--cie-ink); /* text on a --fg surface: always the opposite ink, never the ground */
+    --mute: rgba(243, 242, 238, 0.62);
+    --line: rgba(243, 242, 238, 0.28);
+    --edge: var(--cie-edge);
   }
-  
-  /* Fixed header */
-  .px-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    padding: var(--cie-s-16) var(--cie-edge);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--cie-theme-bg);
-    border-bottom: 1px solid var(--cie-theme-mute);
-    transition: none;
+  html, body { background: var(--bg); color: var(--fg); }
+  body { margin: 0; overflow-x: clip; font-size: 17px; }
+  a { color: inherit; }
+
+  .mono { font-family: var(--cie-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* ── HUD ─────────────────────────────────────────── */
+  .hud {
+    position: fixed; inset: 0 0 auto 0; z-index: 50; display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; padding: 16px var(--edge); color: var(--fg); mix-blend-mode: normal;
   }
-  .px-header a {
-    font-family: var(--cie-mono);
-    font-size: var(--cie-text-mono);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--cie-theme-fg);
-  }
-  
-  /* Main scroll container - MUCH LONGER */
-  .px-scroll-container {
-    min-height: 1100vh;
-    padding-top: 60px;
-  }
-  
-  /* Journey sections */
-  .px-section {
-    min-height: 100vh;
-    padding: var(--cie-s-64) var(--cie-edge);
-    display: grid;
-    place-items: center;
-  }
-  
-  .px-content {
-    max-width: 840px;
-    width: 100%;
-  }
-  
-  /* Typography variants */
-  .px-title {
-    font-size: clamp(56px, 10vw, 128px);
-    font-weight: 300;
-    font-variation-settings: 'wght' 300;
-    letter-spacing: -0.045em;
-    line-height: 0.88;
-    margin-bottom: var(--cie-s-24);
-  }
-  
-  .px-subtitle {
-    font-family: var(--cie-mono);
-    font-size: var(--cie-text-mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    opacity: 0.7;
-    margin-bottom: var(--cie-s-40);
-  }
-  
-  .px-body {
-    font-size: var(--cie-text-body);
-    line-height: 1.5;
-    max-width: 60ch;
-    opacity: 0.85;
-  }
-  
-  /* Component grid */
-  .px-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: var(--cie-s-16);
-    margin-top: var(--cie-s-40);
-  }
-  
-  .px-card {
-    border-radius: var(--cie-r);
-    padding: var(--cie-s-24);
-    background: var(--cie-theme-mute);
-    color: var(--cie-theme-fg);
-    opacity: 0.9;
-    display: grid;
-    gap: var(--cie-s-12);
-    align-content: start;
-    transition: opacity 200ms ease-out;
-  }
-  .px-card:hover {
-    opacity: 1;
-  }
-  
-  .px-card h3 {
-    font-size: var(--cie-text-cell);
-    font-weight: 300;
-    letter-spacing: -0.03em;
-  }
-  
-  /* Button row */
-  .px-btns {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--cie-s-12);
-    margin-top: var(--cie-s-28);
-  }
-  
-  .px-btn {
-    padding: 0.7em 1.4em;
-    border-radius: var(--cie-r-pill);
-    background: var(--cie-theme-fg);
-    color: var(--cie-theme-bg);
-    font-family: var(--cie-mono);
-    font-size: var(--cie-text-mono);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    transition:
-      transform var(--cie-t-snap) var(--cie-ease-out),
-      opacity 200ms linear;
-  }
-  .px-btn:hover {
-    opacity: 0.9;
-  }
-  .px-btn:active {
-    transform: scale(0.96);
-  }
-  
-  /* Progress indicator */
-  .px-progress {
-    position: fixed;
-    bottom: var(--cie-s-24);
-    right: var(--cie-s-24);
-    background: var(--cie-theme-fg);
-    color: var(--cie-theme-bg);
-    padding: var(--cie-s-16) var(--cie-s-20);
-    border-radius: var(--cie-r);
-    font-size: 11px;
-    font-family: var(--cie-mono);
-    z-index: 50;
-    opacity: 0.8;
-    line-height: 1.6;
-  }
-  .px-progress code {
-    font-weight: 700;
-  }
-  
-  /* Floating parallax elements */
-  .px-float {
-    position: absolute;
-    border-radius: var(--cie-r);
-    opacity: 0.12;
-    pointer-events: none;
-  }
-  
+  .hud__chip { outline: 1px solid var(--on); display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 999px; background: var(--fg); color: var(--on); text-decoration: none; }
+  .hud__swatch { width: 14px; height: 14px; border-radius: 50%; background: var(--bg); }
+  .rail { position: fixed; left: 0; right: 0; bottom: 0; height: 3px; z-index: 50; background: var(--line); }
+  .rail i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: var(--fg); }
+  .dots { position: fixed; right: calc(var(--edge) - 7px); top: 50%; transform: translateY(-50%); z-index: 50; display: grid; gap: 0; }
+  /* 24×24 hit area (WCAG 2.5.8), 10px visible dot */
+  .dots a { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; }
+  .dots a::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--fg); box-sizing: border-box; transition: transform var(--cie-t-cell) var(--cie-ease-expo), background-color var(--cie-t-cell) var(--cie-ease-expo); }
+  .dots a.is-on::before { background: var(--fg); transform: scale(1.35); }
+
+  /* ── Chapters ─────────────────────────────────────── */
+  .ch { position: relative; min-height: 120vh; padding: 16vh var(--edge); overflow: clip; }
+  .ch__in { position: relative; max-width: 1120px; margin: 0 auto; }
+  .ch__label { display: flex; gap: 14px; align-items: center; margin-bottom: 24px; }
+  .ch__label span:first-child { padding: 6px 12px; border-radius: 999px; background: var(--fg); color: var(--on); }
+  .big { font-size: clamp(64px, 14vw, 220px); font-weight: 200; letter-spacing: -0.055em; line-height: 0.82; margin: 0; }
+  .h2 { font-size: clamp(44px, 8vw, 120px); font-weight: 300; letter-spacing: -0.045em; line-height: 0.88; margin: 0; }
+  .lead { max-width: 34em; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.55; color: var(--mute); margin: 28px 0 0; }
+
+  /* speed tag shown on every parallax layer */
+  .tag { position: absolute; top: 12px; left: 12px; padding: 4px 9px; border-radius: 999px; background: var(--on); color: var(--fg); }
+  [data-speed] { will-change: transform; }
+
+  /* 01 — hero: ghost numeral + layered words */
+  .ghost { position: absolute; right: -2vw; top: 6vh; font-size: clamp(240px, 46vw, 720px); font-weight: 100; letter-spacing: -0.08em; line-height: 0.75;
+    color: transparent; -webkit-text-stroke: 1.5px var(--line); pointer-events: none; user-select: none; }
+  .hero-words { display: grid; gap: 0; margin: 4vh 0 0; font-weight: 200; }
+  .hero-words .big { display: block; }
+  .hero-words .big:nth-child(2) { padding-left: 12vw; font-weight: 500; }
+  .hero-words .big:nth-child(3) { padding-left: 4vw; font-style: normal; }
+  .cue { margin-top: 40px; display: inline-flex; gap: 12px; align-items: center; }
+  .cue i { width: 1.5px; height: 48px; background: var(--fg); display: block; transform-origin: top; animation: cue 1.6s var(--cie-ease-expo) infinite; }
+  @keyframes cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+  /* 02 — depth stack */
+  .stack { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 10vh; align-items: start; }
+  .stack > div { position: relative; aspect-ratio: 3 / 4; border-radius: var(--cie-r); background: var(--fg); color: var(--on); padding: 14px; display: flex; align-items: flex-end; }
+  .stack > div .tag { background: var(--on); color: var(--fg); }
+  .stack > div b { font-size: clamp(28px, 4vw, 56px); font-weight: 300; letter-spacing: -0.04em; line-height: 1; }
+
+  /* 03 — marquee rows */
+  .marquee { white-space: nowrap; font-size: clamp(72px, 13vw, 200px); font-weight: 200; letter-spacing: -0.05em; line-height: 1; margin: 0; }
+  .marquee.is-solid { font-weight: 600; }
+  .marquee.is-outline { color: transparent; -webkit-text-stroke: 1.5px var(--fg); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 10vh; }
+  .card { position: relative; border-radius: var(--cie-r-page); background: var(--fg); color: var(--on); padding: 28px; min-height: 240px; display: grid; align-content: space-between; }
+  .card .tag { position: static; justify-self: start; }
+  .card h3 { font-size: 34px; font-weight: 300; letter-spacing: -0.035em; margin: 0; }
+  .card p { margin: 8px 0 0; opacity: 0.75; line-height: 1.5; }
+
+  /* 04 — UI kit, solid & high contrast */
+  .kit { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin-top: 8vh; }
+  .panel { border-radius: var(--cie-r-page); background: var(--fg); color: var(--on); padding: 28px; display: grid; gap: 16px; align-content: start; }
+  .panel .mono { opacity: 0.7; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .btn { font: inherit; font-size: 16px; border-radius: 999px; padding: 12px 22px; cursor: pointer; border: 1.5px solid var(--on);
+    background: var(--on); color: var(--fg); font-variation-settings: 'wght' 400;
+    transition: font-variation-settings var(--cie-t-cell) var(--cie-ease-expo), transform var(--cie-t-snap) var(--cie-ease-out), background-color var(--cie-t-cell) var(--cie-ease-expo), color var(--cie-t-cell) var(--cie-ease-expo); }
+  .btn:hover { font-variation-settings: 'wght' 620; }
+  .btn:active { transform: scale(var(--cie-press-scale)); }
+  .btn--ghost { background: transparent; color: var(--on); }
+  .btn--ghost:hover { background: var(--on); color: var(--fg); }
+  .field { font: inherit; width: 100%; box-sizing: border-box; padding: 14px 16px; border-radius: var(--cie-r); border: 1.5px solid var(--on); background: transparent; color: var(--on); }
+  .field::placeholder { color: var(--on); opacity: 0.55; }
+  .switch { display: inline-flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+  .switch i { width: 52px; height: 30px; border-radius: 999px; background: var(--on); position: relative; opacity: 0.35; transition: opacity var(--cie-t-cell) var(--cie-ease-expo); }
+  .switch i::after { content: ""; position: absolute; top: 4px; left: 4px; width: 22px; height: 22px; border-radius: 50%; background: var(--fg); transition: transform var(--cie-t-move) var(--cie-ease-snap); }
+  .switch input { position: absolute; opacity: 0; pointer-events: none; }
+  .switch input:checked + i { opacity: 1; }
+  .switch input:checked + i::after { transform: translateX(22px); }
+  .switch input:focus-visible + i { outline: 2px solid var(--on); outline-offset: 3px; }
+  .stat { font-size: clamp(56px, 7vw, 96px); font-weight: 200; letter-spacing: -0.05em; line-height: 0.9; }
+
+  /* 05 — block → page */
+  .expand-wrap { height: 220vh; position: relative; }
+  .expand-sticky { position: sticky; top: 0; height: 100vh; display: grid; place-items: center; overflow: hidden; }
+  .expand-block { width: 100vw; height: 100vh; background: var(--fg); color: var(--on); display: grid; place-items: center; text-align: center;
+    clip-path: inset(var(--iy, 30%) var(--ix, 30%) round var(--ir, 44px)); }
+  .expand-block .h2 { transform: scale(var(--ts, 0.6)); }
+
+  /* 06 — type specimen */
+  .specimen { display: grid; gap: 2vh; margin-top: 6vh; }
+  .specimen .h2 { white-space: nowrap; }
+  .specimen .h2:nth-child(1) { font-weight: 100; }
+  .specimen .h2:nth-child(2) { font-weight: 400; padding-left: 10vw; }
+  .specimen .h2:nth-child(3) { font-weight: 800; padding-left: 20vw; }
+
+  /* 07 — finale */
+  .finale { min-height: 110vh; display: grid; place-items: center; text-align: center; }
+  .finale .row { justify-content: center; margin-top: 36px; }
+  .finale .btn { background: var(--fg); color: var(--on); border-color: var(--fg); }
+  .finale .btn--ghost { background: transparent; color: var(--fg); }
+  .finale .btn--ghost:hover { background: var(--fg); color: var(--on); }
+
   @media (max-width: 760px) {
-    .px-progress {
-      display: none;
-    }
-    .px-title {
-      font-size: clamp(40px, 12vw, 72px);
-    }
+    .stack { grid-template-columns: repeat(3, 1fr); }
+    .stack > div:nth-child(n+4) { display: none; }
+    .dots { display: none; }
   }
+  @media (prefers-reduced-motion: reduce) {
+    [data-speed], [data-x] { transform: none !important; }
+    .cue i { animation: none; }
+  }
+
+  /* a11y: visible focus everywhere, in the current foreground ink */
+  a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+  .panel a:focus-visible, .panel button:focus-visible, .panel input:focus-visible { outline-color: var(--on); }
+  .hud__btn { border: 0; cursor: pointer; font-family: var(--cie-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+  /* motion switch (also honoured automatically under prefers-reduced-motion) */
+  html.is-still [data-speed], html.is-still [data-x] { transform: none !important; }
+  html.is-still .cue i { animation: none; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 </style>
 </head>
 <body>
-  <header class="px-header">
-    <a href="/" class="cie-uline">← Back</a>
-    <span style="opacity: 0.7;">Parallax Journey</span>
-  </header>
-  
-  <main 
-    class="px-scroll-container" 
-    data-cie-theme-morph
-  >
-    <!-- Stage 1: Ink (Opening) -->
-    <section class="px-section">
-      <div class="px-content">
-        <h1 class="px-title" data-cie-text="fade-up">Shift</h1>
-        <p class="px-subtitle" data-cie-text="fade-up" style="--i: 1;">
-          Scroll-linked · Multi-stop journey
-        </p>
-        <p class="px-body" data-cie-text="fade-up" style="--i: 2;">
-          This page demonstrates a scroll-linked theme morph through five color stops: 
-          <strong>ink → grey → white → grey → ink</strong>. Each zone contains real UI components 
-          from the CIE design system. Text and controls remain readable throughout.
-        </p>
-        <div class="px-btns" data-cie-text="fade-up" style="--i: 3;">
-          <button class="px-btn cie-tap">Start Journey</button>
-          <button class="px-btn cie-tap">Learn More</button>
+
+<header class="hud">
+  <a class="hud__chip mono" href="/">← cie-ds</a>
+  <span class="hud__right" style="display:flex;gap:8px;align-items:center">
+  <button type="button" class="hud__chip hud__btn mono" data-still aria-pressed="false">Motion: on</button>
+  <span class="hud__chip mono"><span class="hud__swatch" aria-hidden="true"></span><span data-hud-name>Ink</span> · <span data-hud-hex>#0b0b0b</span></span>
+  </span>
+</header>
+<p class="sr-only" aria-live="polite" data-live></p>
+<nav class="dots" aria-label="Chapters" data-dots></nav>
+<div class="rail" aria-hidden="true"><i></i></div>
+
+<main>
+  <!-- 01 · INK -->
+  <section class="ch" id="c1" data-bg="ink" data-name="Ink">
+    <div class="ghost" data-speed="-0.35" aria-hidden="true">01</div>
+    <div class="ch__in">
+      <div class="ch__label mono"><span>01 · Ink</span><span>Scroll ↓</span></div>
+      <h1 class="hero-words">
+        <span class="big" data-speed="0.10">Every</span>
+        <span class="big" data-speed="0.30">layer</span>
+        <span class="big" data-speed="0.55">moves.</span>
+      </h1>
+      <p class="lead">Three words, three speeds (×0.10 · ×0.30 · ×0.55). The outlined numeral behind them drifts the other way (×−0.35). Each chapter holds its colour and flips at the seam; text is always ink or paper, never grey.</p>
+      <div class="cue mono"><i></i>Scroll</div>
+    </div>
+  </section>
+
+  <!-- 02 · GREY -->
+  <section class="ch" id="c2" data-bg="grey" data-name="Grey">
+    <div class="ch__in">
+      <div class="ch__label mono"><span>02 · Grey</span><span>Depth stack</span></div>
+      <h2 class="h2">Five blocks,<br>five depths.</h2>
+      <p class="lead">Same row, different speeds. Watch them separate as you scroll — the labels say how fast each one travels.</p>
+      <div class="stack">
+        <div data-speed="-0.30"><span class="tag mono">×−0.30</span><b>A</b></div>
+        <div data-speed="-0.10"><span class="tag mono">×−0.10</span><b>B</b></div>
+        <div data-speed="0.10"><span class="tag mono">×0.10</span><b>C</b></div>
+        <div data-speed="0.30"><span class="tag mono">×0.30</span><b>D</b></div>
+        <div data-speed="0.50"><span class="tag mono">×0.50</span><b>E</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 · PAPER -->
+  <section class="ch" id="c3" data-bg="ink" data-name="Ink">
+    <div class="ch__in">
+      <div class="ch__label mono"><span>03 · Ink</span><span>Horizontal parallax</span></div>
+    </div>
+    <p class="marquee is-solid" data-x="-0.6" aria-hidden="true">Creativity is everywhere — Creativity is everywhere —</p>
+    <p class="marquee is-outline" data-x="0.45" aria-hidden="true">Brand · Space · Tools · Motion · Brand · Space · Tools ·</p>
+    <div class="ch__in">
+      <div class="cards">
+        <article class="card" data-speed="0.08"><span class="tag mono">×0.08</span><div><h3>Brand systems</h3><p>Identity, type and motion rules that survive real products.</p></div></article>
+        <article class="card" data-speed="0.22"><span class="tag mono">×0.22</span><div><h3>Interactive spaces</h3><p>Installations where the body is the interface.</p></div></article>
+        <article class="card" data-speed="0.38"><span class="tag mono">×0.38</span><div><h3>Tools</h3><p>Small internal tools on the same tokens.</p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 · GREY -->
+  <section class="ch" id="c4" data-bg="paper" data-name="Paper">
+    <div class="ch__in">
+      <div class="ch__label mono"><span>04 · Paper</span><span>UI on any ground</span></div>
+      <h2 class="h2">Solid, readable<br>UI everywhere.</h2>
+      <p class="lead">Panels invert against the ground and their text is always the opposite ink — at least 11:1 on every ground.</p>
+      <div class="kit">
+        <div class="panel">
+          <span class="mono">Buttons</span>
+          <div class="row"><button class="btn" type="button">Start a project</button><button class="btn btn--ghost" type="button">Learn more</button></div>
+          <span class="mono">Input</span>
+          <input class="field" type="email" placeholder="you@studio.jp" aria-label="Email">
+        </div>
+        <div class="panel">
+          <span class="mono">Toggle</span>
+          <label class="switch"><input type="checkbox" checked><i></i><span>Sound</span></label>
+          <label class="switch"><input type="checkbox"><i></i><span>Reduced motion</span></label>
+          <span class="mono">Stat</span>
+          <div class="stat">128</div>
+          <span>projects shipped</span>
         </div>
       </div>
-    </section>
-    
-    <!-- Stage 2: Ink → Grey Transition -->
-    <section class="px-section">
-      <div class="px-content">
-        <h2 class="px-title" style="font-size: clamp(32px, 6vw, 64px);" data-cie-text="soft-wipe">
-          Foundations
-        </h2>
-        <div class="px-grid">
-          <div class="px-card cie-lift">
-            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Tokens</span>
-            <h3>Two Inks</h3>
-            <p style="font-size: 14px; opacity: 0.8;">Hierarchy via size + weight. No accent.</p>
-          </div>
-          <div class="px-card cie-lift">
-            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Motion</span>
-            <h3>Snappy Settle</h3>
-            <p style="font-size: 14px; opacity: 0.8;">280–420ms expands. Expo + out.</p>
-          </div>
-          <div class="px-card cie-lift">
-            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Type</span>
-            <h3>Outfit + DM Mono</h3>
-            <p style="font-size: 14px; opacity: 0.8;">Variable weight 300–900.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- Stage 3: Mid Grey Plateau -->
-    <section class="px-section">
-      <div class="px-content">
-        <h2 class="px-title" style="font-size: clamp(40px, 8vw, 88px);" data-cie-text="letter-fade">
-          Interactions
-        </h2>
-        <p class="px-subtitle">Tap · Lift · Invert · Cycle</p>
-        <div class="px-grid">
-          <button class="px-card cie-tap cie-lift">
-            <h3>Hover</h3>
-            <p style="font-size: 14px; opacity: 0.8;">Lift 2px, subtle shadow</p>
-          </button>
-          <button class="px-card cie-tap cie-lift">
-            <h3>Press</h3>
-            <p style="font-size: 14px; opacity: 0.8;">Scale 0.97 on active</p>
-          </button>
-          <button class="px-card cie-tap cie-lift">
-            <h3>Settle</h3>
-            <p style="font-size: 14px; opacity: 0.8;">320ms expo ease</p>
-          </button>
-        </div>
-        <div class="px-btns">
-          <button class="px-btn cie-tap cie-flash" data-cie-cycle="One|Two|Three">
-            <span class="cie-cycle-label">One</span>
-          </button>
-          <button class="px-btn cie-tap cie-flash" data-cie-cycle="Draft|Review|Done">
-            <span class="cie-cycle-label">Draft</span>
-          </button>
-          <button class="px-btn cie-tap cie-flash" data-cie-cycle="EN|JA|両方">
-            <span class="cie-cycle-label">EN</span>
-          </button>
-        </div>
-      </div>
-    </section>
-    
-    <!-- Stage 4: Grey → White Transition -->
-    <section class="px-section">
-      <div class="px-content">
-        <h2 class="px-title" style="font-size: clamp(48px, 9vw, 96px);">
-          Morphing
-        </h2>
-        <p class="px-body">
-          The background shifts through smooth gradients. Text inverts automatically 
-          to maintain contrast. No hard cuts—only continuous lerp between stops.
-        </p>
-        <div style="margin-top: var(--cie-s-40); padding: var(--cie-s-28); border-radius: var(--cie-r-page); background: var(--cie-theme-mute); opacity: 0.8;">
-          <p style="font-family: var(--cie-mono); font-size: 11px; opacity: 0.7; margin-bottom: var(--cie-s-12);">
-            Current Stop
-          </p>
-          <p style="font-size: var(--cie-text-cell); font-weight: 300; letter-spacing: -0.02em;">
-            Approaching white plateau
-          </p>
-        </div>
-      </div>
-    </section>
-    
-    <!-- Stage 5: White Plateau (Middle) -->
-    <section class="px-section" style="min-height: 150vh;">
-      <div class="px-content">
-        <h2 class="px-title" data-cie-text="fade-up">Light</h2>
-        <p class="px-subtitle" data-cie-text="fade-up" style="--i: 1;">
-          Paper plateau · Maximum brightness
-        </p>
-        <p class="px-body" data-cie-text="fade-up" style="--i: 2;">
-          This is the white middle of the journey. Text is dark (ink) for maximum contrast. 
-          All UI elements remain functional and clearly visible. The aesthetic stays consistent 
-          even when the canvas is brightest.
-        </p>
-        
-        <div class="px-grid" style="margin-top: var(--cie-s-40);">
-          <div class="px-card cie-lift cie-tap">
-            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Component</span>
-            <h3 class="cie-breath">Cards</h3>
-            <p style="font-size: 14px; opacity: 0.8;">Lift on hover, tap on press</p>
-          </div>
-          <div class="px-card cie-lift cie-tap">
-            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Component</span>
-            <h3 class="cie-breath">Buttons</h3>
-            <p style="font-size: 14px; opacity: 0.8;">Snappy feedback, expo settle</p>
-          </div>
-          <div class="px-card cie-lift cie-tap">
-            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Component</span>
-            <h3 class="cie-breath">Typography</h3>
-            <p style="font-size: 14px; opacity: 0.8;">Weight breath 300→640</p>
-          </div>
-          <div class="px-card cie-lift cie-tap">
-            <span style="font-family: var(--cie-mono); font-size: 10px; opacity: 0.7;">Component</span>
-            <h3 class="cie-breath">Reveals</h3>
-            <p style="font-size: 14px; opacity: 0.8;">Scroll-linked rise + stagger</p>
-          </div>
-        </div>
-        
-        <div style="margin-top: var(--cie-s-64); text-align: center;">
-          <p style="font-family: var(--cie-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.6; margin-bottom: var(--cie-s-16);">
-            Continue scrolling
-          </p>
-          <div style="width: 2px; height: 40px; background: currentColor; opacity: 0.3; margin: 0 auto; animation: cie-float 2s ease-in-out infinite;"></div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- Stage 6: White → Grey Transition -->
-    <section class="px-section">
-      <div class="px-content">
-        <h2 class="px-title" style="font-size: clamp(40px, 8vw, 88px);" data-cie-text="soft-wipe">
-          Patterns
-        </h2>
-        <p class="px-body">
-          Expand panels, sheets, scroll reveals, click-cycle, per-section sound. 
-          Copy what you need; leave the rest.
-        </p>
-        <div class="px-btns" style="margin-top: var(--cie-s-28);">
-          <button class="px-btn cie-tap">Expand</button>
-          <button class="px-btn cie-tap">Sheet</button>
-          <button class="px-btn cie-tap">Reveal</button>
-          <button class="px-btn cie-tap">Sound</button>
-          <button class="px-btn cie-tap">Nav</button>
-        </div>
-      </div>
-    </section>
-    
-    <!-- Stage 7: Grey Plateau (Return) -->
-    <section class="px-section">
-      <div class="px-content">
-        <h2 class="px-title" style="font-size: clamp(44px, 8vw, 92px);">
-          Reduced Motion
-        </h2>
-        <p class="px-body">
-          Under <code style="font-family: var(--cie-mono); background: var(--cie-theme-mute); padding: 2px 6px; border-radius: 4px;">prefers-reduced-motion: reduce</code>, 
-          all animations collapse to instant or fade-only. Parallax transforms disable. 
-          Main sound effects (click, confirm, cycle) still play when armed—only hover SFX gate on motion preference.
-        </p>
-        <div style="margin-top: var(--cie-s-40); padding: var(--cie-s-24); border-radius: var(--cie-r); background: var(--cie-theme-mute); opacity: 0.7;">
-          <p style="font-size: 14px; line-height: 1.6;">
-            <strong>Color morph continues</strong> even with reduced-motion. 
-            Only decorative transforms (parallax layers, organic loops) respect the preference. 
-            Core functionality and the scroll-linked background transition remain active.
-          </p>
-        </div>
-      </div>
-    </section>
-    
-    <!-- Stage 8: Grey → Ink Transition -->
-    <section class="px-section">
-      <div class="px-content">
-        <h2 class="px-title" style="font-size: clamp(36px, 7vw, 72px);" data-cie-text="letter-fade">
-          Organic Motion
-        </h2>
-        <p class="px-subtitle">Slow · Soft · Ambient</p>
-        <div class="px-grid">
-          <div class="px-card">
-            <div style="width: 60px; height: 60px; background: var(--cie-theme-fg); opacity: 0.3; border-radius: var(--cie-r);" class="cie-drift"></div>
-            <h3>Drift</h3>
-            <p style="font-size: 14px; opacity: 0.8;">Gentle float · 8s loop</p>
-          </div>
-          <div class="px-card">
-            <div style="width: 60px; height: 60px; background: var(--cie-theme-fg); opacity: 0.3; border-radius: var(--cie-r);" class="cie-organic-breath"></div>
-            <h3>Breath</h3>
-            <p style="font-size: 14px; opacity: 0.8;">Soft pulse · 6s loop</p>
-          </div>
-          <div class="px-card">
-            <div style="width: 60px; height: 60px; background: var(--cie-theme-fg); opacity: 0.3; border-radius: var(--cie-r);" class="cie-float"></div>
-            <h3>Float</h3>
-            <p style="font-size: 14px; opacity: 0.8;">Vertical drift · 10s loop</p>
+    </div>
+  </section>
+
+  <!-- 05 · INK -->
+  <section class="ch" id="c5" data-bg="ink" data-name="Ink" style="padding: 0;">
+    <div class="expand-wrap" data-expand>
+      <div class="expand-sticky">
+        <div class="expand-block">
+          <div>
+            <p class="mono">05 · Ink · scroll-driven expand</p>
+            <h2 class="h2">Block becomes page</h2>
           </div>
         </div>
       </div>
-    </section>
-    
-    <!-- Stage 9: Ink Plateau (Closing) -->
-    <section class="px-section" style="min-height: 120vh;">
-      <div class="px-content">
-        <h2 class="px-title">Loop</h2>
-        <p class="px-subtitle">Back to ink · Complete journey</p>
-        <p class="px-body">
-          The morph returns to where it began. Five stops traversed: 
-          ink → grey → white → grey → ink. Over <strong>1000vh</strong> of scroll, 
-          with real UI at every stage. Text stayed readable. Controls stayed functional.
-        </p>
-        <div class="px-btns" style="margin-top: var(--cie-s-40);">
-          <a href="/demo" class="px-btn cie-tap">View Demo</a>
-          <a href="/" class="px-btn cie-tap">Catalog</a>
-        </div>
-        
-        <div style="margin-top: var(--cie-s-64); padding: var(--cie-s-28); border-radius: var(--cie-r-page); background: var(--cie-theme-mute); opacity: 0.6;">
-          <p style="font-family: var(--cie-mono); font-size: 11px; opacity: 0.7; margin-bottom: var(--cie-s-12); letter-spacing: 0.06em; text-transform: uppercase;">
-            v0.4.2 Enhancement
-          </p>
-          <p style="font-size: 14px; line-height: 1.6;">
-            Multi-stop color interpolation with plateau effect. Smooth lerp between each stop. 
-            Easing applied for gradual transitions. UI-rich journey with real components at every zone.
-          </p>
-        </div>
+    </div>
+  </section>
+
+  <!-- 06 · PAPER -->
+  <section class="ch" id="c6" data-bg="grey" data-name="Grey">
+    <div class="ch__in">
+      <div class="ch__label mono"><span>06 · Grey</span><span>Weight in motion</span></div>
+      <div class="specimen">
+        <p class="h2" data-x="-0.25">Outfit 100</p>
+        <p class="h2" data-x="0.15">Outfit 400</p>
+        <p class="h2" data-x="-0.1">Outfit 800</p>
       </div>
-    </section>
-  </main>
-  
-  <aside class="px-progress">
-    Progress: <code id="progress-val">0.000</code><br>
-    BG: <code id="bg-hex">#0b0b0b</code><br>
-    Zone: <code id="zone-name">Ink (start)</code>
-  </aside>
-  
-  <script src="interaction.js"></script>
-  <script>
-    // Live progress + zone indicator
-    const container = document.querySelector('[data-cie-theme-morph]');
-    const progressVal = document.getElementById('progress-val');
-    const bgHex = document.getElementById('bg-hex');
-    const zoneName = document.getElementById('zone-name');
-    
-    const zones = [
-      { min: 0.00, max: 0.12, name: 'Ink (start)' },
-      { min: 0.12, max: 0.25, name: 'Ink → Grey' },
-      { min: 0.25, max: 0.38, name: 'Grey plateau' },
-      { min: 0.38, max: 0.50, name: 'Grey → White' },
-      { min: 0.50, max: 0.62, name: 'White plateau' },
-      { min: 0.62, max: 0.75, name: 'White → Grey' },
-      { min: 0.75, max: 0.88, name: 'Grey plateau' },
-      { min: 0.88, max: 1.00, name: 'Grey → Ink' },
-    ];
-    
-    if (container && progressVal && bgHex && zoneName) {
-      setInterval(() => {
-        const val = parseFloat(getComputedStyle(container).getPropertyValue('--cie-theme-progress').trim()) || 0;
-        const bg = getComputedStyle(container).getPropertyValue('--cie-theme-bg').trim();
-        
-        progressVal.textContent = val.toFixed(3);
-        if (bg) bgHex.textContent = bg;
-        
-        // Find current zone
-        const zone = zones.find(z => val >= z.min && val < z.max) || zones[zones.length - 1];
-        zoneName.textContent = zone.name;
-      }, 100);
+      <p class="lead">Hierarchy comes from size and weight, never from a third colour.</p>
+    </div>
+  </section>
+
+  <!-- 07 · INK -->
+  <section class="ch finale" id="c7" data-bg="ink" data-name="Ink">
+    <div>
+      <div class="ghost" data-speed="0.3" aria-hidden="true" style="left: -4vw; right: auto;">07</div>
+      <p class="mono">07 · Back to ink</p>
+      <h2 class="big">Fin.</h2>
+      <div class="row">
+        <a class="btn" href="/registry/#parallax">React parallax components</a>
+        <a class="btn btn--ghost" href="/">Back to catalog</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var live = document.querySelector("[data-live]"), lastCur = -1;
+  var stillBtn = document.querySelector("[data-still]");
+  try { if (localStorage.getItem("cie-still") === "1") reduce = true; } catch (e) {}
+  function syncStill() {
+    document.documentElement.classList.toggle("is-still", reduce);
+    stillBtn.setAttribute("aria-pressed", String(reduce));
+    stillBtn.textContent = reduce ? "Motion: off" : "Motion: on";
+  }
+  stillBtn.addEventListener("click", function () {
+    reduce = !reduce;
+    try { localStorage.setItem("cie-still", reduce ? "1" : "0"); } catch (e) {}
+    syncStill(); frame();
+  });
+  syncStill();
+  var root = document.documentElement;
+  var C = {
+    ink:   { rgb: [11, 11, 11],    name: "Ink" },
+    grey:  { rgb: [200, 199, 194], name: "Grey" }, // #c8c7c2 — 11.6:1 with ink (AAA)
+    paper: { rgb: [243, 242, 238], name: "Paper" },
+  };
+  var INK = C.ink.rgb, PAPER = C.paper.rgb;
+  var chapters = [].slice.call(document.querySelectorAll("[data-bg]"));
+  var layers = [].slice.call(document.querySelectorAll("[data-speed]"));
+  var xs = [].slice.call(document.querySelectorAll("[data-x]"));
+  var expand = document.querySelector("[data-expand]");
+  var block = expand && expand.querySelector(".expand-block");
+  var nameEl = document.querySelector("[data-hud-name]"), hexEl = document.querySelector("[data-hud-hex]");
+  var rail = document.querySelector(".rail i");
+
+  // chapter dots
+  var dots = document.querySelector("[data-dots]");
+  chapters.forEach(function (c, i) {
+    var a = document.createElement("a"); a.href = "#" + c.id; a.setAttribute("aria-label", (i + 1) + " " + c.dataset.name);
+    dots.appendChild(a);
+  });
+  var dotEls = [].slice.call(dots.children);
+
+  function lum(c) { return c.map(function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); })
+    .reduce(function (s, v, i) { return s + v * [0.2126, 0.7152, 0.0722][i]; }, 0); }
+  function contrast(a, b) { var x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+  function mix(a, b, t) { return a.map(function (v, i) { return Math.round(v + (b[i] - v) * t); }); }
+  function hex(c) { return "#" + c.map(function (v) { return v.toString(16).padStart(2, "0"); }).join(""); }
+  function rgba(c, a) { return "rgba(" + c.join(",") + "," + a + ")"; }
+  function smooth(e0, e1, x) { var t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); }
+
+  function frame() {
+    var vh = innerHeight, mid = vh / 2, y = scrollY;
+    // 1 · colour: hold each chapter, flip fast across the seam (±18% of viewport)
+    var cur = 0, bg = C[chapters[0].dataset.bg].rgb;
+    for (var i = 0; i < chapters.length; i++) {
+      var r = chapters[i].getBoundingClientRect();
+      if (r.top <= mid) cur = i;
     }
-  </script>
+    bg = C[chapters[cur].dataset.bg].rgb;
+    var next = chapters[cur + 1];
+    if (next) {
+      var seam = next.getBoundingClientRect().top; // seam position in viewport
+      var t = smooth(mid + vh * 0.18, mid - vh * 0.18, seam);
+      bg = mix(bg, C[next.dataset.bg].rgb, t);
+    }
+    var fg = contrast(bg, INK) >= contrast(bg, PAPER) ? INK : PAPER;
+    root.style.setProperty("--bg", hex(bg));
+    root.style.setProperty("--fg", hex(fg));
+    root.style.setProperty("--on", hex(fg === INK ? PAPER : INK));
+    root.style.setProperty("--mute", rgba(fg, 0.82));
+    root.style.setProperty("--line", rgba(fg, 0.3));
+    nameEl.textContent = chapters[cur].dataset.name;
+    hexEl.textContent = hex(bg);
+    dotEls.forEach(function (d, i) {
+      d.classList.toggle("is-on", i === cur);
+      if (i === cur) d.setAttribute("aria-current", "true"); else d.removeAttribute("aria-current");
+    });
+    if (cur !== lastCur) { lastCur = cur; live.textContent = "Chapter " + (cur + 1) + ", " + chapters[cur].dataset.name; }
+    rail.parentNode.style.setProperty("--p", y / Math.max(1, document.documentElement.scrollHeight - vh));
+
+    if (!reduce) {
+      // 2 · vertical layers. Zero offset when the chapter's top meets the viewport top, so nothing
+      //     overlaps on arrival; positive speeds lag behind on the way in and rush ahead on the way out.
+      layers.forEach(function (el) {
+        var top = el._ch.getBoundingClientRect().top;
+        var shift = top * parseFloat(el.dataset.speed);
+        el.style.transform = "translate3d(0," + shift.toFixed(1) + "px,0)";
+      });
+      // 3 · horizontal rows
+      xs.forEach(function (el) {
+        var r = el.closest(".ch").getBoundingClientRect();
+        el.style.transform = "translate3d(" + ((r.top - vh) * parseFloat(el.dataset.x)).toFixed(1) + "px,0,0)";
+      });
+    }
+    // 4 · block → page
+    if (block) {
+      var er = expand.getBoundingClientRect();
+      var p = reduce ? 1 : smooth(0, 1, -er.top / (er.height - vh));
+      var e = 1 - Math.pow(1 - p, 3);
+      block.style.setProperty("--iy", ((1 - e) * 30).toFixed(2) + "%");
+      block.style.setProperty("--ix", ((1 - e) * 30).toFixed(2) + "%");
+      block.style.setProperty("--ir", ((1 - e) * 44).toFixed(1) + "px");
+      block.style.setProperty("--ts", (0.6 + e * 0.4).toFixed(3));
+    }
+  }
+  layers.forEach(function (el) { el._ch = el.closest(".ch"); });
+  var ticking = false;
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; frame(); }); } }
+  addEventListener("scroll", onScroll, { passive: true });
+  addEventListener("resize", onScroll);
+  frame();
+})();
+</script>
 </body>
 </html>
