@@ -6,3 +6,7 @@
 
 html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--muted-foreground) transparent; }
 body { font-family: var(--font-sans); }
+
+/* bilingual UI: <T> renders both languages, the inactive one is hidden */
+html[data-ui="ja"] body [lang="en"] { display: none !important; }
+html[data-ui="en"] body [lang="ja"] { display: none !important; }

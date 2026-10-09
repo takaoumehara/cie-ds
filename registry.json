@@ -163,6 +163,9 @@
             "color": "var(--background)"
           }
         }
+      },
+      "meta": {
+        "descriptionJa": "cie-ds の色・フォント・角丸・動きを shadcn の変数に変換したテーマ。最初に1回入れる。"
       }
     },
     {
@@ -181,7 +184,10 @@
           "path": "registry/cie/lib/cie-motion.ts",
           "type": "registry:lib"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "motion 用のイージングと時間の定数（tokens.json から自動生成）。"
+      }
     },
     {
       "name": "cie-color",
@@ -196,7 +202,10 @@
           "path": "registry/cie/lib/cie-color.ts",
           "type": "registry:lib"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "Canvas / WebGL でテーマの色を読み取るための小さな道具。"
+      }
     },
     {
       "name": "button",
@@ -219,7 +228,10 @@
           "path": "registry/cie/ui/button.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "ボタン。丸いピル型、ホバーで文字が太り、押すと少し縮む。"
+      }
     },
     {
       "name": "input",
@@ -238,7 +250,10 @@
           "path": "registry/cie/ui/input.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "入力欄。細い線、フォーカスで静かに強調。"
+      }
     },
     {
       "name": "dialog",
@@ -261,7 +276,10 @@
           "path": "registry/cie/ui/dialog.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "ダイアログ（モーダル）。大きな角丸のブロックが軽く弾んで出る。"
+      }
     },
     {
       "name": "sheet",
@@ -284,7 +302,10 @@
           "path": "registry/cie/ui/sheet.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "シート（横や下から出るパネル）。cie らしい速い expo カーブで滑る。"
+      }
     },
     {
       "name": "grid-pattern",
@@ -309,7 +330,8 @@
         }
       ],
       "meta": {
-        "tech": "svg"
+        "tech": "svg",
+        "descriptionJa": "背景のグリッド / ドット / 十字模様。マス目がふわっと光る。"
       }
     },
     {
@@ -331,7 +353,8 @@
         }
       ],
       "meta": {
-        "tech": "svg"
+        "tech": "svg",
+        "descriptionJa": "背景のフィルム風ザラザラ（グレイン）。テーマの色で着色。"
       }
     },
     {
@@ -357,7 +380,8 @@
         }
       ],
       "meta": {
-        "tech": "canvas2d"
+        "tech": "canvas2d",
+        "descriptionJa": "背景の粒子。カーソルを避けて漂い、またたく（Canvas）。"
       }
     },
     {
@@ -383,7 +407,8 @@
         }
       ],
       "meta": {
-        "tech": "webgl"
+        "tech": "webgl",
+        "descriptionJa": "WebGL の流れる背景。墨が水に広がるような模様。3種類のモード。"
       }
     },
     {
@@ -409,7 +434,8 @@
         }
       ],
       "meta": {
-        "tech": "css"
+        "tech": "css",
+        "descriptionJa": "カーソルを追う光と、光る縁取り。"
       }
     },
     {
@@ -432,7 +458,10 @@
           "path": "registry/cie/ui/border-beam.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "枠線の上を光が一周するエフェクト。"
+      }
     },
     {
       "name": "shimmer-button",
@@ -456,7 +485,10 @@
           "path": "registry/cie/ui/shimmer-button.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "光の帯が走るボタン。目立たせたい CTA 用。"
+      }
     },
     {
       "name": "text-shimmer",
@@ -478,7 +510,10 @@
           "path": "registry/cie/ui/text-shimmer.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "文字の上を光がスッと通る。「生成中…」などに。"
+      }
     },
     {
       "name": "animated-tabs",
@@ -502,7 +537,10 @@
           "path": "registry/cie/ui/animated-tabs.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "タブ。選択中の背景がスッと移動し、高さもなめらかに変わる。"
+      }
     },
     {
       "name": "smooth-accordion",
@@ -524,7 +562,10 @@
           "path": "registry/cie/ui/smooth-accordion.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "アコーディオン。開閉がなめらかで、＋が×に回転。"
+      }
     },
     {
       "name": "parallax",
@@ -547,7 +588,10 @@
           "path": "registry/cie/ui/parallax.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "スクロールで奥行きが出る動き（パララックス）と、ブロックが画面いっぱいに広がるヒーロー。"
+      }
     },
     {
       "name": "reveal",
@@ -570,7 +614,10 @@
           "path": "registry/cie/ui/reveal.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "スクロールで要素が現れる（浮き上がる・ぼかし・ワイプなど6種）。"
+      }
     },
     {
       "name": "split-text",
@@ -593,7 +640,10 @@
           "path": "registry/cie/ui/split-text.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "文字を1語・1文字ずつ出す見出し演出。"
+      }
     },
     {
       "name": "word-rotate",
@@ -616,7 +666,10 @@
           "path": "registry/cie/ui/word-rotate.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "単語がくるくる入れ替わる（例: We design brands / spaces …）。"
+      }
     },
     {
       "name": "number-ticker",
@@ -638,7 +691,10 @@
           "path": "registry/cie/ui/number-ticker.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "数字がカウントアップする。実績の数字などに。"
+      }
     },
     {
       "name": "expand-card",
@@ -662,7 +718,10 @@
           "path": "registry/cie/ui/expand-card.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "cie の代名詞。カードを押すとページ全体に広がる。"
+      }
     },
     {
       "name": "cie-all",
@@ -696,7 +755,10 @@
         "https://cie-ds.vercel.app/r/word-rotate.json",
         "https://cie-ds.vercel.app/r/number-ticker.json",
         "https://cie-ds.vercel.app/r/expand-card.json"
-      ]
+      ],
+      "meta": {
+        "descriptionJa": "テーマ・道具・全コンポーネントを一度に入れる。"
+      }
     }
   ]
 }
