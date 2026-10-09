@@ -18,6 +18,7 @@
   :root {
     --bg: var(--cie-ink);
     --fg: var(--cie-paper);
+    --on: var(--cie-ink); /* text on a --fg surface: always the opposite ink, never the ground */
     --mute: rgba(243, 242, 238, 0.62);
     --line: rgba(243, 242, 238, 0.28);
     --edge: var(--cie-edge);
@@ -33,31 +34,34 @@
     position: fixed; inset: 0 0 auto 0; z-index: 50; display: flex; align-items: center; justify-content: space-between;
     gap: 16px; padding: 16px var(--edge); color: var(--fg); mix-blend-mode: normal;
   }
-  .hud__chip { outline: 1px solid var(--bg); display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 999px; background: var(--fg); color: var(--bg); text-decoration: none; }
+  .hud__chip { outline: 1px solid var(--on); display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 999px; background: var(--fg); color: var(--on); text-decoration: none; }
   .hud__swatch { width: 14px; height: 14px; border-radius: 50%; background: var(--bg); }
   .rail { position: fixed; left: 0; right: 0; bottom: 0; height: 3px; z-index: 50; background: var(--line); }
   .rail i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: var(--fg); }
-  .dots { position: fixed; right: var(--edge); top: 50%; transform: translateY(-50%); z-index: 50; display: grid; gap: 10px; }
-  .dots a { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--fg); display: block; transition: transform var(--cie-t-cell) var(--cie-ease-expo), background-color var(--cie-t-cell) var(--cie-ease-expo); }
-  .dots a.is-on { background: var(--fg); transform: scale(1.35); }
+  .dots { position: fixed; right: calc(var(--edge) - 7px); top: 50%; transform: translateY(-50%); z-index: 50; display: grid; gap: 0; }
+  /* 24×24 hit area (WCAG 2.5.8), 10px visible dot */
+  .dots a { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; }
+  .dots a::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--fg); box-sizing: border-box; transition: transform var(--cie-t-cell) var(--cie-ease-expo), background-color var(--cie-t-cell) var(--cie-ease-expo); }
+  .dots a.is-on::before { background: var(--fg); transform: scale(1.35); }
 
   /* ── Chapters ─────────────────────────────────────── */
   .ch { position: relative; min-height: 120vh; padding: 16vh var(--edge); overflow: clip; }
   .ch__in { position: relative; max-width: 1120px; margin: 0 auto; }
   .ch__label { display: flex; gap: 14px; align-items: center; margin-bottom: 24px; }
-  .ch__label span:first-child { padding: 6px 12px; border-radius: 999px; background: var(--fg); color: var(--bg); }
+  .ch__label span:first-child { padding: 6px 12px; border-radius: 999px; background: var(--fg); color: var(--on); }
   .big { font-size: clamp(64px, 14vw, 220px); font-weight: 200; letter-spacing: -0.055em; line-height: 0.82; margin: 0; }
   .h2 { font-size: clamp(44px, 8vw, 120px); font-weight: 300; letter-spacing: -0.045em; line-height: 0.88; margin: 0; }
   .lead { max-width: 34em; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.55; color: var(--mute); margin: 28px 0 0; }
 
   /* speed tag shown on every parallax layer */
-  .tag { position: absolute; top: 12px; left: 12px; padding: 4px 9px; border-radius: 999px; background: var(--bg); color: var(--fg); }
+  .tag { position: absolute; top: 12px; left: 12px; padding: 4px 9px; border-radius: 999px; background: var(--on); color: var(--fg); }
   [data-speed] { will-change: transform; }
 
   /* 01 — hero: ghost numeral + layered words */
   .ghost { position: absolute; right: -2vw; top: 6vh; font-size: clamp(240px, 46vw, 720px); font-weight: 100; letter-spacing: -0.08em; line-height: 0.75;
     color: transparent; -webkit-text-stroke: 1.5px var(--line); pointer-events: none; user-select: none; }
-  .hero-words { display: grid; gap: 0; margin-top: 4vh; }
+  .hero-words { display: grid; gap: 0; margin: 4vh 0 0; font-weight: 200; }
+  .hero-words .big { display: block; }
   .hero-words .big:nth-child(2) { padding-left: 12vw; font-weight: 500; }
   .hero-words .big:nth-child(3) { padding-left: 4vw; font-style: normal; }
   .cue { margin-top: 40px; display: inline-flex; gap: 12px; align-items: center; }
@@ -66,8 +70,8 @@
 
   /* 02 — depth stack */
   .stack { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 10vh; align-items: start; }
-  .stack > div { position: relative; aspect-ratio: 3 / 4; border-radius: var(--cie-r); background: var(--fg); color: var(--bg); padding: 14px; display: flex; align-items: flex-end; }
-  .stack > div .tag { background: var(--bg); color: var(--fg); }
+  .stack > div { position: relative; aspect-ratio: 3 / 4; border-radius: var(--cie-r); background: var(--fg); color: var(--on); padding: 14px; display: flex; align-items: flex-end; }
+  .stack > div .tag { background: var(--on); color: var(--fg); }
   .stack > div b { font-size: clamp(28px, 4vw, 56px); font-weight: 300; letter-spacing: -0.04em; line-height: 1; }
 
   /* 03 — marquee rows */
@@ -75,38 +79,38 @@
   .marquee.is-solid { font-weight: 600; }
   .marquee.is-outline { color: transparent; -webkit-text-stroke: 1.5px var(--fg); }
   .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 10vh; }
-  .card { position: relative; border-radius: var(--cie-r-page); background: var(--fg); color: var(--bg); padding: 28px; min-height: 240px; display: grid; align-content: space-between; }
+  .card { position: relative; border-radius: var(--cie-r-page); background: var(--fg); color: var(--on); padding: 28px; min-height: 240px; display: grid; align-content: space-between; }
   .card .tag { position: static; justify-self: start; }
   .card h3 { font-size: 34px; font-weight: 300; letter-spacing: -0.035em; margin: 0; }
   .card p { margin: 8px 0 0; opacity: 0.75; line-height: 1.5; }
 
   /* 04 — UI kit, solid & high contrast */
   .kit { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin-top: 8vh; }
-  .panel { border-radius: var(--cie-r-page); background: var(--fg); color: var(--bg); padding: 28px; display: grid; gap: 16px; align-content: start; }
+  .panel { border-radius: var(--cie-r-page); background: var(--fg); color: var(--on); padding: 28px; display: grid; gap: 16px; align-content: start; }
   .panel .mono { opacity: 0.7; }
   .row { display: flex; flex-wrap: wrap; gap: 8px; }
-  .btn { font: inherit; font-size: 16px; border-radius: 999px; padding: 12px 22px; cursor: pointer; border: 1.5px solid var(--bg);
-    background: var(--bg); color: var(--fg); font-variation-settings: 'wght' 400;
+  .btn { font: inherit; font-size: 16px; border-radius: 999px; padding: 12px 22px; cursor: pointer; border: 1.5px solid var(--on);
+    background: var(--on); color: var(--fg); font-variation-settings: 'wght' 400;
     transition: font-variation-settings var(--cie-t-cell) var(--cie-ease-expo), transform var(--cie-t-snap) var(--cie-ease-out), background-color var(--cie-t-cell) var(--cie-ease-expo), color var(--cie-t-cell) var(--cie-ease-expo); }
   .btn:hover { font-variation-settings: 'wght' 620; }
   .btn:active { transform: scale(var(--cie-press-scale)); }
-  .btn--ghost { background: transparent; color: var(--bg); }
-  .btn--ghost:hover { background: var(--bg); color: var(--fg); }
-  .field { font: inherit; width: 100%; box-sizing: border-box; padding: 14px 16px; border-radius: var(--cie-r); border: 1.5px solid var(--bg); background: transparent; color: var(--bg); }
-  .field::placeholder { color: var(--bg); opacity: 0.55; }
+  .btn--ghost { background: transparent; color: var(--on); }
+  .btn--ghost:hover { background: var(--on); color: var(--fg); }
+  .field { font: inherit; width: 100%; box-sizing: border-box; padding: 14px 16px; border-radius: var(--cie-r); border: 1.5px solid var(--on); background: transparent; color: var(--on); }
+  .field::placeholder { color: var(--on); opacity: 0.55; }
   .switch { display: inline-flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
-  .switch i { width: 52px; height: 30px; border-radius: 999px; background: var(--bg); position: relative; opacity: 0.35; transition: opacity var(--cie-t-cell) var(--cie-ease-expo); }
+  .switch i { width: 52px; height: 30px; border-radius: 999px; background: var(--on); position: relative; opacity: 0.35; transition: opacity var(--cie-t-cell) var(--cie-ease-expo); }
   .switch i::after { content: ""; position: absolute; top: 4px; left: 4px; width: 22px; height: 22px; border-radius: 50%; background: var(--fg); transition: transform var(--cie-t-move) var(--cie-ease-snap); }
   .switch input { position: absolute; opacity: 0; pointer-events: none; }
   .switch input:checked + i { opacity: 1; }
   .switch input:checked + i::after { transform: translateX(22px); }
-  .switch input:focus-visible + i { outline: 2px solid var(--bg); outline-offset: 3px; }
+  .switch input:focus-visible + i { outline: 2px solid var(--on); outline-offset: 3px; }
   .stat { font-size: clamp(56px, 7vw, 96px); font-weight: 200; letter-spacing: -0.05em; line-height: 0.9; }
 
   /* 05 — block → page */
   .expand-wrap { height: 220vh; position: relative; }
   .expand-sticky { position: sticky; top: 0; height: 100vh; display: grid; place-items: center; overflow: hidden; }
-  .expand-block { width: 100vw; height: 100vh; background: var(--fg); color: var(--bg); display: grid; place-items: center; text-align: center;
+  .expand-block { width: 100vw; height: 100vh; background: var(--fg); color: var(--on); display: grid; place-items: center; text-align: center;
     clip-path: inset(var(--iy, 30%) var(--ix, 30%) round var(--ir, 44px)); }
   .expand-block .h2 { transform: scale(var(--ts, 0.6)); }
 
@@ -120,9 +124,9 @@
   /* 07 — finale */
   .finale { min-height: 110vh; display: grid; place-items: center; text-align: center; }
   .finale .row { justify-content: center; margin-top: 36px; }
-  .finale .btn { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .finale .btn { background: var(--fg); color: var(--on); border-color: var(--fg); }
   .finale .btn--ghost { background: transparent; color: var(--fg); }
-  .finale .btn--ghost:hover { background: var(--fg); color: var(--bg); }
+  .finale .btn--ghost:hover { background: var(--fg); color: var(--on); }
 
   @media (max-width: 760px) {
     .stack { grid-template-columns: repeat(3, 1fr); }
@@ -133,14 +137,27 @@
     [data-speed], [data-x] { transform: none !important; }
     .cue i { animation: none; }
   }
+
+  /* a11y: visible focus everywhere, in the current foreground ink */
+  a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+  .panel a:focus-visible, .panel button:focus-visible, .panel input:focus-visible { outline-color: var(--on); }
+  .hud__btn { border: 0; cursor: pointer; font-family: var(--cie-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+  /* motion switch (also honoured automatically under prefers-reduced-motion) */
+  html.is-still [data-speed], html.is-still [data-x] { transform: none !important; }
+  html.is-still .cue i { animation: none; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 </style>
 </head>
 <body>
 
 <header class="hud">
   <a class="hud__chip mono" href="/">← cie-ds</a>
-  <span class="hud__chip mono"><span class="hud__swatch"></span><span data-hud-name>Ink</span> · <span data-hud-hex>#0b0b0b</span></span>
+  <span class="hud__right" style="display:flex;gap:8px;align-items:center">
+  <button type="button" class="hud__chip hud__btn mono" data-still aria-pressed="false">Motion: on</button>
+  <span class="hud__chip mono"><span class="hud__swatch" aria-hidden="true"></span><span data-hud-name>Ink</span> · <span data-hud-hex>#0b0b0b</span></span>
+  </span>
 </header>
+<p class="sr-only" aria-live="polite" data-live></p>
 <nav class="dots" aria-label="Chapters" data-dots></nav>
 <div class="rail" aria-hidden="true"><i></i></div>
 
@@ -150,12 +167,12 @@
     <div class="ghost" data-speed="-0.35" aria-hidden="true">01</div>
     <div class="ch__in">
       <div class="ch__label mono"><span>01 · Ink</span><span>Scroll ↓</span></div>
-      <div class="hero-words">
-        <h1 class="big" data-speed="0.10">Every</h1>
-        <p class="big" data-speed="0.30" aria-hidden="true">layer</p>
-        <p class="big" data-speed="0.55" aria-hidden="true">moves.</p>
-      </div>
-      <p class="lead">Three words, three speeds (×0.10 · ×0.30 · ×0.55). The outlined numeral behind them drifts the other way (×−0.35). Each chapter holds its colour, then flips at the seam.</p>
+      <h1 class="hero-words">
+        <span class="big" data-speed="0.10">Every</span>
+        <span class="big" data-speed="0.30">layer</span>
+        <span class="big" data-speed="0.55">moves.</span>
+      </h1>
+      <p class="lead">Three words, three speeds (×0.10 · ×0.30 · ×0.55). The outlined numeral behind them drifts the other way (×−0.35). Each chapter holds its colour and flips at the seam; text is always ink or paper, never grey.</p>
       <div class="cue mono"><i></i>Scroll</div>
     </div>
   </section>
@@ -177,9 +194,9 @@
   </section>
 
   <!-- 03 · PAPER -->
-  <section class="ch" id="c3" data-bg="paper" data-name="Paper">
+  <section class="ch" id="c3" data-bg="ink" data-name="Ink">
     <div class="ch__in">
-      <div class="ch__label mono"><span>03 · Paper</span><span>Horizontal parallax</span></div>
+      <div class="ch__label mono"><span>03 · Ink</span><span>Horizontal parallax</span></div>
     </div>
     <p class="marquee is-solid" data-x="-0.6" aria-hidden="true">Creativity is everywhere — Creativity is everywhere —</p>
     <p class="marquee is-outline" data-x="0.45" aria-hidden="true">Brand · Space · Tools · Motion · Brand · Space · Tools ·</p>
@@ -193,11 +210,11 @@
   </section>
 
   <!-- 04 · GREY -->
-  <section class="ch" id="c4" data-bg="grey" data-name="Grey">
+  <section class="ch" id="c4" data-bg="paper" data-name="Paper">
     <div class="ch__in">
-      <div class="ch__label mono"><span>04 · Grey</span><span>UI on any ground</span></div>
+      <div class="ch__label mono"><span>04 · Paper</span><span>UI on any ground</span></div>
       <h2 class="h2">Solid, readable<br>UI everywhere.</h2>
-      <p class="lead">Panels always invert against the ground, so contrast never drops — on ink, grey or paper.</p>
+      <p class="lead">Panels invert against the ground and their text is always the opposite ink — at least 11:1 on every ground.</p>
       <div class="kit">
         <div class="panel">
           <span class="mono">Buttons</span>
@@ -232,9 +249,9 @@
   </section>
 
   <!-- 06 · PAPER -->
-  <section class="ch" id="c6" data-bg="paper" data-name="Paper">
+  <section class="ch" id="c6" data-bg="grey" data-name="Grey">
     <div class="ch__in">
-      <div class="ch__label mono"><span>06 · Paper</span><span>Weight in motion</span></div>
+      <div class="ch__label mono"><span>06 · Grey</span><span>Weight in motion</span></div>
       <div class="specimen">
         <p class="h2" data-x="-0.25">Outfit 100</p>
         <p class="h2" data-x="0.15">Outfit 400</p>
@@ -261,10 +278,24 @@
 <script>
 (function () {
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var live = document.querySelector("[data-live]"), lastCur = -1;
+  var stillBtn = document.querySelector("[data-still]");
+  try { if (localStorage.getItem("cie-still") === "1") reduce = true; } catch (e) {}
+  function syncStill() {
+    document.documentElement.classList.toggle("is-still", reduce);
+    stillBtn.setAttribute("aria-pressed", String(reduce));
+    stillBtn.textContent = reduce ? "Motion: off" : "Motion: on";
+  }
+  stillBtn.addEventListener("click", function () {
+    reduce = !reduce;
+    try { localStorage.setItem("cie-still", reduce ? "1" : "0"); } catch (e) {}
+    syncStill(); frame();
+  });
+  syncStill();
   var root = document.documentElement;
   var C = {
     ink:   { rgb: [11, 11, 11],    name: "Ink" },
-    grey:  { rgb: [138, 138, 133], name: "Grey" },
+    grey:  { rgb: [200, 199, 194], name: "Grey" }, // #c8c7c2 — 11.6:1 with ink (AAA)
     paper: { rgb: [243, 242, 238], name: "Paper" },
   };
   var INK = C.ink.rgb, PAPER = C.paper.rgb;
@@ -310,11 +341,16 @@
     var fg = contrast(bg, INK) >= contrast(bg, PAPER) ? INK : PAPER;
     root.style.setProperty("--bg", hex(bg));
     root.style.setProperty("--fg", hex(fg));
+    root.style.setProperty("--on", hex(fg === INK ? PAPER : INK));
     root.style.setProperty("--mute", rgba(fg, 0.82));
     root.style.setProperty("--line", rgba(fg, 0.3));
     nameEl.textContent = chapters[cur].dataset.name;
     hexEl.textContent = hex(bg);
-    dotEls.forEach(function (d, i) { d.classList.toggle("is-on", i === cur); });
+    dotEls.forEach(function (d, i) {
+      d.classList.toggle("is-on", i === cur);
+      if (i === cur) d.setAttribute("aria-current", "true"); else d.removeAttribute("aria-current");
+    });
+    if (cur !== lastCur) { lastCur = cur; live.textContent = "Chapter " + (cur + 1) + ", " + chapters[cur].dataset.name; }
     rail.parentNode.style.setProperty("--p", y / Math.max(1, document.documentElement.scrollHeight - vh));
 
     if (!reduce) {
