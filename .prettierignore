@@ -1,0 +1,6 @@
+registry/cie/lib/cie-motion.ts
+registry/cie/styles/
+registry.json
+dist/
+*.html
+*.css

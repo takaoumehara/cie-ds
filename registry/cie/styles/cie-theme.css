@@ -1,0 +1,198 @@
+/* Generated from tokens.json by scripts/sync-tokens.mjs — do not edit by hand.
+   Same output as `npx shadcn add …/r/cie-theme.json`, as a standalone file. */
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --cie-ink: #0b0b0b;
+  --cie-paper: #f3f2ee;
+  --cie-ink-mute: #9c9c98;
+  --cie-paper-mute: #66665f;
+  --cie-sans: 'Outfit', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --cie-mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --cie-sans-ja: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic', sans-serif;
+  --cie-r: clamp(12px, 1.7vmin, 24px);
+  --cie-r-page: clamp(22px, 3.2vmin, 44px);
+  --cie-t-snap: 120ms;
+  --cie-t-fast: 180ms;
+  --cie-t-cell: 320ms;
+  --cie-t-move: 360ms;
+  --cie-t-rise: 400ms;
+  --cie-t-sheet: 300ms;
+  --cie-t-stagger: 24ms;
+  --cie-ease-expo: cubic-bezier(0.76, 0, 0.18, 1);
+  --cie-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --cie-ease-snap: cubic-bezier(0.34, 1.22, 0.64, 1);
+  --cie-parallax-max: 48px;
+  --cie-press-scale: 0.97;
+  --cie-hover-nudge: 3px;
+}
+
+:root {
+  --radius: clamp(12px, 1.7vmin, 24px);
+  --background: #f3f2ee;
+  --foreground: #0b0b0b;
+  --card: #0b0b0b;
+  --card-foreground: #f3f2ee;
+  --popover: #f3f2ee;
+  --popover-foreground: #0b0b0b;
+  --primary: #0b0b0b;
+  --primary-foreground: #f3f2ee;
+  --secondary: rgba(128, 128, 128, 0.32);
+  --secondary-foreground: #0b0b0b;
+  --muted: rgba(11, 11, 11, 0.05);
+  --muted-foreground: #66665f;
+  --accent: rgba(11, 11, 11, 0.08);
+  --accent-foreground: #0b0b0b;
+  --destructive: #c62f35;
+  --border: rgba(11, 11, 11, 0.14);
+  --input: rgba(11, 11, 11, 0.22);
+  --ring: #66665f;
+  --stroke: rgba(11, 11, 11, 0.42);
+  --sidebar: #f3f2ee;
+  --sidebar-foreground: #0b0b0b;
+  --sidebar-primary: #0b0b0b;
+  --sidebar-primary-foreground: #f3f2ee;
+  --sidebar-accent: rgba(11, 11, 11, 0.08);
+  --sidebar-accent-foreground: #0b0b0b;
+  --sidebar-border: rgba(11, 11, 11, 0.14);
+  --sidebar-ring: #66665f;
+  --chart-1: #0b0b0b;
+  --chart-2: #3a3a36;
+  --chart-3: #66665f;
+  --chart-4: #8f8f88;
+  --chart-5: #b8b7b1;
+}
+
+.dark {
+  --background: #0b0b0b;
+  --foreground: #f3f2ee;
+  --card: #f3f2ee;
+  --card-foreground: #0b0b0b;
+  --popover: #0b0b0b;
+  --popover-foreground: #f3f2ee;
+  --primary: #f3f2ee;
+  --primary-foreground: #0b0b0b;
+  --secondary: rgba(128, 128, 128, 0.32);
+  --secondary-foreground: #f3f2ee;
+  --muted: rgba(243, 242, 238, 0.06);
+  --muted-foreground: #9c9c98;
+  --accent: rgba(243, 242, 238, 0.10);
+  --accent-foreground: #f3f2ee;
+  --destructive: #e5484d;
+  --border: rgba(243, 242, 238, 0.16);
+  --input: rgba(243, 242, 238, 0.24);
+  --ring: #9c9c98;
+  --stroke: rgba(243, 242, 238, 0.42);
+  --sidebar: #0b0b0b;
+  --sidebar-foreground: #f3f2ee;
+  --sidebar-primary: #f3f2ee;
+  --sidebar-primary-foreground: #0b0b0b;
+  --sidebar-accent: rgba(243, 242, 238, 0.10);
+  --sidebar-accent-foreground: #f3f2ee;
+  --sidebar-border: rgba(243, 242, 238, 0.16);
+  --sidebar-ring: #9c9c98;
+  --chart-1: #f3f2ee;
+  --chart-2: #c9c8c4;
+  --chart-3: #9c9c98;
+  --chart-4: #6f6f6b;
+  --chart-5: #46463f;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-stroke: var(--stroke);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: 'Outfit', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-ja: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic', sans-serif;
+  --ease-cie-expo: cubic-bezier(0.76, 0, 0.18, 1);
+  --ease-cie-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-cie-snap: cubic-bezier(0.34, 1.22, 0.64, 1);
+  --radius-page: clamp(22px, 3.2vmin, 44px);
+  --color-stroke: var(--stroke);
+  --animate-cie-shimmer: cie-shimmer var(--cie-shimmer-duration, 2.4s) linear infinite;
+  --animate-cie-grain: cie-grain 0.9s steps(4) infinite;
+}
+
+@keyframes cie-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes cie-grain {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-2%, 1%);
+  }
+  50% {
+    transform: translate(1%, -2%);
+  }
+  75% {
+    transform: translate(2%, 2%);
+  }
+}
+
+@utility cie-ring-mask {
+  mask-image: linear-gradient(var(--foreground) 0 0), linear-gradient(var(--foreground) 0 0);
+  mask-clip: content-box, border-box;
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+}
+
+@layer base {
+  * { border-color: var(--border); outline-color: color-mix(in oklab, var(--ring) 50%, transparent); }
+  body { background: var(--background); color: var(--foreground); font-family: var(--font-sans); }
+  body {
+    font-feature-settings: 'palt' 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  :lang(ja) {
+    --cie-sans: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic', sans-serif;
+    font-family: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic', sans-serif;
+    font-feature-settings: 'palt' 1;
+    letter-spacing: 0;
+  }
+  ::selection {
+    background: var(--foreground);
+    color: var(--background);
+  }
+}
