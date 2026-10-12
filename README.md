@@ -46,6 +46,7 @@ Optional namespace in `components.json` → `npx shadcn@latest add @cie/border-b
 | Category | Items |
 |---|---|
 | Foundation | `button` · `input` · `dialog` · `sheet` (shadcn API, cie styling) |
+| UI Parts | `tooltip` · `popover` · `dropdown-menu` · `toast` · `bottom-sheet` · `switch` · `segmented-control` · `chips` · `slider` · `stepper` · `pagination` · `carousel` · `menu-toggle` · `breadcrumb` · `mega-menu` · `step-indicator` · `skeleton` · `spinner` · `badge` · `empty-state` |
 | Atmosphere | `grid-pattern` (SVG) · `noise` (SVG) · `particles` (Canvas 2D) · `shader-field` (WebGL) · `spotlight` |
 | Micro | `border-beam` · `shimmer-button` · `text-shimmer` · `animated-tabs` · `smooth-accordion` |
 | Showcase | `parallax` (+ `ScrollExpand`) · `reveal` · `split-text` · `word-rotate` · `number-ticker` · `expand-card` |

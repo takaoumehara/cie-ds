@@ -80,6 +80,28 @@ import { Slider } from "@/components/ui/slider"
 import { Stepper } from "@/components/ui/stepper"
 import { Pagination } from "@/components/ui/pagination"
 import { Carousel, CarouselItem } from "@/components/ui/carousel"
+import { BellIcon, InboxIcon } from "lucide-react"
+import { MenuToggle } from "@/components/ui/menu-toggle"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage } from "@/components/ui/breadcrumb"
+import {
+  MegaMenu,
+  MegaMenuContent,
+  MegaMenuItem,
+  MegaMenuLink,
+  MegaMenuList,
+  MegaMenuTrigger,
+} from "@/components/ui/mega-menu"
+import { StepIndicator } from "@/components/ui/step-indicator"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Spinner, type SpinnerState } from "@/components/ui/spinner"
+import { Badge, CountBadge } from "@/components/ui/badge"
+import {
+  EmptyState,
+  EmptyStateActions,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/ui/empty-state"
 
 export type Demo = {
   render: () => React.ReactNode
@@ -155,6 +177,138 @@ function StepperDemo() {
     <div className="flex items-center gap-4">
       <Mono>Guests</Mono>
       <Stepper aria-label="Guests" value={guests} onValueChange={setGuests} min={0} max={10} />
+    </div>
+  )
+}
+
+function MenuToggleDemo() {
+  const [open, setOpen] = React.useState(false)
+  return (
+    <div className="flex items-center gap-4">
+      <MenuToggle open={open} onOpenChange={setOpen} />
+      <Mono>{open ? "Open" : "Closed"}</Mono>
+    </div>
+  )
+}
+
+const megaGroups = [
+  {
+    label: "Work",
+    links: [
+      ["Identity", "Marks, type and colour systems"],
+      ["Spaces", "Exhibitions and wayfinding"],
+      ["Digital", "Sites, apps and tools"],
+      ["Motion", "Titles and product film"],
+    ],
+  },
+  {
+    label: "Studio",
+    links: [
+      ["About", "Who we are"],
+      ["Process", "How a project runs"],
+      ["Journal", "Notes and essays"],
+    ],
+  },
+] as const
+
+function MegaMenuDemo() {
+  return (
+    <div className="flex min-h-72 w-full justify-center">
+      <MegaMenu>
+        <MegaMenuList>
+          {megaGroups.map((g) => (
+            <MegaMenuItem key={g.label}>
+              <MegaMenuTrigger>{g.label}</MegaMenuTrigger>
+              <MegaMenuContent>
+                <ul className={g.links.length > 3 ? "grid w-[28rem] grid-cols-2 gap-1" : "grid w-72 gap-1"}>
+                  {g.links.map(([title, desc]) => (
+                    <li key={title}>
+                      <MegaMenuLink href="#">
+                        <span className="font-[460]">{title}</span>
+                        <span className="text-xs text-muted-foreground">{desc}</span>
+                      </MegaMenuLink>
+                    </li>
+                  ))}
+                </ul>
+              </MegaMenuContent>
+            </MegaMenuItem>
+          ))}
+          <MegaMenuItem>
+            <MegaMenuLink variant="trigger" href="#">
+              Contact
+            </MegaMenuLink>
+          </MegaMenuItem>
+        </MegaMenuList>
+      </MegaMenu>
+    </div>
+  )
+}
+
+function StepIndicatorDemo() {
+  const steps = ["Account", "Profile", "Billing", "Review"]
+  const [current, setCurrent] = React.useState(1)
+  return (
+    <div className="flex w-full max-w-lg flex-col gap-6">
+      <StepIndicator steps={steps} current={current} />
+      <div className="flex justify-between">
+        <Button variant="outline" size="sm" disabled={current === 0} onClick={() => setCurrent((c) => c - 1)}>
+          Back
+        </Button>
+        <Button size="sm" onClick={() => setCurrent((c) => (c >= steps.length ? 0 : c + 1))}>
+          {current >= steps.length ? "Restart" : current === steps.length - 1 ? "Finish" : "Next"}
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+function SpinnerDemo() {
+  const [state, setState] = React.useState<SpinnerState>("loading")
+  return (
+    <div className="flex flex-col items-center gap-6">
+      <Spinner state={state} className="size-10" />
+      <div className="flex flex-wrap justify-center gap-2">
+        {(["loading", "success", "error", "idle"] as const).map((s) => (
+          <Button key={s} size="sm" variant={s === state ? "default" : "outline"} onClick={() => setState(s)}>
+            {s}
+          </Button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function BadgeDemo() {
+  const [count, setCount] = React.useState(3)
+  return (
+    <div className="flex flex-col items-center gap-8">
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <Badge>Default</Badge>
+        <Badge variant="secondary">Secondary</Badge>
+        <Badge variant="outline">Outline</Badge>
+        <Badge variant="destructive">Error</Badge>
+      </div>
+      <div className="flex items-center gap-4">
+        <Button
+          variant="outline"
+          size="icon-sm"
+          aria-label="Decrease"
+          onClick={() => setCount((c) => Math.max(0, c - 1))}
+        >
+          −
+        </Button>
+        <CountBadge count={count}>
+          <Button variant="secondary" size="icon" aria-label="Notifications">
+            <BellIcon />
+          </Button>
+        </CountBadge>
+        <Button variant="outline" size="icon-sm" aria-label="Increase" onClick={() => setCount((c) => c + 1)}>
+          +
+        </Button>
+        <Button variant="ghost" size="sm" onClick={() => setCount(120)}>
+          120
+        </Button>
+      </div>
     </div>
   )
 }
@@ -695,6 +849,81 @@ export const demos: Record<string, Demo> = {
           </CarouselItem>
         ))}
       </Carousel>
+    ),
+  },
+  "menu-toggle": {
+    layout: "plain",
+    render: () => <MenuToggleDemo />,
+  },
+  breadcrumb: {
+    layout: "plain",
+    note: "5 items, maxItems 3 — press … to expand.",
+    render: () => (
+      <Breadcrumb>
+        <BreadcrumbList maxItems={3}>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Work</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">2025</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Identity</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbPage>Museum signage</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    ),
+  },
+  "mega-menu": {
+    layout: "plain",
+    render: () => <MegaMenuDemo />,
+  },
+  "step-indicator": {
+    layout: "plain",
+    replay: true,
+    render: () => <StepIndicatorDemo />,
+  },
+  skeleton: {
+    layout: "plain",
+    render: () => (
+      <div aria-busy="true" className="flex w-full max-w-sm items-start gap-4 rounded-page border border-border p-5">
+        <Skeleton className="size-12 shrink-0 rounded-full" />
+        <div className="flex flex-1 flex-col gap-2.5 pt-1">
+          <Skeleton className="h-4 w-2/3" />
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-4/5" />
+        </div>
+      </div>
+    ),
+  },
+  spinner: {
+    layout: "plain",
+    render: () => <SpinnerDemo />,
+  },
+  badge: {
+    layout: "plain",
+    render: () => <BadgeDemo />,
+  },
+  "empty-state": {
+    layout: "plain",
+    replay: true,
+    render: () => (
+      <EmptyState>
+        <EmptyStateIcon>
+          <InboxIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>No messages yet</EmptyStateTitle>
+        <EmptyStateDescription>When someone writes to you, the conversation will show up here.</EmptyStateDescription>
+        <EmptyStateActions>
+          <Button size="sm">Start a conversation</Button>
+        </EmptyStateActions>
+      </EmptyState>
     ),
   },
 }

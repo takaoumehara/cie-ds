@@ -1068,6 +1068,215 @@
       }
     },
     {
+      "name": "menu-toggle",
+      "type": "registry:ui",
+      "title": "Menu Toggle",
+      "description": "Hamburger button whose three ink bars morph into an X on --cie-t-move / expo.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/menu-toggle.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "三本線のメニューボタン。押すと線が回転して × に変わる。"
+      }
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "title": "Breadcrumb",
+      "description": "Breadcrumb with press-nudge links, mono separators and an optional … collapse that expands in place.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/breadcrumb.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "パンくずリスト。長いときは途中を「…」にまとめ、押すとなめらかに広がる。"
+      }
+    },
+    {
+      "name": "mega-menu",
+      "type": "registry:ui",
+      "title": "Mega Menu",
+      "description": "Radix NavigationMenu with a page-radius panel that glides between sizes and slides content by direction.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/mega-menu.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "大きなドロップダウンメニュー。パネルの大きさが項目ごとになめらかに変わり、中身は移動した方向から滑り込む。"
+      }
+    },
+    {
+      "name": "step-indicator",
+      "type": "registry:ui",
+      "title": "Step Indicator",
+      "description": "Horizontal steps: completed dots fill with ink and draw a check, connectors fill left to right.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/step-indicator.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "手順の進み具合を示すステップ表示。完了するとチェックが描かれ、線が左から伸びる。"
+      }
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "Ink-alpha placeholder block with the cie shimmer sweep; static under reduced motion.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "読み込み中の仮表示ブロック。うっすらと光が横切る。"
+      }
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Spinner",
+      "description": "Status spinner: a spinning arc that closes into a ring with a drawn check, or an X on error.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/spinner.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "読み込み表示。終わると円が閉じてチェックが描かれ、失敗時は × になる。"
+      }
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Pill label in four variants, plus CountBadge — a notification bubble that pops in and rolls its digits.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "class-variance-authority",
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/badge.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "小さなラベルと、数字がくるっと切り替わる通知バッジ。"
+      }
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:ui",
+      "title": "Empty State",
+      "description": "Centred empty state — icon tile, light title, description and actions rising in with a stagger.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/empty-state.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "中身がまだないときの表示。アイコンと文言が順にふわっと現れる。"
+      }
+    },
+    {
       "name": "cie-all",
       "type": "registry:style",
       "title": "cie (everything)",
@@ -1110,7 +1319,15 @@
         "https://cie-ds.vercel.app/r/slider.json",
         "https://cie-ds.vercel.app/r/stepper.json",
         "https://cie-ds.vercel.app/r/pagination.json",
-        "https://cie-ds.vercel.app/r/carousel.json"
+        "https://cie-ds.vercel.app/r/carousel.json",
+        "https://cie-ds.vercel.app/r/menu-toggle.json",
+        "https://cie-ds.vercel.app/r/breadcrumb.json",
+        "https://cie-ds.vercel.app/r/mega-menu.json",
+        "https://cie-ds.vercel.app/r/step-indicator.json",
+        "https://cie-ds.vercel.app/r/skeleton.json",
+        "https://cie-ds.vercel.app/r/spinner.json",
+        "https://cie-ds.vercel.app/r/badge.json",
+        "https://cie-ds.vercel.app/r/empty-state.json"
       ],
       "meta": {
         "descriptionJa": "テーマ・道具・全コンポーネントを一度に入れる。"

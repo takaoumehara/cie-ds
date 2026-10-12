@@ -191,15 +191,15 @@ nothing reachable from `cie-all` may depend on a non-core package. Still banned:
 Names from three reference cheat sheets (UI parts · scroll · camera work). Ask for motion by these names;
 each maps to a cie implementation. ✅ exists · 🆕 planned · ✕ not in cie. *Pro* = needs `cie-scroll-pro`.
 
-**UI parts — open / layer**: 01 Modal ✅ `dialog` · 02 Drawer ✅ `sheet` · 03 Bottom sheet 🆕 `sheet` bottom +
-drag · 04 Accordion ✅ `smooth-accordion` · 05 Dropdown 🆕 · 06 Tooltip 🆕 · 07 Popover 🆕 · 08 Toast 🆕
+**UI parts — open / layer**: 01 Modal ✅ `dialog` · 02 Drawer ✅ `sheet` · 03 Bottom sheet ✅ `bottom-sheet` · 04 Accordion ✅ `smooth-accordion` · 05 Dropdown ✅ `dropdown-menu` · 06 Tooltip ✅ `tooltip` · 07 Popover ✅ `popover` · 08 Toast ✅ `toast`
 
-**UI parts — choose / switch**: 09 Tabs ✅ `animated-tabs` · 10 Carousel 🆕 · 11 Toggle switch 🆕 ·
-12 Segmented control 🆕 · 13 Filter chips 🆕 · 14 Range slider 🆕 · 15 Stepper 🆕 · 16 Pagination 🆕
+**UI parts — choose / switch**: 09 Tabs ✅ `animated-tabs` · 10 Carousel ✅ `carousel` · 11 Toggle switch ✅ `switch` ·
+12 Segmented control ✅ `segmented-control` · 13 Filter chips ✅ `chips` · 14 Range slider ✅ `slider` ·
+15 Stepper ✅ `stepper` · 16 Pagination ✅ `pagination`
 
-**UI parts — guide / status**: 17 Hamburger ✅ vanilla `data-cie-hamburger` (React 🆕) · 18 Breadcrumbs 🆕 ·
-19 Mega menu 🆕 · 20 Step indicator 🆕 · 21 Skeleton 🆕 (`animate-cie-shimmer`) · 22 Spinner 🆕 (spin → check) ·
-23 Badge 🆕 · 24 Empty state 🆕
+**UI parts — guide / status**: 17 Hamburger ✅ `menu-toggle` (vanilla `data-cie-hamburger`) · 18 Breadcrumbs ✅ `breadcrumb` ·
+19 Mega menu ✅ `mega-menu` · 20 Step indicator ✅ `step-indicator` · 21 Skeleton ✅ `skeleton` ·
+22 Spinner ✅ `spinner` (spin → check / ×) · 23 Badge ✅ `badge` (`CountBadge`) · 24 Empty state ✅ `empty-state`
 
 **Scroll — entrances**: 01 Fade-in ✅ `Reveal` · 02 Slide-in ✅ `Reveal` · 03 Stagger ✅ `RevealGroup` ·
 04 Text reveal ✅ `split-text` · 05 Mask (clip-path) reveal 🆕 `Reveal` variant · 06 Blur-in 🆕 `Reveal` variant
