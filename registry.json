@@ -1354,6 +1354,135 @@
       }
     },
     {
+      "name": "scroll-progress",
+      "type": "registry:ui",
+      "title": "Scroll Progress",
+      "description": "Reading progress: a 2px ink bar (scaleX) or a self-drawing ring, for the page, a container or one element.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/scroll-progress.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ページや要素の読み進み具合を、細い線または円で示すスクロール進捗インジケーター。"
+      }
+    },
+    {
+      "name": "marquee",
+      "type": "registry:ui",
+      "title": "Marquee",
+      "description": "Infinite marquee whose speed and direction follow page scroll velocity.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/marquee.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "スクロールの速さと向きに合わせて流れが速まり、反転する無限マーキー。"
+      }
+    },
+    {
+      "name": "card-stack",
+      "type": "registry:ui",
+      "title": "Card Stack",
+      "description": "Sticky cards that stack on scroll; covered cards scale down and dim.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/card-stack.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "スクロールでカードが重なっていき、下になったカードが少し縮んで暗くなる。"
+      }
+    },
+    {
+      "name": "hide-header",
+      "type": "registry:ui",
+      "title": "Hide Header",
+      "description": "Header that slides away on scroll down and returns on scroll up.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/hide-header.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "下にスクロールすると隠れ、上に戻すとすぐ現れるヘッダー。"
+      }
+    },
+    {
+      "name": "scrollspy",
+      "type": "registry:ui",
+      "title": "Scrollspy",
+      "description": "Table of contents that tracks the section in view with a gliding marker.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/scrollspy.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "表示中のセクションに合わせてマーカーが滑らかに移動する目次。"
+      }
+    },
+    {
       "name": "cie-all",
       "type": "registry:style",
       "title": "cie (everything)",
@@ -1407,7 +1536,12 @@
         "https://cie-ds.vercel.app/r/empty-state.json",
         "https://cie-ds.vercel.app/r/typewriter.json",
         "https://cie-ds.vercel.app/r/text-fill.json",
-        "https://cie-ds.vercel.app/r/svg-draw.json"
+        "https://cie-ds.vercel.app/r/svg-draw.json",
+        "https://cie-ds.vercel.app/r/scroll-progress.json",
+        "https://cie-ds.vercel.app/r/marquee.json",
+        "https://cie-ds.vercel.app/r/card-stack.json",
+        "https://cie-ds.vercel.app/r/hide-header.json",
+        "https://cie-ds.vercel.app/r/scrollspy.json"
       ],
       "meta": {
         "descriptionJa": "テーマ・道具・全コンポーネントを一度に入れる。"

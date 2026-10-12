@@ -105,6 +105,11 @@ import {
 import { Typewriter } from "@/components/ui/typewriter"
 import { TextFill } from "@/components/ui/text-fill"
 import { SvgDraw, SvgDrawPath } from "@/components/ui/svg-draw"
+import { ScrollProgress } from "@/components/ui/scroll-progress"
+import { Marquee } from "@/components/ui/marquee"
+import { CardStack, CardStackItem } from "@/components/ui/card-stack"
+import { HideHeader } from "@/components/ui/hide-header"
+import { Scrollspy } from "@/components/ui/scrollspy"
 
 export type Demo = {
   render: () => React.ReactNode
@@ -311,6 +316,80 @@ function BadgeDemo() {
         <Button variant="ghost" size="sm" onClick={() => setCount(120)}>
           120
         </Button>
+      </div>
+    </div>
+  )
+}
+
+const scrollCopy = [
+  "A block becomes the page. Scroll is the timeline: every pixel you travel is a frame you can map to something.",
+  "Progress bars are the simplest scroll-linked motion — one value, zero to one, drawn as a hairline of ink.",
+  "Two inks, one ruler. The bar never overshoots the page; the spring only takes the edge off a jumpy wheel.",
+  "Measure the page, an inner box, or a single article. The offsets decide where zero and one live.",
+  "Reduced motion drops the spring: the bar maps one-to-one, nothing follows through, nothing floats.",
+  "Keep reading. The ring on the right draws itself in step with the hairline at the top of the box.",
+]
+
+function ScrollProgressDemo() {
+  const box = React.useRef<HTMLDivElement>(null)
+  return (
+    <div className="flex w-full max-w-xl items-start gap-4">
+      <div ref={box} className="relative h-[420px] flex-1 overflow-y-auto rounded-page border border-border">
+        <ScrollProgress position="sticky" container={box} />
+        <div className="flex flex-col gap-4 p-6 text-sm leading-relaxed text-muted-foreground">
+          {[...scrollCopy, ...scrollCopy].map((t, i) => (
+            <p key={i}>{t}</p>
+          ))}
+        </div>
+      </div>
+      <ScrollProgress variant="circle" container={box} showValue />
+    </div>
+  )
+}
+
+function HideHeaderDemo() {
+  const box = React.useRef<HTMLDivElement>(null)
+  return (
+    <div ref={box} className="relative h-[420px] w-full max-w-xl overflow-y-auto rounded-page border border-border">
+      <HideHeader container={box}>
+        <div className="flex h-12 items-center justify-between px-5">
+          <span className="text-sm font-[520]">cie</span>
+          <Mono>Work · About · Contact</Mono>
+        </div>
+      </HideHeader>
+      <div className="flex flex-col gap-4 p-6 text-sm leading-relaxed text-muted-foreground">
+        {[...scrollCopy, ...scrollCopy, ...scrollCopy].map((t, i) => (
+          <p key={i}>{t}</p>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+const spySections = [
+  { id: "spy-intro", label: "Intro" },
+  { id: "spy-tokens", label: "Tokens" },
+  { id: "spy-motion", label: "Motion" },
+  { id: "spy-scroll", label: "Scroll" },
+]
+
+function ScrollspyDemo() {
+  const box = React.useRef<HTMLDivElement>(null)
+  return (
+    <div className="flex w-full max-w-2xl items-start gap-6">
+      <Scrollspy items={spySections} root={box} className="w-32 shrink-0 pt-2" />
+      <div ref={box} className="relative h-[420px] flex-1 overflow-y-auto rounded-page border border-border">
+        {spySections.map((s, i) => (
+          <section
+            key={s.id}
+            id={s.id}
+            className={i === spySections.length - 1 ? "min-h-[420px] p-6" : "min-h-[300px] p-6"}
+          >
+            <Mono>{`0${i + 1}`}</Mono>
+            <h3 className="mt-2 text-2xl font-[400] tracking-tight">{s.label}</h3>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{scrollCopy[i]}</p>
+          </section>
+        ))}
       </div>
     </div>
   )
@@ -974,5 +1053,59 @@ export const demos: Record<string, Demo> = {
         </SvgDraw>
       </div>
     ),
+  },
+  "scroll-progress": {
+    layout: "plain",
+    note: "Scroll inside the box.",
+    render: () => <ScrollProgressDemo />,
+  },
+  marquee: {
+    layout: "flush",
+    note: "Scroll the page to speed it up.",
+    render: () => (
+      <div className="flex flex-col gap-2 py-8">
+        <Marquee baseVelocity={4}>
+          {["Two inks", "Snappy motion", "Blocks become pages"].map((w) => (
+            <span key={w} className="px-6 text-5xl font-[300] tracking-tight whitespace-nowrap md:text-7xl">
+              {w} ·
+            </span>
+          ))}
+        </Marquee>
+        <Marquee baseVelocity={-4}>
+          {["Scroll", "Reveal", "Parallax", "Stack"].map((w) => (
+            <span
+              key={w}
+              className="px-6 text-5xl font-[300] tracking-tight whitespace-nowrap text-muted-foreground md:text-7xl"
+            >
+              {w} ·
+            </span>
+          ))}
+        </Marquee>
+      </div>
+    ),
+  },
+  "card-stack": {
+    layout: "plain",
+    note: "Scroll the page. Each card sticks; the ones beneath shrink and dim.",
+    render: () => (
+      <CardStack className="w-full max-w-xl" top={96}>
+        {["Reveal", "Parallax", "Progress", "Stack"].map((t, i) => (
+          <CardStackItem key={t} className="flex h-[300px] flex-col justify-between">
+            <Mono>{`0${i + 1} / 04`}</Mono>
+            <p className="text-4xl font-[300] tracking-tight">{t}</p>
+          </CardStackItem>
+        ))}
+      </CardStack>
+    ),
+  },
+  "hide-header": {
+    layout: "plain",
+    note: "Scroll down inside the box, then up.",
+    render: () => <HideHeaderDemo />,
+  },
+  scrollspy: {
+    layout: "plain",
+    note: "Scroll the box or click an entry.",
+    render: () => <ScrollspyDemo />,
   },
 }

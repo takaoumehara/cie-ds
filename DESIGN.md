@@ -92,9 +92,15 @@ Always honour `prefers-reduced-motion: reduce` (zero meaningful animation; no UI
 |---|---|
 | `data-cie-reveal` | Hidden until IntersectionObserver adds `.is-in` |
 | `data-cie-reveal="rise\|fade\|slide\|slide-right\|pop"` | Variant transforms |
+| `data-cie-reveal="blur"` | `filter: blur(var(--cie-blur-in))` → 0, no travel (`--cie-t-rise`, ease-out) |
+| `data-cie-reveal="clip"` | `clip-path: inset(100% 0 0 0)` → `inset(0)` — wipes up (`--cie-t-move`, expo) |
 | `.cie-reveal-stagger` | Sets `--i` on children for delay |
 | `data-cie-parallax="0.35"` | Scroll-linked `--cie-py` (capped by `--cie-parallax-max`) |
 | `.cie-parallax-stage` | Overflow clip for layered stages |
+| `data-cie-progress` / `="#id"` | Writes `--cie-progress` (0–1): page progress, or `#id`'s own inner scroll (if it scrolls) / its passage through the viewport |
+| `.cie-progress-bar` (+ `--fixed`) | 2px `currentColor` bar, `transform: scaleX(var(--cie-progress))`, origin left; `--fixed` pins it to the viewport top |
+| `data-cie-hide-header` / `="#box"` | Toggles `.is-hidden` (translateY(-100%), `--cie-t-move` expo) after 8px down; removed on 8px up, near the top (<64px) or on focus. Reduced motion: fades instead |
+| `data-cie-scrollspy` / `="#box"` | On a nav: `a[href^="#"]` gets `.is-active` + `aria-current="location"` when its section is in view; clicks scroll smoothly (instant under reduced motion). `data-cie-scrollspy-offset="64"` reserves a sticky header |
 
 ## Scrollbar
 
