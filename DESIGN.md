@@ -63,6 +63,9 @@ Snappy 「にゅるっと but fast」 — expands land in **280–420ms**, not 7
 | `--cie-t-rise` | 400ms | Reveal after open |
 | `--cie-t-sheet` | 300ms | Modal / sheet |
 | `--cie-t-stagger` | 24ms | Per-item delay |
+| `--cie-t-scene` | 420ms | View / scene transition (wipe, whip) |
+| `--cie-blur-in` | 8px | Blur-in reveal, rack focus |
+| `--cie-whip-blur` | 12px | Peak blur in a whip pan |
 
 Site behaviours to echo:
 
@@ -89,9 +92,15 @@ Always honour `prefers-reduced-motion: reduce` (zero meaningful animation; no UI
 |---|---|
 | `data-cie-reveal` | Hidden until IntersectionObserver adds `.is-in` |
 | `data-cie-reveal="rise\|fade\|slide\|slide-right\|pop"` | Variant transforms |
+| `data-cie-reveal="blur"` | `filter: blur(var(--cie-blur-in))` → 0, no travel (`--cie-t-rise`, ease-out) |
+| `data-cie-reveal="clip"` | `clip-path: inset(100% 0 0 0)` → `inset(0)` — wipes up (`--cie-t-move`, expo) |
 | `.cie-reveal-stagger` | Sets `--i` on children for delay |
 | `data-cie-parallax="0.35"` | Scroll-linked `--cie-py` (capped by `--cie-parallax-max`) |
 | `.cie-parallax-stage` | Overflow clip for layered stages |
+| `data-cie-progress` / `="#id"` | Writes `--cie-progress` (0–1): page progress, or `#id`'s own inner scroll (if it scrolls) / its passage through the viewport |
+| `.cie-progress-bar` (+ `--fixed`) | 2px `currentColor` bar, `transform: scaleX(var(--cie-progress))`, origin left; `--fixed` pins it to the viewport top |
+| `data-cie-hide-header` / `="#box"` | Toggles `.is-hidden` (translateY(-100%), `--cie-t-move` expo) after 8px down; removed on 8px up, near the top (<64px) or on focus. Reduced motion: fades instead |
+| `data-cie-scrollspy` / `="#box"` | On a nav: `a[href^="#"]` gets `.is-active` + `aria-current="location"` when its section is in view; clicks scroll smoothly (instant under reduced motion). `data-cie-scrollspy-offset="64"` reserves a sticky header |
 
 ## Scrollbar
 
@@ -142,8 +151,8 @@ npx shadcn@latest add https://cie-ds.vercel.app/r/<name>.json
 
 Tailwind utilities from the theme: `font-sans` (Outfit) · `font-mono` (DM Mono) · `ease-cie-expo|out|snap` ·
 `rounded-page` · `border-stroke` · `animate-cie-shimmer|grain` · `cie-ring-mask`.
-In motion code import `cieEase`, `cieDuration`, `cieTransition`, `cieScroll` from `@/lib/cie-motion`
-(never type bezier numbers by hand).
+In motion code import `cieEase`, `cieDuration`, `cieTransition`, `cieScene`, `cieBlur`, `cieScroll` from
+`@/lib/cie-motion` (never type bezier numbers by hand). In GSAP code import from `@/lib/cie-gsap`.
 
 ### Expression rules for the registry (v0.5 update)
 
@@ -157,6 +166,74 @@ The board language above still wins. These are allowed **because they stay insid
 - **Parallax beyond 48px** when asked for: `<Parallax speed={2.5}>` scales the token range. 48px stays the default.
 - **Atmospheres** (shader fields, particles, grain) as backgrounds behind content, never on UI chrome.
 - No drop shadows, no Tailwind palette colours, no hex in components — `npm run check` fails the build otherwise.
+
+### Motion libraries (policy)
+
+Libraries are chosen **by fit, not by rule**. Any animation / interaction library may be used if the result
+passes the fit test below. What stays strict is **install cost**: a library is only installed by the items
+that need it.
+
+| Layer | Library | Use for | Installed by |
+|---|---|---|---|
+| Core | `motion` | All UI parts, reveals, hover / press, view transitions | `cie-all` and every core item |
+| Pro (opt-in) | `gsap` + ScrollTrigger via `cie-gsap` | Pinned / scrubbed scroll scenes: pin + scrub, scrollytelling, horizontal scroll, image sequence, scroll-driven camera | `cie-scroll-pro` and its items only |
+| Others | e.g. Lenis, Rive, Lottie | When a component genuinely needs them | That item only, decided case by case |
+
+`npm run check` enforces it: every npm import in a registry file must be in that item's `dependencies`, and
+nothing reachable from `cie-all` may depend on a non-core package. Still banned: `framer-motion` (old name of
+`motion`, would install twice) and `react-transition-group` (use `AnimatePresence`).
+
+**Fit test** — a motion belongs in cie when:
+
+1. It uses two inks (+ alpha) only. No hue gradients.
+2. Time and easing come from tokens: `cieTransition` / `cieScene` in motion, `cieGsapEase` / `cieGsapDuration`
+   (from `@/lib/cie-gsap`) in GSAP. Never hand-typed beziers.
+3. UI responses land in 280–420ms. Scroll-scrubbed motion follows scroll distance instead (`ease: "none"`).
+4. Reduced motion shows the end state or an instant cut (the "freeze frame"). `useCieGsap` passes `reduced`.
+5. It isn't off-brand: no dutch angles, FPV dives or strong handheld shake.
+
+### Motion vocabulary (72 names → cie)
+
+Names from three reference cheat sheets (UI parts · scroll · camera work). Ask for motion by these names;
+each maps to a cie implementation. ✅ exists · 🆕 planned · ✕ not in cie. *Pro* = needs `cie-scroll-pro`.
+
+**UI parts — open / layer**: 01 Modal ✅ `dialog` · 02 Drawer ✅ `sheet` · 03 Bottom sheet ✅ `bottom-sheet` · 04 Accordion ✅ `smooth-accordion` · 05 Dropdown ✅ `dropdown-menu` · 06 Tooltip ✅ `tooltip` · 07 Popover ✅ `popover` · 08 Toast ✅ `toast`
+
+**UI parts — choose / switch**: 09 Tabs ✅ `animated-tabs` · 10 Carousel ✅ `carousel` · 11 Toggle switch ✅ `switch` ·
+12 Segmented control ✅ `segmented-control` · 13 Filter chips ✅ `chips` · 14 Range slider ✅ `slider` ·
+15 Stepper ✅ `stepper` · 16 Pagination ✅ `pagination`
+
+**UI parts — guide / status**: 17 Hamburger ✅ `menu-toggle` (vanilla `data-cie-hamburger`) · 18 Breadcrumbs ✅ `breadcrumb` ·
+19 Mega menu ✅ `mega-menu` · 20 Step indicator ✅ `step-indicator` · 21 Skeleton ✅ `skeleton` ·
+22 Spinner ✅ `spinner` (spin → check / ×) · 23 Badge ✅ `badge` (`CountBadge`) · 24 Empty state ✅ `empty-state`
+
+**Scroll — entrances**: 01 Fade-in ✅ `Reveal` · 02 Slide-in ✅ `Reveal` · 03 Stagger ✅ `RevealGroup` ·
+04 Text reveal ✅ `split-text` · 05 Mask (clip-path) reveal ✅ `Reveal variant="mask|clip-left"` · 06 Blur-in ✅
+`Reveal variant="blur"` (`--cie-blur-in`) · 07 Typewriter ✅ `typewriter` · 08 Count-up ✅ `number-ticker`
+
+**Scroll — linked**: 09 Scroll progress ✅ `scroll-progress` · 10 Parallax ✅ `parallax` · 11 Scroll zoom ✅
+`ScrollExpand` · 12 Image sequence ✅ `image-sequence` *Pro* · 13 SVG line draw ✅ `svg-draw` · 14 Text fill ✅
+`text-fill` · 15 Background transition ✅ vanilla `data-cie-theme-morph` (ink ↔ paper only) · 16 Marquee (scroll
+velocity) ✅ `marquee`
+
+**Scroll — pin / nav**: 17 Sticky — CSS `position: sticky` · 18 Pin + scrub ✅ `pin-scrub` *Pro* · 19 Scrollytelling ✅
+`scrollytelling` *Pro* · 20 Card stack ✅ `card-stack` · 21 Scroll snap — CSS `scroll-snap` · 22 Horizontal scroll ✅
+`horizontal-scroll` *Pro* · 23 Hide-on-scroll header ✅ `hide-header` · 24 Scrollspy ✅ `scrollspy`
+
+Vanilla: `data-cie-reveal="blur|clip"`, `data-cie-progress`, `data-cie-hide-header`, `data-cie-scrollspy`
+(interaction.js) and, with GSAP loaded, `data-cie-pin` / `data-cie-scrub` / `data-cie-hscroll` (scroll-pro.js).
+
+**Camera moves** → `camera-stage` 🆕 (pointer / hover) and `camera-scroll` 🆕 *Pro* (scroll):
+01 Pan · 02 Tilt · 03 Dolly in · 04 Zoom in · 05 Tracking · 06 Orbit · 07 Crane up · 08 Dolly zoom (vertigo:
+foreground and background scale in opposite directions)
+
+**Shooting / time**: 09 Rack focus 🆕 `focus-shift` (blur moves between layers) · 10 Handheld — only as
+faint organic drift · 11 FPV ✕ · 12 Dutch angle ✕ · 13 Slow motion / 15 Time-lapse — duration choice, not a
+component · 14 Speed ramp = `cieEase.expo` · 16 Freeze frame = the reduced-motion end state
+
+**Transitions** → `cieScene` presets + `scene-transition` 🆕: 17 Jump cut `cut` · 18 Match cut — shared
+`layoutId` (as in `expand-card`) · 19 Whip pan `whip` (+ `--cie-whip-blur`) · 20 Cross dissolve `dissolve` ·
+21 Wipe `wipe` · 22 Smash cut `smash` · 23 J-cut / 24 L-cut — section sound leads / trails the picture 🆕
 
 ### Choosing a renderer (agents: decide per site)
 

@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────
-   CIE scroll — reveal-on-scroll + optional parallax.
+   CIE scroll — reveal-on-scroll, parallax, progress, hide header, scrollspy.
    Pair with interaction.js (IntersectionObserver + rAF parallax).
    ───────────────────────────────────────────────────────────── */
 
@@ -37,7 +37,31 @@
   transform: translate3d(0, var(--cie-reveal-y, 22px), 0);
 }
 
+/* Blur-in: soft focus pull, no travel */
+[data-cie-reveal="blur"] {
+  transform: none;
+  filter: blur(var(--cie-blur-in, 8px));
+  transition:
+    opacity var(--cie-t-rise, 400ms) var(--cie-ease-out),
+    filter var(--cie-t-rise, 400ms) var(--cie-ease-out);
+  transition-delay: calc(var(--i, 0) * var(--cie-t-stagger));
+  will-change: opacity, filter;
+}
+/* Clip: wipes up from a mask (visible ink, clipped geometry) */
+[data-cie-reveal="clip"] {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path var(--cie-t-move, 360ms) var(--cie-ease-expo);
+  transition-delay: calc(var(--i, 0) * var(--cie-t-stagger));
+  will-change: clip-path;
+}
+[data-cie-reveal="blur"].is-in { filter: blur(0); }
+[data-cie-reveal="clip"].is-in { clip-path: inset(0); }
+
 [data-cie-reveal="fade"].is-in,
+[data-cie-reveal="blur"].is-in,
+[data-cie-reveal="clip"].is-in,
 [data-cie-reveal="slide"].is-in,
 [data-cie-reveal="slide-right"].is-in,
 [data-cie-reveal="pop"].is-in,
@@ -76,15 +100,72 @@
   position: relative;
 }
 
+/* Scroll progress — JS writes --cie-progress (0–1) on [data-cie-progress]. */
+[data-cie-progress] {
+  --cie-progress: 0;
+}
+.cie-progress-bar {
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(var(--cie-progress, 0));
+  transform-origin: 0 50%;
+  transition: none; /* driven by scroll rAF */
+  pointer-events: none;
+}
+.cie-progress-bar--fixed {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+}
+
+/* Hide header — JS toggles .is-hidden on scroll down, removes it on scroll up. */
+[data-cie-hide-header] {
+  transition:
+    transform var(--cie-t-move, 360ms) var(--cie-ease-expo),
+    opacity var(--cie-t-fast, 180ms) var(--cie-ease-out);
+}
+[data-cie-hide-header].is-hidden {
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+/* Scrollspy — JS adds .is-active + aria-current="location" to the link in view. */
+[data-cie-scrollspy] a[href^="#"] {
+  opacity: 0.56;
+  transition:
+    opacity var(--cie-t-cell, 320ms) var(--cie-ease-expo),
+    box-shadow var(--cie-t-cell, 320ms) var(--cie-ease-expo);
+}
+[data-cie-scrollspy] a[href^="#"]:hover,
+[data-cie-scrollspy] a[href^="#"].is-active {
+  opacity: 1;
+}
+[data-cie-scrollspy] a[href^="#"].is-active {
+  box-shadow: inset 2px 0 0 currentColor;
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-cie-reveal] {
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
     transition: none !important;
     will-change: auto;
   }
   [data-cie-parallax] {
     transform: none !important;
     will-change: auto;
+  }
+  /* No slide: the header simply fades out / in. */
+  [data-cie-hide-header] {
+    transition: opacity var(--cie-t-fast, 180ms) linear;
+  }
+  [data-cie-hide-header].is-hidden {
+    transform: none;
+    opacity: 0;
+  }
+  [data-cie-scrollspy] a[href^="#"] {
+    transition: none;
   }
 }

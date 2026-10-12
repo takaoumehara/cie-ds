@@ -112,6 +112,9 @@
           "--cie-t-rise": "400ms",
           "--cie-t-sheet": "300ms",
           "--cie-t-stagger": "24ms",
+          "--cie-t-scene": "420ms",
+          "--cie-blur-in": "8px",
+          "--cie-whip-blur": "12px",
           "--cie-ease-expo": "cubic-bezier(0.76, 0, 0.18, 1)",
           "--cie-ease-out": "cubic-bezier(0.16, 1, 0.3, 1)",
           "--cie-ease-snap": "cubic-bezier(0.34, 1.22, 0.64, 1)",
@@ -205,6 +208,30 @@
       ],
       "meta": {
         "descriptionJa": "Canvas / WebGL でテーマの色を読み取るための小さな道具。"
+      }
+    },
+    {
+      "name": "cie-gsap",
+      "type": "registry:lib",
+      "title": "cie gsap",
+      "description": "Opt-in GSAP + ScrollTrigger adapter: cie easings as named CustomEases, token durations, and useCieGsap() with reduced-motion handling. For pinned / scrubbed scroll scenes.",
+      "categories": [
+        "foundation"
+      ],
+      "dependencies": [
+        "gsap"
+      ],
+      "registryDependencies": [
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/lib/cie-gsap.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "GSAP + ScrollTrigger 用の任意アダプタ。cie のイージングと時間、reduced-motion 対応の useCieGsap()。ピン留め・スクラブ系のスクロール演出用。"
       }
     },
     {
@@ -724,6 +751,839 @@
       }
     },
     {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "Radix Tooltip as an inverted ink pill: fade, 4px slide from the side and 0.96 → 1 scale on --cie-t-fast.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ツールチップ。墨色の小さなピルが、横から少しだけ滑りながらふわっと現れる。"
+      }
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "Radix Popover panel that scales from its anchor origin (0.96 → 1) with a fade on --cie-t-cell / expo.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/popover.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ポップオーバー。押したボタンの位置からパネルがキュッと広がって開く。"
+      }
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "Dropdown Menu",
+      "description": "Radix DropdownMenu on the popover panel; the highlighted item fills and its label nudges 2px right (cie press).",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/dropdown-menu.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ドロップダウンメニュー。選択中の項目は背景が付き、文字が少しだけ右へ寄る。"
+      }
+    },
+    {
+      "name": "toast",
+      "type": "registry:ui",
+      "title": "Toast",
+      "description": "Radix Toast ink pills that rise from the bottom and swipe right to dismiss, with a tiny toast() / <Toaster /> queue.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/toast.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "トースト通知。下からスッと上がり、右へスワイプすると消える。toast() 一行で呼び出せる。"
+      }
+    },
+    {
+      "name": "bottom-sheet",
+      "type": "registry:ui",
+      "title": "Bottom Sheet",
+      "description": "Draggable bottom sheet on Radix Dialog + motion: rises on cieTransition.sheet, drag the grabber down to dismiss, springs back otherwise.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/bottom-sheet.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ボトムシート。下からせり上がり、つまみを下へ引っ張ると閉じ、足りなければバネで戻る。"
+      }
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "Radix Switch with a pill track that inks in and a spring thumb that squashes while pressed.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/switch.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "押すと少し横に伸び、バネで滑るつまみを持つピル型のスイッチです。"
+      }
+    },
+    {
+      "name": "segmented-control",
+      "type": "registry:ui",
+      "title": "Segmented Control",
+      "description": "Single-select Radix ToggleGroup with a shared-layout pill that glides to the selected segment.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/segmented-control.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "選択中の項目へピルが滑らかに移動する、常に一つだけ選べるセグメントコントロールです。"
+      }
+    },
+    {
+      "name": "chips",
+      "type": "registry:ui",
+      "title": "Chips",
+      "description": "Multi-select filter chips on Radix ToggleGroup; selected chips invert to ink and grow a check.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/chips.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "選ぶと墨色に反転し、チェックが伸びて現れる複数選択のフィルターチップです。"
+      }
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "title": "Slider",
+      "description": "Radix Slider for single values or ranges, with thumbs that grow while dragging and an optional value bubble.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/slider.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ドラッグ中につまみが大きくなり、値の吹き出しも表示できる単一・範囲対応のスライダーです。"
+      }
+    },
+    {
+      "name": "stepper",
+      "type": "registry:ui",
+      "title": "Stepper",
+      "description": "Numeric stepper whose number rolls up or down with the direction of change; spinbutton semantics.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/stepper.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "増減の向きに合わせて数字が上下に転がる、キーボード操作対応の数値ステッパーです。"
+      }
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "title": "Pagination",
+      "description": "Page buttons with ellipses and prev/next arrows; the current page is marked by a gliding pill.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/pagination.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "現在のページを示すピルが滑らかに移動する、省略記号付きのページネーションです。"
+      }
+    },
+    {
+      "name": "carousel",
+      "type": "registry:ui",
+      "title": "Carousel",
+      "description": "Dependency-free drag carousel that springs to each slide, with arrows and stretching dot indicators.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/carousel.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ドラッグでスライドに吸着し、現在位置のドットが伸びる追加依存なしのカルーセルです。"
+      }
+    },
+    {
+      "name": "menu-toggle",
+      "type": "registry:ui",
+      "title": "Menu Toggle",
+      "description": "Hamburger button whose three ink bars morph into an X on --cie-t-move / expo.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/menu-toggle.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "三本線のメニューボタン。押すと線が回転して × に変わる。"
+      }
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "title": "Breadcrumb",
+      "description": "Breadcrumb with press-nudge links, mono separators and an optional … collapse that expands in place.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/breadcrumb.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "パンくずリスト。長いときは途中を「…」にまとめ、押すとなめらかに広がる。"
+      }
+    },
+    {
+      "name": "mega-menu",
+      "type": "registry:ui",
+      "title": "Mega Menu",
+      "description": "Radix NavigationMenu with a page-radius panel that glides between sizes and slides content by direction.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/mega-menu.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "大きなドロップダウンメニュー。パネルの大きさが項目ごとになめらかに変わり、中身は移動した方向から滑り込む。"
+      }
+    },
+    {
+      "name": "step-indicator",
+      "type": "registry:ui",
+      "title": "Step Indicator",
+      "description": "Horizontal steps: completed dots fill with ink and draw a check, connectors fill left to right.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/step-indicator.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "手順の進み具合を示すステップ表示。完了するとチェックが描かれ、線が左から伸びる。"
+      }
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "Ink-alpha placeholder block with the cie shimmer sweep; static under reduced motion.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "読み込み中の仮表示ブロック。うっすらと光が横切る。"
+      }
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Spinner",
+      "description": "Status spinner: a spinning arc that closes into a ring with a drawn check, or an X on error.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/spinner.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "読み込み表示。終わると円が閉じてチェックが描かれ、失敗時は × になる。"
+      }
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Pill label in four variants, plus CountBadge — a notification bubble that pops in and rolls its digits.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "class-variance-authority",
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/badge.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "小さなラベルと、数字がくるっと切り替わる通知バッジ。"
+      }
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:ui",
+      "title": "Empty State",
+      "description": "Centred empty state — icon tile, light title, description and actions rising in with a stagger.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/empty-state.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "中身がまだないときの表示。アイコンと文言が順にふわっと現れる。"
+      }
+    },
+    {
+      "name": "typewriter",
+      "type": "registry:ui",
+      "title": "Typewriter",
+      "description": "Types text glyph by glyph on view with a stepped 1px caret; optional words loop (type, hold, delete, next).",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/typewriter.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "画面に入ると一文字ずつ文字を打ち込み、細いキャレットが点滅するタイプライター表現です。"
+      }
+    },
+    {
+      "name": "text-fill",
+      "type": "registry:ui",
+      "title": "Text Fill",
+      "description": "Scroll-linked paragraph whose words fill from muted to full ink as it passes through the viewport.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/text-fill.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "スクロールに合わせて、薄い文字が一語ずつインクの色に満ちていく段落です。"
+      }
+    },
+    {
+      "name": "svg-draw",
+      "type": "registry:ui",
+      "title": "SVG Draw",
+      "description": "Draws SVG paths with currentColor strokes, scrubbed by scroll or once on view.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/svg-draw.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "スクロール量に連動して、または画面に入ったときに一度だけ、SVG の線を描いていきます。"
+      }
+    },
+    {
+      "name": "scroll-progress",
+      "type": "registry:ui",
+      "title": "Scroll Progress",
+      "description": "Reading progress: a 2px ink bar (scaleX) or a self-drawing ring, for the page, a container or one element.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/scroll-progress.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ページや要素の読み進み具合を、細い線または円で示すスクロール進捗インジケーター。"
+      }
+    },
+    {
+      "name": "marquee",
+      "type": "registry:ui",
+      "title": "Marquee",
+      "description": "Infinite marquee whose speed and direction follow page scroll velocity.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/marquee.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "スクロールの速さと向きに合わせて流れが速まり、反転する無限マーキー。"
+      }
+    },
+    {
+      "name": "card-stack",
+      "type": "registry:ui",
+      "title": "Card Stack",
+      "description": "Sticky cards that stack on scroll; covered cards scale down and dim.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/card-stack.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "スクロールでカードが重なっていき、下になったカードが少し縮んで暗くなる。"
+      }
+    },
+    {
+      "name": "hide-header",
+      "type": "registry:ui",
+      "title": "Hide Header",
+      "description": "Header that slides away on scroll down and returns on scroll up.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/hide-header.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "下にスクロールすると隠れ、上に戻すとすぐ現れるヘッダー。"
+      }
+    },
+    {
+      "name": "scrollspy",
+      "type": "registry:ui",
+      "title": "Scrollspy",
+      "description": "Table of contents that tracks the section in view with a gliding marker.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/scrollspy.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "表示中のセクションに合わせてマーカーが滑らかに移動する目次。"
+      }
+    },
+    {
+      "name": "pin-scrub",
+      "type": "registry:ui",
+      "title": "Pin Scrub",
+      "description": "Pins a full-viewport stage and scrubs a GSAP timeline you build with scroll; PinScrubSteps preset cross-fades N steps with a progress hairline.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-gsap.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/pin-scrub.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ステージを画面にピン留めし、自分で組んだ GSAP タイムラインをスクロール量に合わせて再生する(ステップ切替のプリセット付き)。",
+        "tech": "GSAP"
+      }
+    },
+    {
+      "name": "scrollytelling",
+      "type": "registry:ui",
+      "title": "Scrollytelling",
+      "description": "Text steps scroll while a pinned figure swaps its state per active step; the active step is full ink, the rest muted.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-gsap.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/scrollytelling.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "本文のステップをスクロールすると、ピン留めされた図版がアクティブなステップに合わせて切り替わる。",
+        "tech": "GSAP"
+      }
+    },
+    {
+      "name": "horizontal-scroll",
+      "type": "registry:ui",
+      "title": "Horizontal Scroll",
+      "description": "Vertical scroll drives a pinned horizontal track of panels, with optional snap to each panel.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-gsap.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/horizontal-scroll.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "縦スクロールでピン留めされた横長のトラックを送り、パネルごとにスナップもできる。",
+        "tech": "GSAP"
+      }
+    },
+    {
+      "name": "image-sequence",
+      "type": "registry:ui",
+      "title": "Image Sequence",
+      "description": "Scroll-scrubbed canvas frame sequence on a pinned stage: preloaded frames drawn with cover fit, or a procedural render in the theme's two inks.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-gsap.json",
+        "https://cie-ds.vercel.app/r/cie-color.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/image-sequence.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ピン留めしたキャンバスに連番画像(または手続き描画)をスクロール量に合わせてコマ送りで描く。",
+        "tech": "GSAP"
+      }
+    },
+    {
       "name": "cie-all",
       "type": "registry:style",
       "title": "cie (everything)",
@@ -754,10 +1614,59 @@
         "https://cie-ds.vercel.app/r/split-text.json",
         "https://cie-ds.vercel.app/r/word-rotate.json",
         "https://cie-ds.vercel.app/r/number-ticker.json",
-        "https://cie-ds.vercel.app/r/expand-card.json"
+        "https://cie-ds.vercel.app/r/expand-card.json",
+        "https://cie-ds.vercel.app/r/tooltip.json",
+        "https://cie-ds.vercel.app/r/popover.json",
+        "https://cie-ds.vercel.app/r/dropdown-menu.json",
+        "https://cie-ds.vercel.app/r/toast.json",
+        "https://cie-ds.vercel.app/r/bottom-sheet.json",
+        "https://cie-ds.vercel.app/r/switch.json",
+        "https://cie-ds.vercel.app/r/segmented-control.json",
+        "https://cie-ds.vercel.app/r/chips.json",
+        "https://cie-ds.vercel.app/r/slider.json",
+        "https://cie-ds.vercel.app/r/stepper.json",
+        "https://cie-ds.vercel.app/r/pagination.json",
+        "https://cie-ds.vercel.app/r/carousel.json",
+        "https://cie-ds.vercel.app/r/menu-toggle.json",
+        "https://cie-ds.vercel.app/r/breadcrumb.json",
+        "https://cie-ds.vercel.app/r/mega-menu.json",
+        "https://cie-ds.vercel.app/r/step-indicator.json",
+        "https://cie-ds.vercel.app/r/skeleton.json",
+        "https://cie-ds.vercel.app/r/spinner.json",
+        "https://cie-ds.vercel.app/r/badge.json",
+        "https://cie-ds.vercel.app/r/empty-state.json",
+        "https://cie-ds.vercel.app/r/typewriter.json",
+        "https://cie-ds.vercel.app/r/text-fill.json",
+        "https://cie-ds.vercel.app/r/svg-draw.json",
+        "https://cie-ds.vercel.app/r/scroll-progress.json",
+        "https://cie-ds.vercel.app/r/marquee.json",
+        "https://cie-ds.vercel.app/r/card-stack.json",
+        "https://cie-ds.vercel.app/r/hide-header.json",
+        "https://cie-ds.vercel.app/r/scrollspy.json"
       ],
       "meta": {
         "descriptionJa": "テーマ・道具・全コンポーネントを一度に入れる。"
+      }
+    },
+    {
+      "name": "cie-scroll-pro",
+      "type": "registry:style",
+      "title": "cie scroll pro (GSAP)",
+      "description": "Opt-in bundle for pinned / scrubbed scroll scenes built on GSAP ScrollTrigger. Install only when a page needs them; cie-all stays motion-only.",
+      "categories": [
+        "foundation"
+      ],
+      "registryDependencies": [
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json",
+        "https://cie-ds.vercel.app/r/cie-gsap.json",
+        "https://cie-ds.vercel.app/r/pin-scrub.json",
+        "https://cie-ds.vercel.app/r/scrollytelling.json",
+        "https://cie-ds.vercel.app/r/horizontal-scroll.json",
+        "https://cie-ds.vercel.app/r/image-sequence.json"
+      ],
+      "meta": {
+        "descriptionJa": "GSAP ScrollTrigger を使うピン留め・スクラブ系の任意バンドル。必要なページでだけ入れる(cie-all は motion のみ)。"
       }
     }
   ]

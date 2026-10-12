@@ -318,9 +318,41 @@
     white-space: pre;
     margin: 0;
   }
+  /* Scroll hooks demo (progress · hide header · scrollspy) */
+  .hooks {
+    display: grid;
+    grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+    gap: var(--cie-s-24);
+    align-items: start;
+  }
+  .hooks__toc { display: grid; gap: var(--cie-s-4, 4px); }
+  .hooks__toc a { padding: var(--cie-s-4, 4px) var(--cie-s-12); color: inherit; text-decoration: none; }
+  .hooks__frame {
+    position: relative;
+    border-radius: var(--cie-r-page);
+    box-shadow: inset 0 0 0 1px var(--cie-stroke);
+    overflow: hidden;
+  }
+  .hooks__bar { position: absolute; inset: 0 0 auto 0; z-index: 2; color: var(--cie-paper); }
+  .hooks__box { height: 360px; overflow-y: auto; }
+  .hooks__head {
+    position: sticky; top: 0; z-index: 1;
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: var(--cie-s-12) var(--cie-s-20);
+    background: var(--cie-ink);
+    border-bottom: 1px solid var(--cie-stroke);
+  }
+  .hooks__sec { min-height: 240px; padding: var(--cie-s-20); display: grid; gap: var(--cie-s-8); align-content: start; }
+  .hooks__sec .mono { color: var(--cie-ink-mute); }
+  .hooks__sec--last { min-height: 360px; }
+  @media (max-width: 600px) {
+    .hooks { grid-template-columns: minmax(0, 1fr); }
+    .hooks__toc { grid-auto-flow: column; overflow-x: auto; }
+  }
 </style>
 </head>
 <body>
+  <div class="cie-progress-bar cie-progress-bar--fixed" data-cie-progress aria-hidden="true"></div>
   <main class="demo">
     <div class="demo__banner">
       <p><b>cie-ds</b> · personal / internal · not for public adoption</p>
@@ -333,6 +365,7 @@
         <a class="cie-uline" href="#sheet">Sheet</a>
         <a class="cie-uline" href="#scroll">Scroll</a>
         <a class="cie-uline" href="#parallax">Parallax</a>
+        <a class="cie-uline" href="#scroll-hooks">Scroll hooks</a>
         <a class="cie-uline" href="#cycle">Cycle</a>
         <a class="cie-uline" href="#sound">Sound</a>
         <a class="cie-uline" href="#organic">Organic</a>
@@ -824,7 +857,7 @@
     <section class="pattern" id="scroll">
       <h2>Scroll reveal</h2>
       <p class="pattern__hint">
-        <code>data-cie-reveal="rise|fade|slide|slide-right|pop"</code>
+        <code>data-cie-reveal="rise|fade|slide|slide-right|pop|blur|clip"</code>
         · observed once by <code>interaction.js</code>. Parent
         <code>.cie-reveal-stagger</code> sets <code>--i</code>.
       </p>
@@ -843,6 +876,12 @@
         </div>
         <div class="cell" data-cie-reveal="pop">
           <span>Pop</span><span class="mono">scale 0.92</span>
+        </div>
+        <div class="cell cell--ink" data-cie-reveal="blur">
+          <span>Blur</span><span class="mono">--cie-blur-in → 0</span>
+        </div>
+        <div class="cell" data-cie-reveal="clip">
+          <span>Clip</span><span class="mono">inset(100% 0 0 0) → 0</span>
         </div>
       </div>
     </section>
@@ -863,6 +902,37 @@
         <div>
           <p class="layer-a" data-cie-parallax="0.25">Shift</p>
           <p class="layer-b" data-cie-parallax="0.45">scroll-linked · subtle</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Scroll hooks: progress · hide header · scrollspy ─ -->
+    <section class="pattern" id="scroll-hooks">
+      <h2>Scroll hooks</h2>
+      <p class="pattern__hint">
+        <code>data-cie-progress</code> writes <code>--cie-progress</code> (0–1) for the page — the hairline at the
+        very top of this page — or <code>="#id"</code> for one element; <code>.cie-progress-bar</code> draws it.
+        <code>data-cie-hide-header</code> toggles <code>.is-hidden</code> on scroll down / up.
+        <code>data-cie-scrollspy</code> marks the link whose section is in view. Scroll inside the box.
+      </p>
+      <div class="hooks" data-cie-reveal="fade">
+        <nav class="hooks__toc mono" data-cie-scrollspy="#hooks-box" aria-label="Box sections">
+          <a href="#hooks-one">01 Reveal</a>
+          <a href="#hooks-two">02 Parallax</a>
+          <a href="#hooks-three">03 Progress</a>
+          <a href="#hooks-four">04 Spy</a>
+        </nav>
+        <div class="hooks__frame">
+          <div class="cie-progress-bar hooks__bar" data-cie-progress="#hooks-box" aria-hidden="true"></div>
+          <div class="hooks__box" id="hooks-box">
+            <header class="hooks__head" data-cie-hide-header="#hooks-box">
+              <span>cie</span><span class="mono">Work · About · Contact</span>
+            </header>
+            <div class="hooks__sec" id="hooks-one"><p class="mono">01</p><p>Reveal — blocks rise, blur or wipe in as they enter.</p></div>
+            <div class="hooks__sec" id="hooks-two"><p class="mono">02</p><p>Parallax — layers drift against the scroll, capped by a token.</p></div>
+            <div class="hooks__sec" id="hooks-three"><p class="mono">03</p><p>Progress — one value, zero to one, drawn as a hairline of ink.</p></div>
+            <div class="hooks__sec hooks__sec--last" id="hooks-four"><p class="mono">04</p><p>Scrollspy — the table of contents follows where you are.</p></div>
+          </div>
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 /*!
  * cie-ds interaction.js — vanilla, dependency-free
- * Scroll reveal · parallax · click-cycle · expand/morph · sheet · per-section audio
+ * Scroll reveal · parallax · progress · hide header · scrollspy · click-cycle · expand/morph · sheet · per-section audio
  *
  * Include after CSS:
  *   <script src="interaction.js" defer></script>
@@ -251,6 +251,136 @@
     update();
     global.addEventListener('scroll', onScroll, { passive: true });
     global.addEventListener('resize', onScroll, { passive: true });
+  }
+
+  /* ── Scroll helpers (progress · hide header · scrollspy) ─── */
+  // A hook's value may name a scroll container ("#box"); empty → the window.
+  function scrollHost(sel) {
+    if (!sel || sel.charAt(0) !== '#') return null;
+    return document.querySelector(sel);
+  }
+
+  function isScroller(el) {
+    if (!el) return false;
+    const oy = getComputedStyle(el).overflowY;
+    return (oy === 'auto' || oy === 'scroll') && el.scrollHeight > el.clientHeight;
+  }
+
+  function onScrollFrame(target, fn) {
+    let ticking = false;
+    function tick() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { ticking = false; fn(); });
+    }
+    (target || global).addEventListener('scroll', tick, { passive: true });
+    global.addEventListener('resize', tick, { passive: true });
+    fn();
+  }
+
+  /* ── Scroll progress → --cie-progress (0–1) ──────────────── */
+  // data-cie-progress            → page progress
+  // data-cie-progress="#id"      → that element: its own inner scroll if it scrolls,
+  //                                otherwise its passage (top hits top → bottom hits bottom).
+  function initProgress(root) {
+    root.querySelectorAll('[data-cie-progress]').forEach((el) => {
+      const target = scrollHost(el.getAttribute('data-cie-progress'));
+      const inner = target && isScroller(target);
+      function update() {
+        let p;
+        if (!target) {
+          const max = document.documentElement.scrollHeight - global.innerHeight;
+          p = max > 0 ? global.scrollY / max : 0;
+        } else if (inner) {
+          const max = target.scrollHeight - target.clientHeight;
+          p = max > 0 ? target.scrollTop / max : 0;
+        } else {
+          const r = target.getBoundingClientRect();
+          const span = r.height - global.innerHeight;
+          p = span > 0 ? -r.top / span : (r.top <= 0 ? 1 : 0);
+        }
+        p = Math.max(0, Math.min(1, p));
+        el.style.setProperty('--cie-progress', p.toFixed(4));
+      }
+      onScrollFrame(inner ? target : null, update);
+    });
+  }
+
+  /* ── Hide header on scroll down, show on scroll up ───────── */
+  // data-cie-hide-header (window) or data-cie-hide-header="#box" (inner scroll box).
+  function initHideHeader(root) {
+    const THRESHOLD = 8;
+    const TOP = 64;
+    root.querySelectorAll('[data-cie-hide-header]').forEach((header) => {
+      const box = scrollHost(header.getAttribute('data-cie-hide-header'));
+      let anchor = 0;
+      let hidden = false;
+      function set(h) {
+        if (h === hidden) return;
+        hidden = h;
+        header.classList.toggle('is-hidden', h);
+      }
+      function update() {
+        const y = box ? box.scrollTop : global.scrollY;
+        if (y < TOP) { anchor = y; set(false); return; }
+        if (hidden ? y > anchor : y < anchor) anchor = y;
+        const d = y - anchor;
+        if (!hidden && d > THRESHOLD) { set(true); anchor = y; }
+        else if (hidden && d < -THRESHOLD) { set(false); anchor = y; }
+      }
+      header.addEventListener('focusin', () => set(false));
+      onScrollFrame(box, update);
+    });
+  }
+
+  /* ── Scrollspy: mark the link whose section is in view ───── */
+  // <nav data-cie-scrollspy> (window) or data-cie-scrollspy="#box"; optional
+  // data-cie-scrollspy-offset="64" reserves a sticky header's height.
+  function initScrollspy(root) {
+    root.querySelectorAll('[data-cie-scrollspy]').forEach((nav) => {
+      const box = scrollHost(nav.getAttribute('data-cie-scrollspy'));
+      const offset = parseFloat(nav.getAttribute('data-cie-scrollspy-offset') || '0') || 0;
+      const links = Array.from(nav.querySelectorAll('a[href^="#"]')).filter((a) => a.getAttribute('href').length > 1);
+      const pairs = links
+        .map((a) => ({ a, el: document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1))) }))
+        .filter((p) => p.el);
+      if (!pairs.length) return;
+
+      function activate(el) {
+        pairs.forEach((p) => {
+          const on = p.el === el;
+          p.a.classList.toggle('is-active', on);
+          if (on) p.a.setAttribute('aria-current', 'location');
+          else p.a.removeAttribute('aria-current');
+        });
+      }
+
+      const visible = new Map();
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => visible.set(e.target, e.isIntersecting));
+          const first = pairs.find((p) => visible.get(p.el));
+          if (first) activate(first.el);
+        },
+        { root: box, rootMargin: '-' + offset + 'px 0px -55% 0px', threshold: 0 }
+      );
+      pairs.forEach((p) => io.observe(p.el));
+      activate(pairs[0].el);
+
+      pairs.forEach((p) => {
+        p.a.addEventListener('click', (e) => {
+          e.preventDefault();
+          activate(p.el);
+          const behavior = REDUCE ? 'auto' : 'smooth';
+          if (box) {
+            const top = p.el.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop - offset;
+            box.scrollTo({ top, behavior });
+          } else {
+            global.scrollTo({ top: p.el.getBoundingClientRect().top + global.scrollY - offset, behavior });
+          }
+        });
+      });
+    });
   }
 
   /* ── Click-to-cycle ──────────────────────────────────────── */
@@ -1088,6 +1218,9 @@
       const root = scope || document;
       initReveal(root);
       initParallax(root);
+      initProgress(root);
+      initHideHeader(root);
+      initScrollspy(root);
       initCycle(root);
       initExpand(root);
       initSheet(root);

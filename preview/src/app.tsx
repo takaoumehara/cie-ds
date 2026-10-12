@@ -26,6 +26,13 @@ const CATEGORIES = [
     ja: "shadcn/ui の基本部品を cie の見た目に作り替えたもの。使い方は shadcn と同じなので、そのまま置き換えられます。",
   },
   {
+    id: "ui",
+    title: "UI Parts",
+    blurb:
+      "Everyday controls that open, switch and guide: tooltip to toast, switch to carousel, steps to empty states. motion + Radix.",
+    ja: "開く・選ぶ・案内するための日常的な部品。ツールチップからトースト、スイッチからカルーセル、ステップ表示や空の状態まで。",
+  },
+  {
     id: "atmosphere",
     title: "Atmosphere",
     blurb:
@@ -37,6 +44,13 @@ const CATEGORIES = [
     title: "Micro Interactive",
     blurb: "Small, frequent motion: beams, shimmer, tabs, accordion. motion + Tailwind only.",
     ja: "よく使う小さな動き。光る枠線、キラッと光るボタン、タブ、アコーディオンなど。",
+  },
+  {
+    id: "scroll",
+    title: "Scroll",
+    blurb:
+      "Scroll-linked motion: typewriter, text fill, line drawing, progress, marquee, stacking cards, hide-on-scroll and scrollspy. Items marked GSAP are opt-in via cie-scroll-pro.",
+    ja: "スクロールに連動する演出。タイプライター、文字の塗り、線の描画、進捗バー、マーキー、重なるカード、隠れるヘッダー、目次のハイライトなど。GSAP と書かれたものは cie-scroll-pro で任意に入れます。",
   },
   {
     id: "showcase",
@@ -177,7 +191,7 @@ function ComponentCard({ item }: { item: Item }) {
         <AnimatedTabsContent value="preview">
           <div
             className={cn(
-              "relative overflow-hidden rounded-page border border-border",
+              "relative overflow-clip rounded-page border border-border",
               layout === "stage" && "h-80 sm:h-96",
               layout === "plain" && "flex min-h-64 items-center justify-center p-6 sm:p-10",
               layout === "flush" && "border-0"

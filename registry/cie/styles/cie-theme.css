@@ -19,6 +19,9 @@
   --cie-t-rise: 400ms;
   --cie-t-sheet: 300ms;
   --cie-t-stagger: 24ms;
+  --cie-t-scene: 420ms;
+  --cie-blur-in: 8px;
+  --cie-whip-blur: 12px;
   --cie-ease-expo: cubic-bezier(0.76, 0, 0.18, 1);
   --cie-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --cie-ease-snap: cubic-bezier(0.34, 1.22, 0.64, 1);

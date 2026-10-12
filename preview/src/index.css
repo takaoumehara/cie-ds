@@ -4,7 +4,8 @@
 
 @source "../../registry/cie";
 
-html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--muted-foreground) transparent; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+html { scrollbar-width: thin; scrollbar-color: var(--muted-foreground) transparent; }
 body { font-family: var(--font-sans); }
 
 /* bilingual UI: <T> renders both languages, the inactive one is hidden */
