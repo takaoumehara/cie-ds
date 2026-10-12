@@ -112,6 +112,9 @@
           "--cie-t-rise": "400ms",
           "--cie-t-sheet": "300ms",
           "--cie-t-stagger": "24ms",
+          "--cie-t-scene": "420ms",
+          "--cie-blur-in": "8px",
+          "--cie-whip-blur": "12px",
           "--cie-ease-expo": "cubic-bezier(0.76, 0, 0.18, 1)",
           "--cie-ease-out": "cubic-bezier(0.16, 1, 0.3, 1)",
           "--cie-ease-snap": "cubic-bezier(0.34, 1.22, 0.64, 1)",
@@ -205,6 +208,30 @@
       ],
       "meta": {
         "descriptionJa": "Canvas / WebGL でテーマの色を読み取るための小さな道具。"
+      }
+    },
+    {
+      "name": "cie-gsap",
+      "type": "registry:lib",
+      "title": "cie gsap",
+      "description": "Opt-in GSAP + ScrollTrigger adapter: cie easings as named CustomEases, token durations, and useCieGsap() with reduced-motion handling. For pinned / scrubbed scroll scenes.",
+      "categories": [
+        "foundation"
+      ],
+      "dependencies": [
+        "gsap"
+      ],
+      "registryDependencies": [
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/lib/cie-gsap.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "GSAP + ScrollTrigger 用の任意アダプタ。cie のイージングと時間、reduced-motion 対応の useCieGsap()。ピン留め・スクラブ系のスクロール演出用。"
       }
     },
     {
@@ -758,6 +785,23 @@
       ],
       "meta": {
         "descriptionJa": "テーマ・道具・全コンポーネントを一度に入れる。"
+      }
+    },
+    {
+      "name": "cie-scroll-pro",
+      "type": "registry:style",
+      "title": "cie scroll pro (GSAP)",
+      "description": "Opt-in bundle for pinned / scrubbed scroll scenes built on GSAP ScrollTrigger. Install only when a page needs them; cie-all stays motion-only.",
+      "categories": [
+        "foundation"
+      ],
+      "registryDependencies": [
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json",
+        "https://cie-ds.vercel.app/r/cie-gsap.json"
+      ],
+      "meta": {
+        "descriptionJa": "GSAP ScrollTrigger を使うピン留め・スクラブ系の任意バンドル。必要なページでだけ入れる(cie-all は motion のみ)。"
       }
     }
   ]

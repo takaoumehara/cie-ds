@@ -49,10 +49,13 @@ Optional namespace in `components.json` → `npx shadcn@latest add @cie/border-b
 | Atmosphere | `grid-pattern` (SVG) · `noise` (SVG) · `particles` (Canvas 2D) · `shader-field` (WebGL) · `spotlight` |
 | Micro | `border-beam` · `shimmer-button` · `text-shimmer` · `animated-tabs` · `smooth-accordion` |
 | Showcase | `parallax` (+ `ScrollExpand`) · `reveal` · `split-text` · `word-rotate` · `number-ticker` · `expand-card` |
-| Libs | `cie-theme` · `cie-motion` (easings/durations for motion) · `cie-color` (theme colours for Canvas/WebGL) |
+| Libs | `cie-theme` · `cie-motion` (easings/durations for motion) · `cie-color` (theme colours for Canvas/WebGL) · `cie-gsap` (opt-in GSAP adapter) |
+| Bundles | `cie-all` (everything, motion-only) · `cie-scroll-pro` (opt-in GSAP ScrollTrigger scenes) |
 
 Rules enforced by `npm run check` (`scripts/check-tokens.mjs`): no hex / colour literals, no Tailwind palette
-colours, no drop shadows, no animation library other than `motion`.
+colours, no drop shadows; every npm import declared in its item's `dependencies`; `cie-all` pulls in core
+libraries only. Animation libraries are chosen per item by fit (DESIGN.md → Motion libraries): `motion` is the
+core, GSAP ScrollTrigger is opt-in via `cie-scroll-pro` for pinned / scrubbed scroll scenes.
 
 ### Develop
 

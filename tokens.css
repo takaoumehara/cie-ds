@@ -84,6 +84,9 @@
   --cie-t-rise: 400ms;   /* reveal after open */
   --cie-t-sheet: 300ms;  /* modal / sheet open·close */
   --cie-t-stagger: 24ms; /* per-item delay in a rise wave */
+  --cie-t-scene: 420ms;  /* view / scene transition (wipe, whip) */
+  --cie-blur-in: 8px;    /* blur-in reveal, rack focus */
+  --cie-whip-blur: 12px; /* peak blur in a whip pan */
   --t-cell: var(--cie-t-cell);
   --t-move: var(--cie-t-move);
   --cie-ease-expo: cubic-bezier(0.76, 0, 0.18, 1); /* decisive settle */

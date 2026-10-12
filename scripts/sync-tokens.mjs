@@ -61,6 +61,9 @@ const raw = {
   "--cie-t-rise": motion.rise,
   "--cie-t-sheet": motion.sheet,
   "--cie-t-stagger": motion.stagger,
+  "--cie-t-scene": motion.scene,
+  "--cie-blur-in": motion.blurIn,
+  "--cie-whip-blur": motion.whipBlur,
   "--cie-ease-expo": motion.easeExpo,
   "--cie-ease-out": motion.easeOut,
   "--cie-ease-snap": motion.easeSnap,
@@ -157,6 +160,7 @@ export const cieDuration = {
   rise: ${ms(motion.rise)},
   sheet: ${ms(motion.sheet)},
   stagger: ${ms(motion.stagger)},
+  scene: ${ms(motion.scene)},
 }
 
 export const cieTransition = {
@@ -171,6 +175,31 @@ export const cieTransition = {
   /** Gentle spring for cursor-follow / parallax smoothing. */
   follow: { type: "spring", stiffness: 160, damping: 28, mass: 0.6 },
 } satisfies Record<string, Transition>
+
+/**
+ * Scene transitions, named after film cuts (DESIGN.md → Motion vocabulary).
+ * Pair with AnimatePresence; blur amounts are in cieBlur.
+ */
+export const cieScene = {
+  /** Jump cut — swap instantly. Also the reduced-motion fallback for every scene transition. */
+  cut: { duration: 0 },
+  /** Cross dissolve — overlap and fade. */
+  dissolve: { duration: cieDuration.cell, ease: cieEase.out },
+  /** Whip pan — fast slide with horizontal blur (cieBlur.whip). */
+  whip: { duration: cieDuration.move, ease: cieEase.expo },
+  /** Wipe — a clip-path edge sweeps across. */
+  wipe: { duration: cieDuration.scene, ease: cieEase.expo },
+  /** Smash cut — still, then a sudden scaled hit. */
+  smash: { duration: cieDuration.snap, ease: cieEase.snap },
+} satisfies Record<string, Transition>
+
+/** px */
+export const cieBlur = {
+  /** Blur-in reveal / rack focus start */
+  in: ${Number.parseFloat(motion.blurIn)},
+  /** Peak horizontal blur during a whip pan */
+  whip: ${Number.parseFloat(motion.whipBlur)},
+}
 
 export const cieScroll = {
   revealY: ${Number.parseFloat(scroll.revealY)},
