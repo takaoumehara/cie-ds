@@ -102,6 +102,9 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/ui/empty-state"
+import { Typewriter } from "@/components/ui/typewriter"
+import { TextFill } from "@/components/ui/text-fill"
+import { SvgDraw, SvgDrawPath } from "@/components/ui/svg-draw"
 
 export type Demo = {
   render: () => React.ReactNode
@@ -924,6 +927,52 @@ export const demos: Record<string, Demo> = {
           <Button size="sm">Start a conversation</Button>
         </EmptyStateActions>
       </EmptyState>
+    ),
+  },
+  typewriter: {
+    layout: "plain",
+    replay: true,
+    render: () => (
+      <div className="flex w-full flex-col gap-6">
+        <h2 className="text-4xl font-[300] tracking-[-0.04em]">
+          We design <Typewriter words={["brands", "spaces", "tools"]} delay={0.3} />
+        </h2>
+        <Typewriter
+          as="p"
+          className="max-w-md text-sm text-muted-foreground"
+          text="Quiet interfaces, typed one letter at a time."
+          speed={36}
+          delay={0.6}
+        />
+      </div>
+    ),
+  },
+  "text-fill": {
+    layout: "plain",
+    note: "Scroll — words fill with ink.",
+    render: () => (
+      <TextFill className="max-w-2xl text-3xl font-[300] leading-tight tracking-[-0.03em]">
+        Good motion is mostly restraint. A page that moves only when it has something to say reads calmer, loads faster
+        and leaves room for the work itself to carry the story.
+      </TextFill>
+    ),
+  },
+  "svg-draw": {
+    layout: "plain",
+    note: "Scroll to draw.",
+    render: () => (
+      <div className="flex w-full flex-col items-center gap-10">
+        <SvgDraw
+          viewBox="0 0 400 80"
+          strokeWidth={2}
+          className="w-full"
+          d="M4 40 C 54 0, 96 0, 146 40 S 238 80, 288 40 S 360 0, 396 40"
+        />
+        <SvgDraw trigger="view" viewBox="0 0 48 48" strokeWidth={2} className="size-16">
+          <SvgDrawPath d="M24 4 a20 20 0 1 1 0 40 a20 20 0 1 1 0 -40" />
+          <SvgDrawPath d="M15 25 l6 6 l12 -13" />
+        </SvgDraw>
+      </div>
     ),
   },
 }

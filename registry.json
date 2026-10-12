@@ -1277,6 +1277,83 @@
       }
     },
     {
+      "name": "typewriter",
+      "type": "registry:ui",
+      "title": "Typewriter",
+      "description": "Types text glyph by glyph on view with a stepped 1px caret; optional words loop (type, hold, delete, next).",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/typewriter.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "画面に入ると一文字ずつ文字を打ち込み、細いキャレットが点滅するタイプライター表現です。"
+      }
+    },
+    {
+      "name": "text-fill",
+      "type": "registry:ui",
+      "title": "Text Fill",
+      "description": "Scroll-linked paragraph whose words fill from muted to full ink as it passes through the viewport.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/text-fill.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "スクロールに合わせて、薄い文字が一語ずつインクの色に満ちていく段落です。"
+      }
+    },
+    {
+      "name": "svg-draw",
+      "type": "registry:ui",
+      "title": "SVG Draw",
+      "description": "Draws SVG paths with currentColor strokes, scrubbed by scroll or once on view.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/svg-draw.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "スクロール量に連動して、または画面に入ったときに一度だけ、SVG の線を描いていきます。"
+      }
+    },
+    {
       "name": "cie-all",
       "type": "registry:style",
       "title": "cie (everything)",
@@ -1327,7 +1404,10 @@
         "https://cie-ds.vercel.app/r/skeleton.json",
         "https://cie-ds.vercel.app/r/spinner.json",
         "https://cie-ds.vercel.app/r/badge.json",
-        "https://cie-ds.vercel.app/r/empty-state.json"
+        "https://cie-ds.vercel.app/r/empty-state.json",
+        "https://cie-ds.vercel.app/r/typewriter.json",
+        "https://cie-ds.vercel.app/r/text-fill.json",
+        "https://cie-ds.vercel.app/r/svg-draw.json"
       ],
       "meta": {
         "descriptionJa": "テーマ・道具・全コンポーネントを一度に入れる。"
