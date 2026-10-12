@@ -751,6 +751,323 @@
       }
     },
     {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "Radix Tooltip as an inverted ink pill: fade, 4px slide from the side and 0.96 → 1 scale on --cie-t-fast.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ツールチップ。墨色の小さなピルが、横から少しだけ滑りながらふわっと現れる。"
+      }
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "Radix Popover panel that scales from its anchor origin (0.96 → 1) with a fade on --cie-t-cell / expo.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/popover.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ポップオーバー。押したボタンの位置からパネルがキュッと広がって開く。"
+      }
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "Dropdown Menu",
+      "description": "Radix DropdownMenu on the popover panel; the highlighted item fills and its label nudges 2px right (cie press).",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/dropdown-menu.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ドロップダウンメニュー。選択中の項目は背景が付き、文字が少しだけ右へ寄る。"
+      }
+    },
+    {
+      "name": "toast",
+      "type": "registry:ui",
+      "title": "Toast",
+      "description": "Radix Toast ink pills that rise from the bottom and swipe right to dismiss, with a tiny toast() / <Toaster /> queue.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/toast.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "トースト通知。下からスッと上がり、右へスワイプすると消える。toast() 一行で呼び出せる。"
+      }
+    },
+    {
+      "name": "bottom-sheet",
+      "type": "registry:ui",
+      "title": "Bottom Sheet",
+      "description": "Draggable bottom sheet on Radix Dialog + motion: rises on cieTransition.sheet, drag the grabber down to dismiss, springs back otherwise.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/bottom-sheet.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ボトムシート。下からせり上がり、つまみを下へ引っ張ると閉じ、足りなければバネで戻る。"
+      }
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "Radix Switch with a pill track that inks in and a spring thumb that squashes while pressed.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/switch.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "押すと少し横に伸び、バネで滑るつまみを持つピル型のスイッチです。"
+      }
+    },
+    {
+      "name": "segmented-control",
+      "type": "registry:ui",
+      "title": "Segmented Control",
+      "description": "Single-select Radix ToggleGroup with a shared-layout pill that glides to the selected segment.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/segmented-control.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "選択中の項目へピルが滑らかに移動する、常に一つだけ選べるセグメントコントロールです。"
+      }
+    },
+    {
+      "name": "chips",
+      "type": "registry:ui",
+      "title": "Chips",
+      "description": "Multi-select filter chips on Radix ToggleGroup; selected chips invert to ink and grow a check.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/chips.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "選ぶと墨色に反転し、チェックが伸びて現れる複数選択のフィルターチップです。"
+      }
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "title": "Slider",
+      "description": "Radix Slider for single values or ranges, with thumbs that grow while dragging and an optional value bubble.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/slider.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ドラッグ中につまみが大きくなり、値の吹き出しも表示できる単一・範囲対応のスライダーです。"
+      }
+    },
+    {
+      "name": "stepper",
+      "type": "registry:ui",
+      "title": "Stepper",
+      "description": "Numeric stepper whose number rolls up or down with the direction of change; spinbutton semantics.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/stepper.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "増減の向きに合わせて数字が上下に転がる、キーボード操作対応の数値ステッパーです。"
+      }
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "title": "Pagination",
+      "description": "Page buttons with ellipses and prev/next arrows; the current page is marked by a gliding pill.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/pagination.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "現在のページを示すピルが滑らかに移動する、省略記号付きのページネーションです。"
+      }
+    },
+    {
+      "name": "carousel",
+      "type": "registry:ui",
+      "title": "Carousel",
+      "description": "Dependency-free drag carousel that springs to each slide, with arrows and stretching dot indicators.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-motion.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/carousel.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ドラッグでスライドに吸着し、現在位置のドットが伸びる追加依存なしのカルーセルです。"
+      }
+    },
+    {
       "name": "cie-all",
       "type": "registry:style",
       "title": "cie (everything)",
@@ -781,7 +1098,19 @@
         "https://cie-ds.vercel.app/r/split-text.json",
         "https://cie-ds.vercel.app/r/word-rotate.json",
         "https://cie-ds.vercel.app/r/number-ticker.json",
-        "https://cie-ds.vercel.app/r/expand-card.json"
+        "https://cie-ds.vercel.app/r/expand-card.json",
+        "https://cie-ds.vercel.app/r/tooltip.json",
+        "https://cie-ds.vercel.app/r/popover.json",
+        "https://cie-ds.vercel.app/r/dropdown-menu.json",
+        "https://cie-ds.vercel.app/r/toast.json",
+        "https://cie-ds.vercel.app/r/bottom-sheet.json",
+        "https://cie-ds.vercel.app/r/switch.json",
+        "https://cie-ds.vercel.app/r/segmented-control.json",
+        "https://cie-ds.vercel.app/r/chips.json",
+        "https://cie-ds.vercel.app/r/slider.json",
+        "https://cie-ds.vercel.app/r/stepper.json",
+        "https://cie-ds.vercel.app/r/pagination.json",
+        "https://cie-ds.vercel.app/r/carousel.json"
       ],
       "meta": {
         "descriptionJa": "テーマ・道具・全コンポーネントを一度に入れる。"

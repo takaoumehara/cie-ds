@@ -49,6 +49,37 @@ import { SplitText } from "@/components/ui/split-text"
 import { WordRotate } from "@/components/ui/word-rotate"
 import { NumberTicker } from "@/components/ui/number-ticker"
 import { ExpandBoard, ExpandCard } from "@/components/ui/expand-card"
+import { BoldIcon, ItalicIcon, LinkIcon, UnderlineIcon } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Toaster, toast } from "@/components/ui/toast"
+import {
+  BottomSheet,
+  BottomSheetClose,
+  BottomSheetContent,
+  BottomSheetDescription,
+  BottomSheetHeader,
+  BottomSheetTitle,
+  BottomSheetTrigger,
+} from "@/components/ui/bottom-sheet"
+import { Switch } from "@/components/ui/switch"
+import { SegmentedControl, SegmentedControlItem } from "@/components/ui/segmented-control"
+import { Chip, Chips } from "@/components/ui/chips"
+import { Slider } from "@/components/ui/slider"
+import { Stepper } from "@/components/ui/stepper"
+import { Pagination } from "@/components/ui/pagination"
+import { Carousel, CarouselItem } from "@/components/ui/carousel"
 
 export type Demo = {
   render: () => React.ReactNode
@@ -77,6 +108,54 @@ function ShaderModes() {
         </div>
       </div>
     </ShaderField>
+  )
+}
+
+function DropdownMenuDemo() {
+  const [grid, setGrid] = React.useState(true)
+  const [labels, setLabels] = React.useState(false)
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline">Options</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="start">
+        <DropdownMenuLabel>File</DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            New page<DropdownMenuShortcut>⌘N</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            Duplicate<DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>Share…</DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel>View</DropdownMenuLabel>
+        <DropdownMenuCheckboxItem checked={grid} onCheckedChange={(v) => setGrid(v === true)}>
+          Show grid
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem checked={labels} onCheckedChange={(v) => setLabels(v === true)}>
+          Show labels
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem variant="destructive">
+          Delete<DropdownMenuShortcut>⌫</DropdownMenuShortcut>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
+const yen = (v: number) => `¥${v.toLocaleString("en-US")}`
+
+function StepperDemo() {
+  const [guests, setGuests] = React.useState(2)
+  return (
+    <div className="flex items-center gap-4">
+      <Mono>Guests</Mono>
+      <Stepper aria-label="Guests" value={guests} onValueChange={setGuests} min={0} max={10} />
+    </div>
   )
 }
 
@@ -435,6 +514,187 @@ export const demos: Record<string, Demo> = {
           </ExpandCard>
         ))}
       </ExpandBoard>
+    ),
+  },
+  tooltip: {
+    layout: "plain",
+    render: () => (
+      <TooltipProvider>
+        <div className="flex gap-1 rounded-full border border-border p-1">
+          {[
+            { icon: <BoldIcon />, label: "Bold" },
+            { icon: <ItalicIcon />, label: "Italic" },
+            { icon: <UnderlineIcon />, label: "Underline" },
+            { icon: <LinkIcon />, label: "Insert link" },
+          ].map(({ icon, label }) => (
+            <Tooltip key={label}>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon-sm" aria-label={label}>
+                  {icon}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{label}</TooltipContent>
+            </Tooltip>
+          ))}
+        </div>
+      </TooltipProvider>
+    ),
+  },
+  popover: {
+    layout: "plain",
+    render: () => (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline">Dimensions</Button>
+        </PopoverTrigger>
+        <PopoverContent className="flex w-64 flex-col gap-3">
+          <Mono>Dimensions</Mono>
+          <label className="flex items-center justify-between gap-3 text-sm">
+            Width
+            <Input defaultValue="1200" className="h-8 w-28" />
+          </label>
+          <label className="flex items-center justify-between gap-3 text-sm">
+            Height
+            <Input defaultValue="800" className="h-8 w-28" />
+          </label>
+          <PopoverClose asChild>
+            <Button size="sm" className="self-end">
+              Apply
+            </Button>
+          </PopoverClose>
+        </PopoverContent>
+      </Popover>
+    ),
+  },
+  "dropdown-menu": {
+    layout: "plain",
+    render: () => <DropdownMenuDemo />,
+  },
+  toast: {
+    layout: "plain",
+    note: "Swipe a toast right to dismiss it.",
+    render: () => (
+      <div className="flex flex-wrap gap-2">
+        <Button onClick={() => toast("Changes saved", { icon: true, description: "Just now" })}>Save</Button>
+        <Button
+          variant="outline"
+          onClick={() =>
+            toast("Upload failed", { variant: "destructive", description: "Check your connection and retry." })
+          }
+        >
+          Fail
+        </Button>
+        <Toaster />
+      </div>
+    ),
+  },
+  "bottom-sheet": {
+    layout: "plain",
+    note: "Drag the handle down to dismiss.",
+    render: () => (
+      <BottomSheet>
+        <BottomSheetTrigger asChild>
+          <Button>Open sheet</Button>
+        </BottomSheetTrigger>
+        <BottomSheetContent>
+          <BottomSheetHeader>
+            <Mono>Sheet</Mono>
+            <BottomSheetTitle>Share this page</BottomSheetTitle>
+            <BottomSheetDescription>
+              Anyone with the link can view. Pull the handle down past a third of the sheet, or flick it, to close.
+            </BottomSheetDescription>
+          </BottomSheetHeader>
+          <BottomSheetClose asChild>
+            <Button variant="secondary" className="self-start">
+              Close
+            </Button>
+          </BottomSheetClose>
+        </BottomSheetContent>
+      </BottomSheet>
+    ),
+  },
+  switch: {
+    layout: "plain",
+    render: () => (
+      <div className="flex w-full max-w-xs flex-col gap-4">
+        {[
+          { id: "sw-notify", label: "Notifications", on: true },
+          { id: "sw-sound", label: "Section sound", on: false },
+          { id: "sw-motion", label: "Reduce motion", on: false },
+        ].map((s) => (
+          <label key={s.id} htmlFor={s.id} className="flex items-center justify-between gap-4 text-sm">
+            {s.label}
+            <Switch id={s.id} defaultChecked={s.on} />
+          </label>
+        ))}
+      </div>
+    ),
+  },
+  "segmented-control": {
+    layout: "plain",
+    render: () => (
+      <SegmentedControl defaultValue="week" aria-label="Range">
+        <SegmentedControlItem value="day">Day</SegmentedControlItem>
+        <SegmentedControlItem value="week">Week</SegmentedControlItem>
+        <SegmentedControlItem value="month">Month</SegmentedControlItem>
+      </SegmentedControl>
+    ),
+  },
+  chips: {
+    layout: "plain",
+    render: () => (
+      <Chips defaultValue={["tokyo"]} aria-label="Filter by location" className="max-w-sm justify-center">
+        <Chip value="all">All</Chip>
+        <Chip value="tokyo">Tokyo</Chip>
+        <Chip value="osaka">Osaka</Chip>
+        <Chip value="online">Online</Chip>
+      </Chips>
+    ),
+  },
+  slider: {
+    layout: "plain",
+    note: "Hover or drag a thumb to see its value.",
+    render: () => (
+      <div className="flex w-full max-w-sm flex-col gap-3">
+        <Mono>Price</Mono>
+        <Slider
+          aria-label="Price range"
+          defaultValue={[3000, 7000]}
+          min={1000}
+          max={10000}
+          step={500}
+          minStepsBetweenThumbs={1}
+          showValue
+          formatValue={yen}
+        />
+        <div className="flex justify-between font-mono text-xs text-muted-foreground">
+          <span>{yen(1000)}</span>
+          <span>{yen(10000)}</span>
+        </div>
+      </div>
+    ),
+  },
+  stepper: {
+    layout: "plain",
+    render: () => <StepperDemo />,
+  },
+  pagination: {
+    layout: "plain",
+    render: () => <Pagination total={12} defaultPage={1} />,
+  },
+  carousel: {
+    layout: "plain",
+    note: "Drag, use the arrows, or focus and press ← →.",
+    render: () => (
+      <Carousel label="Featured" className="max-w-md">
+        {["01", "02", "03", "04"].map((n) => (
+          <CarouselItem key={n}>
+            <div className="flex aspect-[4/3] items-end rounded-[var(--cie-r)] border border-border p-6">
+              <span className="text-7xl font-[300] tracking-[-0.04em] tabular-nums">{n}</span>
+            </div>
+          </CarouselItem>
+        ))}
+      </Carousel>
     ),
   },
 }
