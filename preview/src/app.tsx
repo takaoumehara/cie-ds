@@ -26,6 +26,13 @@ const CATEGORIES = [
     ja: "shadcn/ui の基本部品を cie の見た目に作り替えたもの。使い方は shadcn と同じなので、そのまま置き換えられます。",
   },
   {
+    id: "ui",
+    title: "UI Parts",
+    blurb:
+      "Everyday controls that open, switch and guide: tooltip to toast, switch to carousel, steps to empty states. motion + Radix.",
+    ja: "開く・選ぶ・案内するための日常的な部品。ツールチップからトースト、スイッチからカルーセル、ステップ表示や空の状態まで。",
+  },
+  {
     id: "atmosphere",
     title: "Atmosphere",
     blurb:
