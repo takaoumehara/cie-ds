@@ -208,16 +208,20 @@ each maps to a cie implementation. ✅ exists · 🆕 planned · ✕ not in cie.
 22 Spinner ✅ `spinner` (spin → check / ×) · 23 Badge ✅ `badge` (`CountBadge`) · 24 Empty state ✅ `empty-state`
 
 **Scroll — entrances**: 01 Fade-in ✅ `Reveal` · 02 Slide-in ✅ `Reveal` · 03 Stagger ✅ `RevealGroup` ·
-04 Text reveal ✅ `split-text` · 05 Mask (clip-path) reveal 🆕 `Reveal` variant · 06 Blur-in 🆕 `Reveal` variant
-(`--cie-blur-in`) · 07 Typewriter 🆕 · 08 Count-up ✅ `number-ticker`
+04 Text reveal ✅ `split-text` · 05 Mask (clip-path) reveal ✅ `Reveal variant="mask|clip-left"` · 06 Blur-in ✅
+`Reveal variant="blur"` (`--cie-blur-in`) · 07 Typewriter ✅ `typewriter` · 08 Count-up ✅ `number-ticker`
 
-**Scroll — linked**: 09 Scroll progress 🆕 · 10 Parallax ✅ `parallax` · 11 Scroll zoom ✅ `ScrollExpand` ·
-12 Image sequence 🆕 *Pro* · 13 SVG line draw 🆕 · 14 Text fill 🆕 · 15 Background transition ✅ vanilla
-`data-cie-theme-morph` (ink ↔ paper only) · 16 Marquee (scroll velocity) 🆕
+**Scroll — linked**: 09 Scroll progress ✅ `scroll-progress` · 10 Parallax ✅ `parallax` · 11 Scroll zoom ✅
+`ScrollExpand` · 12 Image sequence ✅ `image-sequence` *Pro* · 13 SVG line draw ✅ `svg-draw` · 14 Text fill ✅
+`text-fill` · 15 Background transition ✅ vanilla `data-cie-theme-morph` (ink ↔ paper only) · 16 Marquee (scroll
+velocity) ✅ `marquee`
 
-**Scroll — pin / nav**: 17 Sticky — CSS `position: sticky` · 18 Pin + scrub 🆕 *Pro* · 19 Scrollytelling 🆕 *Pro* ·
-20 Card stack 🆕 · 21 Scroll snap — CSS `scroll-snap` · 22 Horizontal scroll 🆕 *Pro* · 23 Hide-on-scroll
-header 🆕 · 24 Scrollspy 🆕
+**Scroll — pin / nav**: 17 Sticky — CSS `position: sticky` · 18 Pin + scrub ✅ `pin-scrub` *Pro* · 19 Scrollytelling ✅
+`scrollytelling` *Pro* · 20 Card stack ✅ `card-stack` · 21 Scroll snap — CSS `scroll-snap` · 22 Horizontal scroll ✅
+`horizontal-scroll` *Pro* · 23 Hide-on-scroll header ✅ `hide-header` · 24 Scrollspy ✅ `scrollspy`
+
+Vanilla: `data-cie-reveal="blur|clip"`, `data-cie-progress`, `data-cie-hide-header`, `data-cie-scrollspy`
+(interaction.js) and, with GSAP loaded, `data-cie-pin` / `data-cie-scrub` / `data-cie-hscroll` (scroll-pro.js).
 
 **Camera moves** → `camera-stage` 🆕 (pointer / hover) and `camera-scroll` 🆕 *Pro* (scroll):
 01 Pan · 02 Tilt · 03 Dolly in · 04 Zoom in · 05 Tracking · 06 Orbit · 07 Crane up · 08 Dolly zoom (vertigo:

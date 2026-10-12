@@ -101,7 +101,7 @@ function AnimatedTabsPanels({ className, children, ...props }: React.ComponentPr
   return (
     <motion.div
       data-slot="tabs-panels"
-      className={cn("relative overflow-hidden", className)}
+      className={cn("relative overflow-clip", className)}
       animate={{ height }}
       transition={{ duration: cieDuration.move, ease: cieEase.expo }}
       {...(props as React.ComponentProps<typeof motion.div>)}

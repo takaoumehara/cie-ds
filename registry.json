@@ -1483,6 +1483,107 @@
       }
     },
     {
+      "name": "pin-scrub",
+      "type": "registry:ui",
+      "title": "Pin Scrub",
+      "description": "Pins a full-viewport stage and scrubs a GSAP timeline you build with scroll; PinScrubSteps preset cross-fades N steps with a progress hairline.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-gsap.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/pin-scrub.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ステージを画面にピン留めし、自分で組んだ GSAP タイムラインをスクロール量に合わせて再生する(ステップ切替のプリセット付き)。",
+        "tech": "GSAP"
+      }
+    },
+    {
+      "name": "scrollytelling",
+      "type": "registry:ui",
+      "title": "Scrollytelling",
+      "description": "Text steps scroll while a pinned figure swaps its state per active step; the active step is full ink, the rest muted.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-gsap.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/scrollytelling.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "本文のステップをスクロールすると、ピン留めされた図版がアクティブなステップに合わせて切り替わる。",
+        "tech": "GSAP"
+      }
+    },
+    {
+      "name": "horizontal-scroll",
+      "type": "registry:ui",
+      "title": "Horizontal Scroll",
+      "description": "Vertical scroll drives a pinned horizontal track of panels, with optional snap to each panel.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-gsap.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/horizontal-scroll.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "縦スクロールでピン留めされた横長のトラックを送り、パネルごとにスナップもできる。",
+        "tech": "GSAP"
+      }
+    },
+    {
+      "name": "image-sequence",
+      "type": "registry:ui",
+      "title": "Image Sequence",
+      "description": "Scroll-scrubbed canvas frame sequence on a pinned stage: preloaded frames drawn with cover fit, or a procedural render in the theme's two inks.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/cie-gsap.json",
+        "https://cie-ds.vercel.app/r/cie-color.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/image-sequence.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ピン留めしたキャンバスに連番画像(または手続き描画)をスクロール量に合わせてコマ送りで描く。",
+        "tech": "GSAP"
+      }
+    },
+    {
       "name": "cie-all",
       "type": "registry:style",
       "title": "cie (everything)",
@@ -1558,7 +1659,11 @@
       "registryDependencies": [
         "https://cie-ds.vercel.app/r/cie-theme.json",
         "https://cie-ds.vercel.app/r/cie-motion.json",
-        "https://cie-ds.vercel.app/r/cie-gsap.json"
+        "https://cie-ds.vercel.app/r/cie-gsap.json",
+        "https://cie-ds.vercel.app/r/pin-scrub.json",
+        "https://cie-ds.vercel.app/r/scrollytelling.json",
+        "https://cie-ds.vercel.app/r/horizontal-scroll.json",
+        "https://cie-ds.vercel.app/r/image-sequence.json"
       ],
       "meta": {
         "descriptionJa": "GSAP ScrollTrigger を使うピン留め・スクラブ系の任意バンドル。必要なページでだけ入れる(cie-all は motion のみ)。"

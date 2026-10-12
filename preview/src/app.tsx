@@ -191,7 +191,7 @@ function ComponentCard({ item }: { item: Item }) {
         <AnimatedTabsContent value="preview">
           <div
             className={cn(
-              "relative overflow-hidden rounded-page border border-border",
+              "relative overflow-clip rounded-page border border-border",
               layout === "stage" && "h-80 sm:h-96",
               layout === "plain" && "flex min-h-64 items-center justify-center p-6 sm:p-10",
               layout === "flush" && "border-0"

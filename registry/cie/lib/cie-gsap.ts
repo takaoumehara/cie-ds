@@ -21,7 +21,27 @@ function registerCie() {
   CustomEase.create("cie-expo", svgPath(cieEase.expo))
   CustomEase.create("cie-out", svgPath(cieEase.out))
   CustomEase.create("cie-snap", svgPath(cieEase.snap))
+  watchLayout()
   registered = true
+}
+
+// Pins measure their start / end once. When content above them changes height later (fonts, images,
+// accordions, lazily revealed sections) the measurements go stale and pins release early, so re-measure
+// whenever the document's height changes (debounced) and once fonts are ready.
+function watchLayout() {
+  let lastHeight = document.documentElement.scrollHeight
+  let timer: ReturnType<typeof setTimeout> | undefined
+  const refresh = () => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      const height = document.documentElement.scrollHeight
+      if (Math.abs(height - lastHeight) < 2) return
+      lastHeight = height
+      ScrollTrigger.refresh()
+    }, 120)
+  }
+  new ResizeObserver(refresh).observe(document.body)
+  document.fonts?.ready.then(() => ScrollTrigger.refresh())
 }
 registerCie()
 

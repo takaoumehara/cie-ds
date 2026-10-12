@@ -110,6 +110,10 @@ import { Marquee } from "@/components/ui/marquee"
 import { CardStack, CardStackItem } from "@/components/ui/card-stack"
 import { HideHeader } from "@/components/ui/hide-header"
 import { Scrollspy } from "@/components/ui/scrollspy"
+import { PinScrubSteps } from "@/components/ui/pin-scrub"
+import { Scrollytelling, ScrollytellingStep } from "@/components/ui/scrollytelling"
+import { HorizontalScroll, HorizontalScrollPanel } from "@/components/ui/horizontal-scroll"
+import { ImageSequence, type ImageSequenceInk } from "@/components/ui/image-sequence"
 
 export type Demo = {
   render: () => React.ReactNode
@@ -393,6 +397,38 @@ function ScrollspyDemo() {
       </div>
     </div>
   )
+}
+
+const STORY = [
+  { n: "01", title: "Listen", body: "Every project starts with a room full of questions, not answers." },
+  { n: "02", title: "Shape", body: "We cut the brief down until one idea is left standing." },
+  { n: "03", title: "Ship", body: "Then we build it — type, motion and code on the same tokens." },
+]
+
+/** Procedural frame: a ring closes and a block turns a quarter as progress runs 0 → 1. Inks from the theme. */
+function drawRingFrame(ctx: CanvasRenderingContext2D, p: number, w: number, h: number, ink: ImageSequenceInk) {
+  const cx = w / 2
+  const cy = h / 2
+  const r = Math.min(w, h) * 0.3
+  ctx.lineCap = "round"
+  ctx.strokeStyle = ink.fg
+  ctx.globalAlpha = 0.15
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.arc(cx, cy, r, 0, Math.PI * 2)
+  ctx.stroke()
+  ctx.globalAlpha = 1
+  ctx.lineWidth = 6
+  ctx.beginPath()
+  ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * p)
+  ctx.stroke()
+  const s = r * (0.5 + 0.25 * p)
+  ctx.save()
+  ctx.translate(cx, cy)
+  ctx.rotate((Math.PI / 2) * p)
+  ctx.fillStyle = ink.fg
+  ctx.fillRect(-s / 2, -s / 2, s, s)
+  ctx.restore()
 }
 
 export const demos: Record<string, Demo> = {
@@ -1107,5 +1143,84 @@ export const demos: Record<string, Demo> = {
     layout: "plain",
     note: "Scroll the box or click an entry.",
     render: () => <ScrollspyDemo />,
+  },
+  "pin-scrub": {
+    layout: "flush",
+    note: "GSAP · Scroll — the stage pins while three steps play, then lets go.",
+    render: () => (
+      <PinScrubSteps className="bg-card text-card-foreground">
+        {["Pin.", "Scrub.", "Release."].map((word, i) => (
+          <div key={word} className="flex flex-col gap-3">
+            <span className="font-mono text-xs text-muted-foreground uppercase">
+              Step {String(i + 1).padStart(2, "0")}
+            </span>
+            <p className="text-6xl leading-[0.9] font-[300] tracking-[-0.045em] sm:text-8xl">{word}</p>
+          </div>
+        ))}
+      </PinScrubSteps>
+    ),
+  },
+  scrollytelling: {
+    layout: "flush",
+    note: "GSAP · Scroll — the figure pins and changes with the active step.",
+    render: () => (
+      <Scrollytelling
+        figure={(i) => (
+          <div className="flex flex-col items-center gap-6">
+            <div
+              className="size-28 bg-foreground transition-[border-radius,transform] duration-[var(--cie-t-move,360ms)] ease-cie-expo motion-reduce:transition-none sm:size-36"
+              style={{
+                borderRadius: i === 0 ? "999px" : i === 1 ? "var(--cie-r)" : "0px",
+                transform: `rotate(${i * 45}deg)`,
+              }}
+            />
+            <span className="text-7xl font-[200] tracking-[-0.05em] tabular-nums sm:text-8xl">{STORY[i]?.n}</span>
+          </div>
+        )}
+      >
+        {STORY.map((s) => (
+          <ScrollytellingStep key={s.n}>
+            <span className="font-mono text-xs uppercase">{s.n}</span>
+            <h4 className="mt-2 text-4xl font-[300] tracking-[-0.035em]">{s.title}</h4>
+            <p className="mt-3 max-w-sm text-base">{s.body}</p>
+          </ScrollytellingStep>
+        ))}
+      </Scrollytelling>
+    ),
+  },
+  "horizontal-scroll": {
+    layout: "flush",
+    note: "GSAP · Scroll — scrolling down moves the track sideways, snapping to each panel.",
+    render: () => (
+      <HorizontalScroll snap aria-label="Five panels">
+        {["01", "02", "03", "04", "05"].map((n, i) => (
+          <HorizontalScrollPanel key={n} className="p-3">
+            <div
+              className={
+                i % 2 === 0
+                  ? "flex size-full flex-col justify-between rounded-page bg-card p-8 text-card-foreground"
+                  : "flex size-full flex-col justify-between rounded-page border border-border p-8"
+              }
+            >
+              <span className="font-mono text-xs text-muted-foreground uppercase">Panel</span>
+              <span className="text-8xl font-[200] tracking-[-0.06em] tabular-nums sm:text-9xl">{n}</span>
+            </div>
+          </HorizontalScrollPanel>
+        ))}
+      </HorizontalScroll>
+    ),
+  },
+  "image-sequence": {
+    layout: "flush",
+    note: "GSAP · Scroll — a canvas draws frame by frame as you scroll (procedural, no images).",
+    render: () => (
+      <ImageSequence
+        render={drawRingFrame}
+        label="A ring closing around a turning square"
+        className="bg-card text-card-foreground"
+      >
+        <span className="absolute top-6 left-6 font-mono text-xs text-muted-foreground uppercase">Frame sequence</span>
+      </ImageSequence>
+    ),
   },
 }
