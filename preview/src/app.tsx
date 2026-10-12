@@ -46,6 +46,13 @@ const CATEGORIES = [
     ja: "よく使う小さな動き。光る枠線、キラッと光るボタン、タブ、アコーディオンなど。",
   },
   {
+    id: "scroll",
+    title: "Scroll",
+    blurb:
+      "Scroll-linked motion: typewriter, text fill, line drawing, progress, marquee, stacking cards, hide-on-scroll and scrollspy. Items marked GSAP are opt-in via cie-scroll-pro.",
+    ja: "スクロールに連動する演出。タイプライター、文字の塗り、線の描画、進捗バー、マーキー、重なるカード、隠れるヘッダー、目次のハイライトなど。GSAP と書かれたものは cie-scroll-pro で任意に入れます。",
+  },
+  {
     id: "showcase",
     title: "Showcase & Hero",
     blurb: "Scroll-driven parallax, reveals, text effects and the cie block → page expand.",
