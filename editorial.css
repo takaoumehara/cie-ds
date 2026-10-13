@@ -1,0 +1,437 @@
+/* ─────────────────────────────────────────────────────────────
+   CIE editorial — the calm reading mode for plain HTML.
+   Scope: [data-cie-mode="editorial"] on <html>, <body> or any section.
+   Paper ground by default; data-tone="ink" / data-ground="ink" flips it.
+   Still two inks: every surface is a mix of fg into bg. No shadows.
+   Load after tokens.css + base.css (+ scroll.css for reveal / scrollspy).
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Ground + local inks ─────────────────────────────────── */
+[data-cie-mode="editorial"] {
+  --ed-fg:    var(--cie-ink);
+  --ed-bg:    var(--cie-paper);
+  --ed-muted: var(--cie-paper-mute);
+  --cie-surface-band:  color-mix(in oklab, var(--ed-fg) 4%, var(--ed-bg));
+  --cie-surface-plate: color-mix(in oklab, var(--ed-fg) 7%, var(--ed-bg));
+  --cie-hairline:      color-mix(in oklab, var(--ed-fg) 10%, transparent);
+
+  background: var(--ed-bg);
+  color: var(--ed-fg);
+  font-family: var(--cie-sans);
+  font-size: var(--cie-text-body);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+/* Ink ground — the same rhythm, flipped inks */
+[data-cie-mode="editorial"][data-tone="ink"],
+[data-cie-mode="editorial"][data-ground="ink"] {
+  --ed-fg:    var(--cie-paper);
+  --ed-bg:    var(--cie-ink);
+  --ed-muted: var(--cie-ink-mute);
+}
+
+/* On <html>, base.css paints body ink — hand the ground back to the scope */
+html[data-cie-mode="editorial"] body {
+  background: transparent;
+  color: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+[data-cie-mode="editorial"] ::selection { background: var(--ed-fg); color: var(--ed-bg); }
+
+/* Japanese rhythm — looser leading, no tracking, proportional kana */
+[data-cie-mode="editorial"]:lang(ja),
+[data-cie-mode="editorial"] :lang(ja) {
+  line-height: 1.8;
+  letter-spacing: 0;
+  font-feature-settings: 'palt' 1;
+  line-break: strict;
+}
+
+/* ── Layout ──────────────────────────────────────────────── */
+.cie-container {
+  width: 100%;
+  max-width: var(--cie-container);
+  margin-inline: auto;
+  padding-inline: var(--cie-gutter);
+}
+
+.cie-section {
+  padding-block: var(--cie-section);
+  background: var(--ed-bg);
+  color: var(--ed-fg);
+  overflow-x: clip; /* bleeding media never adds a page scrollbar */
+}
+.cie-section--tight { padding-block: calc(var(--cie-section) * 0.6); }
+
+/* Section tones — band is one step deeper; ink flips the inks locally */
+.cie-section[data-tone="canvas"] { background: var(--ed-bg); }
+.cie-section[data-tone="band"]   { background: var(--cie-surface-band); }
+.cie-section[data-tone="ink"] {
+  --ed-fg:    var(--cie-paper);
+  --ed-bg:    var(--cie-ink);
+  --ed-muted: var(--cie-ink-mute);
+  --cie-surface-band:  color-mix(in oklab, var(--ed-fg) 4%, var(--ed-bg));
+  --cie-surface-plate: color-mix(in oklab, var(--ed-fg) 7%, var(--ed-bg));
+  --cie-hairline:      color-mix(in oklab, var(--ed-fg) 10%, transparent);
+  background: var(--ed-bg);
+  color: var(--ed-fg);
+}
+/* Cards on a band step up to plate so they still read as a surface */
+.cie-section[data-tone="band"] .cie-feature { background: var(--cie-surface-plate); }
+.cie-section[data-tone="band"] .cie-feature .cie-media { background: var(--cie-surface-band); }
+
+/* ── Reading ─────────────────────────────────────────────── */
+.cie-prose,
+.cie-section p:not([class]) {
+  color: var(--ed-muted);
+  max-width: var(--cie-measure);
+}
+.cie-prose > * + * { margin-top: 1em; }
+.cie-prose strong { color: var(--ed-fg); font-weight: 500; }
+
+.cie-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cie-s-8);
+  font-family: var(--cie-mono);
+  font-size: var(--cie-text-mono);
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+}
+.cie-kicker--dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: var(--cie-r-pill);
+  background: currentColor;
+  flex: none;
+}
+
+/* Whisper headlines — weight 300, tight tracking. Named ed-* so the
+   Board .cie-display in base.css stays untouched. */
+.ed-display,
+.ed-heading {
+  font-weight: 300;
+  font-variation-settings: 'wght' 300;
+  color: var(--ed-fg);
+  text-wrap: balance;
+}
+.ed-display {
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+}
+.ed-heading {
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1.13;
+  letter-spacing: -0.02em;
+}
+.ed-lead {
+  font-size: clamp(18px, 1.6vw, 20px);
+  line-height: 1.45;
+  color: var(--ed-muted);
+  max-width: var(--cie-measure);
+  text-wrap: pretty;
+}
+.ed-display:lang(ja),
+.ed-heading:lang(ja),
+.ed-display :lang(ja),
+.ed-heading :lang(ja) {
+  word-break: auto-phrase; /* break at phrase boundaries, not mid-word */
+  letter-spacing: 0;
+  line-height: 1.4;
+  font-weight: 400;
+}
+.ed-lead:lang(ja) { line-height: 1.8; }
+
+/* Kicker → title → description stack */
+.ed-stack > * + * { margin-top: var(--cie-gap); }
+.ed-stack > .cie-kicker + * { margin-top: var(--cie-s-20); }
+
+/* ── Section head: title block left, aside link right ────── */
+.cie-section-head {
+  display: grid;
+  gap: var(--cie-gap-lg);
+  margin-bottom: calc(var(--cie-gap-lg) * 2);
+}
+.cie-section-head > :first-child > * + * { margin-top: var(--cie-gap); }
+.cie-section-head > :first-child > .cie-kicker + * { margin-top: var(--cie-s-20); }
+@media (min-width: 768px) {
+  .cie-section-head {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: last baseline;
+    column-gap: var(--cie-s-64);
+  }
+}
+
+/* ── Text link with a nudging arrow ──────────────────────── */
+.cie-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4em;
+  font-weight: 500;
+  color: var(--ed-fg);
+  white-space: nowrap;
+}
+.cie-link::after {
+  content: '→';
+  display: inline-block;
+  transition: transform var(--cie-t-cell) var(--cie-ease-expo);
+}
+.cie-link:hover::after,
+.cie-link:focus-visible::after { transform: translateX(var(--cie-hover-nudge)); }
+
+/* ── Heroes ──────────────────────────────────────────────── */
+.cie-hero-split {
+  display: grid;
+  gap: calc(var(--cie-gap-lg) * 1.5);
+}
+.cie-hero-split__lead > * + * { margin-top: var(--cie-gap-lg); }
+@media (min-width: 900px) {
+  .cie-hero-split {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--cie-gap-lg);
+    align-items: end;
+  }
+  .cie-hero-split > :first-child { grid-column: 1 / span 7; }
+  .cie-hero-split > :last-child  { grid-column: 9 / span 4; }
+}
+
+.cie-hero-center {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: var(--cie-gap-lg);
+}
+.cie-hero-center > .cie-kicker + * { margin-top: calc(var(--cie-s-4) * -1); }
+.cie-hero-center .ed-lead { margin-inline: auto; }
+
+/* Pill row under a hero or lead */
+.cie-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cie-s-12);
+}
+.cie-hero-center .cie-actions { justify-content: center; }
+
+/* ── Features ────────────────────────────────────────────── */
+.cie-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: var(--cie-gap-lg);
+}
+
+.cie-feature {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cie-gap);
+  background: var(--cie-surface-band);
+  color: var(--ed-fg);
+  border-radius: var(--cie-r-card);
+  padding: var(--cie-card-pad);
+  border: 0;
+  box-shadow: none;
+}
+.cie-feature > .cie-media { margin-bottom: var(--cie-s-8); }
+.cie-feature h3 {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.cie-feature p { color: var(--ed-muted); }
+a.cie-feature {
+  transition: background-color var(--cie-t-cell) var(--cie-ease-expo);
+}
+a.cie-feature:hover { background: var(--cie-surface-plate); }
+.cie-section[data-tone="band"] a.cie-feature:hover {
+  background: color-mix(in oklab, var(--ed-fg) 10%, var(--ed-bg));
+}
+
+/* ── Media frame ─────────────────────────────────────────── */
+.cie-media {
+  position: relative;
+  aspect-ratio: var(--ratio, 4 / 3);
+  border-radius: var(--cie-r-media);
+  overflow: clip;
+  background: var(--cie-surface-plate);
+  color: var(--ed-fg);
+}
+.cie-media > img,
+.cie-media > video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Bleed: let the frame run to the viewport edge on wide screens */
+@media (min-width: 1100px) {
+  .cie-media--bleed-right {
+    margin-right: calc(min(0px, (var(--cie-container) - 100vw) / 2) - var(--cie-gutter));
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+  .cie-media--bleed-left {
+    margin-left: calc(min(0px, (var(--cie-container) - 100vw) / 2) - var(--cie-gutter));
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+}
+
+/* ── Hairline ────────────────────────────────────────────── */
+.cie-hairline {
+  border: 0;
+  height: 1px;
+  background: var(--cie-hairline);
+}
+
+/* ── Anchor nav (sticky, in-page) ────────────────────────── */
+.cie-anchor-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: color-mix(in oklab, var(--ed-bg) 82%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(18px);
+  backdrop-filter: saturate(1.4) blur(18px);
+  border-bottom: 1px solid var(--cie-hairline);
+}
+.cie-anchor-nav__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--cie-gap-lg);
+  min-height: 56px;
+}
+.cie-anchor-nav__links { margin-left: auto; }
+.cie-anchor-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--cie-s-12);
+}
+.cie-anchor-nav__title {
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.cie-anchor-nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--cie-s-24);
+  list-style: none;
+}
+.cie-anchor-nav a[href^="#"] {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ed-muted);
+  opacity: 1;
+  box-shadow: none;
+  white-space: nowrap;
+  transition: color var(--cie-t-cell) var(--cie-ease-expo);
+}
+.cie-anchor-nav a[href^="#"]:hover,
+.cie-anchor-nav a[href^="#"].is-active {
+  color: var(--ed-fg);
+  opacity: 1;
+  box-shadow: none;
+}
+/* Narrow: links drop to their own row and scroll sideways, never wrap */
+@media (max-width: 767px) {
+  .cie-anchor-nav__inner { flex-wrap: wrap; row-gap: 0; padding-top: var(--cie-s-12); min-height: 0; }
+  .cie-anchor-nav__actions { margin-left: auto; }
+  .cie-anchor-nav__links {
+    order: 3;
+    flex-basis: 100%;
+    margin-left: 0;
+    padding-block: var(--cie-s-12);
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: var(--cie-s-20);
+  }
+  .cie-anchor-nav__links::-webkit-scrollbar { display: none; }
+  .cie-anchor-nav .cie-anchor-nav__hide-sm { display: none; }
+}
+
+/* ── Pills ───────────────────────────────────────────────── */
+.cie-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cie-s-8);
+  min-height: 40px;
+  padding-inline: 18px;
+  border-radius: var(--cie-r-pill);
+  font-family: var(--cie-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+  background: var(--ed-fg);
+  color: var(--ed-bg);
+  border: 1px solid var(--ed-fg);
+  transition:
+    background-color var(--cie-t-cell) var(--cie-ease-expo),
+    color var(--cie-t-cell) var(--cie-ease-expo),
+    border-color var(--cie-t-cell) var(--cie-ease-expo),
+    transform var(--cie-t-snap) var(--cie-ease-out);
+}
+.cie-pill:hover { background: color-mix(in oklab, var(--ed-fg) 84%, var(--ed-bg)); }
+.cie-pill:active { transform: scale(var(--cie-press-scale)); }
+.cie-pill--outline {
+  background: transparent;
+  color: var(--ed-fg);
+  border-color: color-mix(in oklab, var(--ed-fg) 22%, transparent);
+}
+.cie-pill--outline:hover {
+  background: var(--cie-surface-band);
+  border-color: color-mix(in oklab, var(--ed-fg) 40%, transparent);
+}
+.cie-pill--sm { min-height: 32px; padding-inline: 14px; font-size: 13px; }
+
+/* ── Spec list: two columns, hairline between rows ───────── */
+.cie-specs {
+  display: grid;
+  border-top: 1px solid var(--cie-hairline);
+}
+.cie-specs > div {
+  display: grid;
+  gap: var(--cie-s-4);
+  padding-block: var(--cie-s-20);
+  border-bottom: 1px solid var(--cie-hairline);
+}
+.cie-specs dt { color: var(--ed-fg); }
+.cie-specs dd {
+  font-family: var(--cie-mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--ed-muted);
+  overflow-wrap: anywhere;
+}
+@media (min-width: 768px) {
+  .cie-specs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--cie-s-64);
+  }
+  .cie-specs > div {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: var(--cie-gap-lg);
+  }
+  .cie-specs dd { text-align: right; }
+}
+
+/* ── Reduced motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .cie-link::after,
+  .cie-pill,
+  a.cie-feature,
+  .cie-anchor-nav a[href^="#"] { transition: none; }
+  .cie-link:hover::after,
+  .cie-link:focus-visible::after { transform: none; }
+  .cie-pill:active { transform: none; }
+}
