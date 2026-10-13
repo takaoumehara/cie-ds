@@ -33,7 +33,7 @@ const CATEGORIES = [
     ja: "開く・選ぶ・案内するための日常的な部品。ツールチップからトースト、スイッチからカルーセル、ステップ表示や空の状態まで。",
   },
   {
-    id: "layout",
+    id: "editorial",
     title: "Layout",
     blurb:
       "Editorial mode: containers, sections, whisper heroes, flat feature cards, media frames and anchor nav — space and rhythm from tokens.",

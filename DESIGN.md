@@ -50,6 +50,10 @@ generous and consistent vertical rhythm, one focal element per section, flat sur
 | display / heading / lead | clamp(40–72) 300 1.06 −0.025em / clamp(28–40) 300 1.13 −0.02em / 18–20 1.45 | `text-display` / `text-heading` / `text-lead` |
 | kicker | DM Mono 12 uppercase +0.04em, muted | — |
 
+Gotcha: `cn()` (tailwind-merge) reads `text-display` / `text-heading` / `text-lead` as *colours* and drops them
+when a colour class such as `text-foreground` is in the same `cn()` call. Let the colour inherit, or put the size
+class outside `cn()`.
+
 Inside the scope, body text inherits line-height 1.6 and +0.01em (Japanese: 1.8 / 0, palt) — existing components get
 the calmer reading rhythm without code changes.
 

@@ -73,6 +73,7 @@ const raw = {
   "--cie-press-scale": String(scroll.pressScale),
   "--cie-hover-nudge": scroll.hoverNudge,
   // Editorial mode — rhythm + shape (mode-independent so Board pages can borrow them too)
+  "--cie-measure": tokens.space.measure,
   "--cie-section": ed.space.section,
   "--cie-gutter": ed.space.gutter,
   "--cie-container": ed.space.container,

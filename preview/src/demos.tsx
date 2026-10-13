@@ -114,6 +114,11 @@ import { PinScrubSteps } from "@/components/ui/pin-scrub"
 import { Scrollytelling, ScrollytellingStep } from "@/components/ui/scrollytelling"
 import { HorizontalScroll, HorizontalScrollPanel } from "@/components/ui/horizontal-scroll"
 import { ImageSequence, type ImageSequenceInk } from "@/components/ui/image-sequence"
+import { Hairline, Kicker, Section, SectionHeader, TextLink } from "@/components/ui/layout"
+import { EditorialHero } from "@/components/ui/editorial-hero"
+import { FeatureCard, FeatureGrid } from "@/components/ui/feature-card"
+import { MediaFrame } from "@/components/ui/media-frame"
+import { AnchorNav } from "@/components/ui/anchor-nav"
 
 export type Demo = {
   render: () => React.ReactNode
@@ -429,6 +434,174 @@ function drawRingFrame(ctx: CanvasRenderingContext2D, p: number, w: number, h: n
   ctx.fillStyle = ink.fg
   ctx.fillRect(-s / 2, -s / 2, s, s)
   ctx.restore()
+}
+
+/** Placeholder visual: one oversized DM Mono figure on the plate. */
+function PlateNumber({ value, label }: { value: React.ReactNode; label?: React.ReactNode }) {
+  return (
+    <div className="relative flex size-full flex-col justify-between p-[var(--cie-card-pad)]">
+      {label != null && (
+        <span className="font-mono text-xs tracking-[0.04em] text-muted-foreground uppercase">{label}</span>
+      )}
+      <span className="mt-auto font-mono text-[clamp(64px,9vw,128px)] leading-[0.9] tracking-[-0.05em] text-foreground">
+        {value}
+      </span>
+    </div>
+  )
+}
+
+/** Placeholder visual: a grid field with one big ink circle. */
+function PlateOrb({ size = "38%", offset = "50%" }: { size?: string; offset?: string }) {
+  return (
+    <div className="relative size-full">
+      <GridPattern size={36} fade="radial" className="text-foreground/10" />
+      <div
+        className="absolute top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground"
+        style={{ width: size, left: offset }}
+      />
+    </div>
+  )
+}
+
+/** Placeholder visual: hairline stack — lines of type as bars. */
+function PlateLines() {
+  return (
+    <div className="flex size-full flex-col justify-end gap-3 p-[var(--cie-card-pad)]">
+      {[92, 74, 86, 40].map((w, i) => (
+        <span key={i} className="h-2.5 rounded-full bg-foreground/15" style={{ width: `${w}%` }} />
+      ))}
+    </div>
+  )
+}
+
+function EditorialPageDemo() {
+  return (
+    <div data-cie-mode="editorial" className="bg-background text-foreground">
+      <AnchorNav
+        title="Cie Studio"
+        items={[
+          { id: "ed-overview", label: "Overview" },
+          { id: "ed-features", label: "Features" },
+          { id: "ed-craft", label: "Craft" },
+          { id: "ed-start", label: "Start" },
+        ]}
+        action={<Button size="sm">Get started</Button>}
+      />
+
+      <Section id="ed-overview">
+        <EditorialHero
+          kicker="Cie Studio · Editorial mode"
+          title="Quiet type for ideas that carry."
+          lead="Two inks, one rhythm. Whisper-weight headlines, calm body copy and generous space — a page that reads like a well-set magazine."
+          actions={
+            <>
+              <Button>Start a project</Button>
+              <Button variant="outline">Read the notes</Button>
+            </>
+          }
+        />
+      </Section>
+
+      <Section id="ed-features" tone="band">
+        <SectionHeader
+          kicker="Features"
+          title="Three surfaces, one rhythm."
+          description="Canvas, band and plate are the same ink stepped a few percent deeper — enough to separate, never enough to shout."
+          aside={<TextLink href="#ed-craft">See the craft</TextLink>}
+        />
+        <FeatureGrid>
+          <FeatureCard
+            surface="canvas"
+            kicker="01 · Type"
+            title="Whisper headlines"
+            description="Outfit at weight 300 with tight tracking. Large, never loud."
+            media={<PlateNumber value="300" label="Weight" />}
+            href="#ed-craft"
+          />
+          <FeatureCard
+            surface="canvas"
+            kicker="02 · Rhythm"
+            title="One beat per section"
+            description="Sections breathe between 80 and 128px. One focal element each."
+            media={<PlateLines />}
+            href="#ed-craft"
+          />
+          <FeatureCard
+            surface="canvas"
+            kicker="03 · Surface"
+            title="Flat, rounded, calm"
+            description="No borders, no shadows. Hairlines where something must divide."
+            media={<PlateOrb size="44%" />}
+            mediaBleed
+            href="#ed-craft"
+          />
+        </FeatureGrid>
+      </Section>
+
+      <Section id="ed-craft">
+        <div className="grid items-center gap-[calc(var(--cie-gap-lg)*2)] lg:grid-cols-12">
+          <div className="flex flex-col gap-[var(--cie-gap)] lg:col-span-5">
+            <Kicker dot>Craft</Kicker>
+            <h2 className="text-heading text-balance">Measured against the tokens, not the mood.</h2>
+            <p className="max-w-[var(--cie-measure)] text-muted-foreground">
+              Every gap is a multiple of the same few numbers. Text blocks stop at sixty-two characters, so the eye
+              never has to hunt for the next line.
+            </p>
+            <p className="max-w-[var(--cie-measure)] text-muted-foreground">
+              Imagery enters from one side and runs off the page — the column stays calm while the picture breathes.
+            </p>
+            <div className="mt-2">
+              <TextLink href="#ed-start">How it is built</TextLink>
+            </div>
+          </div>
+          <MediaFrame className="lg:col-span-7" ratio="4/3" bleed="right" caption="Fig. 1 — One ink on a plate">
+            <PlateOrb size="46%" offset="42%" />
+          </MediaFrame>
+        </div>
+      </Section>
+
+      <Hairline inset />
+
+      <Section id="ed-start" spacing="tight">
+        <div className="flex flex-col items-center gap-[var(--cie-gap-lg)] text-center">
+          <h2 className="max-w-[18ch] text-heading text-balance">Start with a calm page.</h2>
+          <p className="max-w-[44ch] text-muted-foreground">
+            Install the parts, keep the two inks, let the space work.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Button>Install the registry</Button>
+            <Button variant="ghost">
+              Browse parts <ArrowRightIcon />
+            </Button>
+          </div>
+        </div>
+      </Section>
+    </div>
+  )
+}
+
+function AnchorNavDemo() {
+  const items = [
+    { id: "an-overview", label: "Overview" },
+    { id: "an-design", label: "Design" },
+    { id: "an-motion", label: "Motion" },
+    { id: "an-specs", label: "Specs" },
+  ]
+  return (
+    <div data-cie-mode="editorial" className="bg-background text-foreground">
+      <AnchorNav title="Cie One" items={items} action={<Button size="sm">Buy</Button>} />
+      {items.map((it, i) => (
+        <Section key={it.id} id={it.id} tone={i % 2 ? "band" : "canvas"} spacing="tight">
+          <div className="flex min-h-[44vh] flex-col justify-between gap-[var(--cie-gap-lg)]">
+            <Kicker>{`0${i + 1} · ${it.label}`}</Kicker>
+            <p className="max-w-[16ch] text-heading">
+              {["A calm surface.", "Two inks only.", "Snappy, not floaty.", "Sixty-two characters."][i]}
+            </p>
+          </div>
+        </Section>
+      ))}
+    </div>
+  )
 }
 
 export const demos: Record<string, Demo> = {
@@ -1222,5 +1395,126 @@ export const demos: Record<string, Demo> = {
         <span className="absolute top-6 left-6 font-mono text-xs text-muted-foreground uppercase">Frame sequence</span>
       </ImageSequence>
     ),
+  },
+  layout: {
+    layout: "flush",
+    note: "Container · Section · SectionHeader · Kicker · Hairline · TextLink, composed into a full editorial page (scroll it).",
+    render: () => <EditorialPageDemo />,
+  },
+  "editorial-hero": {
+    layout: "flush",
+    replay: true,
+    note: "split (headline left, lead on its last baseline, pills below) and center (Apple style, media below).",
+    render: () => (
+      <div data-cie-mode="editorial" className="bg-background text-foreground">
+        <Section>
+          <EditorialHero
+            animate
+            kicker="Editorial · Split"
+            title="Make the page feel composed."
+            lead="A headline that whispers, a lead that settles on its last line, and two pills below. Nothing more."
+            actions={
+              <>
+                <Button>Get started</Button>
+                <Button variant="outline">Learn more</Button>
+              </>
+            }
+          />
+        </Section>
+        <Hairline inset />
+        <Section>
+          <EditorialHero
+            animate
+            variant="center"
+            kicker="Cie One"
+            title="Two inks. Endless calm."
+            lead="Centred, oversized, and followed by one big visual — the product page, reduced to its essence."
+            actions={
+              <>
+                <Button>Buy</Button>
+                <Button variant="ghost">
+                  Learn more <ArrowRightIcon />
+                </Button>
+              </>
+            }
+            media={
+              <MediaFrame ratio="21/9">
+                <PlateOrb size="22%" />
+              </MediaFrame>
+            }
+          />
+        </Section>
+      </div>
+    ),
+  },
+  "feature-card": {
+    layout: "flush",
+    note: "Flat cards on a band. Linked cards step one tone deeper and nudge their arrow on hover.",
+    render: () => (
+      <div data-cie-mode="editorial" className="bg-background text-foreground">
+        <Section tone="band" spacing="tight">
+          <FeatureGrid>
+            <FeatureCard
+              surface="canvas"
+              kicker="Type"
+              title="Whisper headlines"
+              description="Weight 300, tracking -0.02em."
+              media={<PlateNumber value="Aa" />}
+              href="#"
+            />
+            <FeatureCard
+              surface="canvas"
+              kicker="Surface"
+              title="Media to the edge"
+              description="mediaBleed runs the frame to the card's sides and bottom."
+              media={<PlateOrb size="40%" />}
+              mediaBleed
+              href="#"
+            />
+            <FeatureCard
+              surface="plate"
+              kicker="Static"
+              title="Without a link"
+              description="No href — just a calm, flat block of content with no media."
+            />
+          </FeatureGrid>
+        </Section>
+      </div>
+    ),
+  },
+  "media-frame": {
+    layout: "flush",
+    note: "Plate + radius 28, any ratio, mono caption. bleed='right' runs to the viewport edge at lg+.",
+    render: () => (
+      <div data-cie-mode="editorial" className="bg-background text-foreground">
+        <Section spacing="tight">
+          <div className="grid grid-cols-2 gap-[var(--cie-gap-lg)] md:grid-cols-4">
+            <MediaFrame ratio="1/1" caption="1/1">
+              <PlateNumber value="01" />
+            </MediaFrame>
+            <MediaFrame ratio="4/5" caption="4/5">
+              <PlateOrb size="56%" />
+            </MediaFrame>
+            <MediaFrame ratio="4/5" caption="4/5" className="hidden md:block">
+              <PlateLines />
+            </MediaFrame>
+            <MediaFrame ratio="1/1" caption="1/1" className="hidden md:block">
+              <PlateNumber value="04" />
+            </MediaFrame>
+          </div>
+          <div className="mt-[calc(var(--cie-gap-lg)*2)] grid items-center gap-[var(--cie-gap-lg)] lg:grid-cols-12">
+            <p className="text-heading lg:col-span-4">Enters from one side.</p>
+            <MediaFrame ratio="16/9" bleed="right" caption="16/9 · bleed right" className="lg:col-span-8">
+              <PlateOrb size="30%" offset="62%" />
+            </MediaFrame>
+          </div>
+        </Section>
+      </div>
+    ),
+  },
+  "anchor-nav": {
+    layout: "flush",
+    note: "Scroll the page — the current section's link turns full ink. Links scroll sideways on phones.",
+    render: () => <AnchorNavDemo />,
   },
 }

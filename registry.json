@@ -142,6 +142,7 @@
           "--cie-parallax-max": "48px",
           "--cie-press-scale": "0.97",
           "--cie-hover-nudge": "3px",
+          "--cie-measure": "62ch",
           "--cie-section": "clamp(80px, 10vw, 128px)",
           "--cie-gutter": "clamp(20px, 5vw, 64px)",
           "--cie-container": "1280px",
@@ -1625,6 +1626,131 @@
       }
     },
     {
+      "name": "layout",
+      "type": "registry:ui",
+      "title": "Layout",
+      "description": "Editorial page skeleton: Container, Section (canvas / band / ink tone, py-section rhythm, data-cie-mode), SectionHeader with a baseline-aligned aside, Kicker, Hairline and a TextLink whose arrow nudges on hover.",
+      "categories": [
+        "editorial"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/layout.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "エディトリアルなページの骨格。コンテナ、帯の色を切り替えるセクション、見出し、キッカー、細い罫線、矢印が少し動くテキストリンクをまとめたセット。"
+      }
+    },
+    {
+      "name": "editorial-hero",
+      "type": "registry:ui",
+      "title": "Editorial Hero",
+      "description": "Asymmetric editorial hero: whisper display headline left, lead aligned to its last baseline on the right, pills below; or a centred Apple-style variant with a full-width media slot. Optional Reveal entrance.",
+      "categories": [
+        "editorial"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/layout.json",
+        "https://cie-ds.vercel.app/r/reveal.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/editorial-hero.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "エディトリアルなヒーロー。左に細身の大見出し、右に最終行へ揃えたリード文、下にピル型ボタン。中央寄せで大きなビジュアルを置く型も選べる。"
+      }
+    },
+    {
+      "name": "feature-card",
+      "type": "registry:ui",
+      "title": "Feature Card",
+      "description": "Flat editorial card (band / canvas / plate surface, radius 20, no border or shadow) with kicker, whisper title, muted copy and bottom media; with href the whole card links, steps one tone deeper and nudges its arrow. Plus a responsive FeatureGrid.",
+      "categories": [
+        "editorial"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json",
+        "https://cie-ds.vercel.app/r/layout.json",
+        "https://cie-ds.vercel.app/r/media-frame.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/feature-card.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "枠線も影もないフラットなカード。見出しと説明、下部にメディアを置け、リンクにするとホバーで面が一段深くなり矢印が少し進む。"
+      }
+    },
+    {
+      "name": "media-frame",
+      "type": "registry:ui",
+      "title": "Media Frame",
+      "description": "Flat plate with a 28px radius at a fixed aspect ratio; children fill with object-cover, optional mono caption, and bleed left / right to the viewport edge at lg+.",
+      "categories": [
+        "editorial"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/media-frame.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "画像や映像を収める角丸のフレーム。比率を指定でき、キャプションを添えたり、片側だけ画面の端まで伸ばしたりできる。"
+      }
+    },
+    {
+      "name": "anchor-nav",
+      "type": "registry:ui",
+      "title": "Anchor Nav",
+      "description": "Apple-style sticky in-page nav: blurred ground, hairline below, title left, section links right (scrollable on phones); the current section's link turns full ink via IntersectionObserver.",
+      "categories": [
+        "editorial"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "https://cie-ds.vercel.app/r/cie-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/cie/ui/anchor-nav.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "descriptionJa": "ページ内のセクションへ飛ぶ追従ナビ。スクロールに合わせて今いるセクションのリンクだけが濃い墨色になる。"
+      }
+    },
+    {
       "name": "cie-all",
       "type": "registry:style",
       "title": "cie (everything)",
@@ -1683,7 +1809,12 @@
         "https://cie-ds.vercel.app/r/marquee.json",
         "https://cie-ds.vercel.app/r/card-stack.json",
         "https://cie-ds.vercel.app/r/hide-header.json",
-        "https://cie-ds.vercel.app/r/scrollspy.json"
+        "https://cie-ds.vercel.app/r/scrollspy.json",
+        "https://cie-ds.vercel.app/r/layout.json",
+        "https://cie-ds.vercel.app/r/editorial-hero.json",
+        "https://cie-ds.vercel.app/r/feature-card.json",
+        "https://cie-ds.vercel.app/r/media-frame.json",
+        "https://cie-ds.vercel.app/r/anchor-nav.json"
       ],
       "meta": {
         "descriptionJa": "テーマ・道具・全コンポーネントを一度に入れる。"

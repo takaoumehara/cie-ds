@@ -28,6 +28,7 @@
   --cie-parallax-max: 48px;
   --cie-press-scale: 0.97;
   --cie-hover-nudge: 3px;
+  --cie-measure: 62ch;
   --cie-section: clamp(80px, 10vw, 128px);
   --cie-gutter: clamp(20px, 5vw, 64px);
   --cie-container: 1280px;
