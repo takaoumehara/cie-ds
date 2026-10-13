@@ -28,6 +28,17 @@
   --cie-parallax-max: 48px;
   --cie-press-scale: 0.97;
   --cie-hover-nudge: 3px;
+  --cie-section: clamp(80px, 10vw, 128px);
+  --cie-gutter: clamp(20px, 5vw, 64px);
+  --cie-container: 1280px;
+  --cie-card-pad: clamp(24px, 2.6vw, 32px);
+  --cie-gap: 16px;
+  --cie-gap-lg: 24px;
+  --cie-r-card: 20px;
+  --cie-r-media: 28px;
+  --cie-surface-band: color-mix(in oklab, var(--foreground) 4%, var(--background));
+  --cie-surface-plate: color-mix(in oklab, var(--foreground) 7%, var(--background));
+  --cie-hairline: color-mix(in oklab, var(--foreground) 10%, transparent);
 }
 
 :root {
@@ -146,6 +157,27 @@
   --ease-cie-snap: cubic-bezier(0.34, 1.22, 0.64, 1);
   --radius-page: clamp(22px, 3.2vmin, 44px);
   --color-stroke: var(--stroke);
+  --spacing-section: var(--cie-section);
+  --spacing-gutter: var(--cie-gutter);
+  --spacing-card: var(--cie-card-pad);
+  --container-page: var(--cie-container);
+  --radius-card: var(--cie-r-card);
+  --radius-media: var(--cie-r-media);
+  --color-band: var(--cie-surface-band);
+  --color-plate: var(--cie-surface-plate);
+  --color-hairline: var(--cie-hairline);
+  --text-display: clamp(40px, 5vw, 72px);
+  --text-display--line-height: 1.06;
+  --text-display--letter-spacing: -0.025em;
+  --text-display--font-weight: 300;
+  --text-heading: clamp(28px, 3vw, 40px);
+  --text-heading--line-height: 1.13;
+  --text-heading--letter-spacing: -0.02em;
+  --text-heading--font-weight: 300;
+  --text-lead: clamp(18px, 1.6vw, 20px);
+  --text-lead--line-height: 1.45;
+  --text-lead--letter-spacing: 0;
+  --text-lead--font-weight: 400;
   --animate-cie-shimmer: cie-shimmer var(--cie-shimmer-duration, 2.4s) linear infinite;
   --animate-cie-grain: cie-grain 0.9s steps(4) infinite;
 }
@@ -197,5 +229,14 @@
   ::selection {
     background: var(--foreground);
     color: var(--background);
+  }
+  [data-cie-mode="editorial"] {
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    --cie-mode: editorial;
+  }
+  [data-cie-mode="editorial"]:lang(ja), :lang(ja) [data-cie-mode="editorial"] {
+    line-height: 1.8;
+    letter-spacing: 0;
   }
 }

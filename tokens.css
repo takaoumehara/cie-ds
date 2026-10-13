@@ -111,6 +111,16 @@
   --parallax-max: var(--cie-parallax-max);
   --sb-size: var(--cie-sb-size);
 
+  /* Editorial mode rhythm (data-cie-mode="editorial"; see editorial.css) */
+  --cie-section: clamp(80px, 10vw, 128px); /* gap between sections */
+  --cie-gutter: clamp(20px, 5vw, 64px);    /* outer page margin */
+  --cie-container: 1280px;                 /* content max width */
+  --cie-card-pad: clamp(24px, 2.6vw, 32px);
+  --cie-gap: 16px;
+  --cie-gap-lg: 24px;
+  --cie-r-card: 20px;
+  --cie-r-media: 28px;
+
   /* Board grid (optional; site-only) */
   --cols: 8;
   --rows: 6;
