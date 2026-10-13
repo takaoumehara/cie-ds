@@ -231,7 +231,13 @@
     background: var(--foreground);
     color: var(--background);
   }
+  .dark, [data-cie-mode="editorial"] {
+    --cie-surface-band: color-mix(in oklab, var(--foreground) 4%, var(--background));
+    --cie-surface-plate: color-mix(in oklab, var(--foreground) 7%, var(--background));
+    --cie-hairline: color-mix(in oklab, var(--foreground) 10%, transparent);
+  }
   [data-cie-mode="editorial"] {
+    --border: var(--cie-hairline);
     line-height: 1.6;
     letter-spacing: 0.01em;
     --cie-mode: editorial;

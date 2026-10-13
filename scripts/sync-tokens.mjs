@@ -156,7 +156,15 @@ const css = {
     },
     "::selection": { background: "var(--foreground)", color: "var(--background)" },
     // Editorial mode: calmer reading rhythm for everything inside the scope (components inherit it).
+    // Surfaces are mixes of the *local* inks: re-declare them where the inks change so nested .dark blocks flip too.
+    '.dark, [data-cie-mode="editorial"]': {
+      "--cie-surface-band": mix(ed.surface.band),
+      "--cie-surface-plate": mix(ed.surface.plate),
+      "--cie-hairline": `color-mix(in oklab, var(--foreground) ${ed.surface.hairline}, transparent)`,
+    },
     '[data-cie-mode="editorial"]': {
+      // One line weight inside Editorial: component borders use the hairline.
+      "--border": "var(--cie-hairline)",
       "line-height": ed.type.body.leading,
       "letter-spacing": ed.type.body.tracking,
       "--cie-mode": "editorial",
