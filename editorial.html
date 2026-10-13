@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" data-ui="ja" data-cie-mode="editorial">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cie-ds — Editorial</title>
+<meta name="description" content="Editorial mode for the CIE CSS kit: paper ground, whisper headlines, flat bands, hairlines, generous rhythm.">
+<meta name="robots" content="noindex">
+<script>
+  // UI language: saved choice → browser language → ja (shared with index.html)
+  try {
+    var l = localStorage.getItem("cie-ui-lang") || ((navigator.language || "ja").slice(0, 2) === "ja" ? "ja" : "en");
+    document.documentElement.setAttribute("data-ui", l);
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=Outfit:wght@100..900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="scroll.css">
+<link rel="stylesheet" href="interactions.css">
+<link rel="stylesheet" href="editorial.css">
+<style>
+  /* language switch: hide the other language */
+  html[data-ui="ja"] body [lang="en"] { display: none !important; }
+  html[data-ui="en"] body [lang="ja"] { display: none !important; }
+
+  /* page-only: language segment in the nav */
+  .seg { display: inline-flex; border: 1px solid var(--cie-hairline); border-radius: var(--cie-r-pill); padding: 2px; }
+  .seg button { font-family: var(--cie-mono); font-size: 11px; letter-spacing: 0.04em; padding: 6px 10px; border-radius: var(--cie-r-pill); color: var(--ed-muted); }
+  html[data-ui="ja"] .seg [data-set="ja"], html[data-ui="en"] .seg [data-set="en"] { background: var(--ed-fg); color: var(--ed-bg); }
+  .ed-lead code { white-space: nowrap; font-family: var(--cie-mono); font-size: 0.82em; letter-spacing: 0; color: var(--ed-fg); }
+
+  /* page-only: the shapes inside media plates (two inks, no images) */
+  .plate { display: grid; place-items: center; }
+  .plate__num { font-family: var(--cie-mono); font-size: clamp(64px, 7vw, 96px); line-height: 1; letter-spacing: -0.04em; color: var(--ed-fg); }
+  .shape-ring { width: 46%; aspect-ratio: 1; border-radius: 50%; border: 1px solid var(--ed-fg); }
+  .shape-stack { width: 44%; aspect-ratio: 1; display: grid; grid-template-rows: repeat(4, 1fr); gap: 10%; }
+  .shape-stack i { display: block; border-radius: var(--cie-r-pill); background: var(--ed-fg); }
+  .shape-stack i:nth-child(2) { width: 72%; } .shape-stack i:nth-child(3) { width: 86%; } .shape-stack i:nth-child(4) { width: 48%; }
+
+  /* the big framed visual in the canvas section */
+  .stage { display: grid; place-items: center; }
+  .stage__disc { width: min(52%, 360px); aspect-ratio: 1; border-radius: 50%; background: var(--ed-fg); }
+  .stage__line { position: absolute; inset-inline: 0; top: 50%; height: 1px; background: var(--cie-hairline); }
+  .stage__cap { position: absolute; left: var(--cie-card-pad); bottom: var(--cie-card-pad); }
+
+  /* editorial block beside the bleeding frame */
+  .split { display: grid; gap: calc(var(--cie-gap-lg) * 2); align-items: center; }
+  @media (min-width: 900px) {
+    .split { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--cie-gap-lg); }
+    .split > :first-child { grid-column: 1 / span 5; }
+    .split > :last-child  { grid-column: 7 / span 6; }
+  }
+
+  .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--cie-s-12) var(--cie-gap-lg); padding-block: var(--cie-s-28) var(--cie-s-40); }
+  .foot a { color: var(--ed-muted); }
+  .foot a:hover { color: var(--ed-fg); }
+</style>
+</head>
+<body>
+
+<!-- ─── Anchor nav ─────────────────────────────────────────── -->
+<nav class="cie-anchor-nav" data-cie-scrollspy data-cie-scrollspy-offset="64" aria-label="On this page">
+  <div class="cie-container cie-anchor-nav__inner">
+    <a class="cie-anchor-nav__title" href="index.html">cie-ds Editorial</a>
+    <ul class="cie-anchor-nav__links">
+      <li><a href="#overview"><span lang="ja">概要</span><span lang="en">Overview</span></a></li>
+      <li><a href="#features"><span lang="ja">特徴</span><span lang="en">Features</span></a></li>
+      <li><a href="#rhythm"><span lang="ja">リズム</span><span lang="en">Rhythm</span></a></li>
+      <li><a href="#specs"><span lang="ja">仕様</span><span lang="en">Specs</span></a></li>
+    </ul>
+    <div class="cie-anchor-nav__actions">
+      <div class="seg" role="group" aria-label="Language">
+        <button type="button" data-set="ja">JA</button>
+        <button type="button" data-set="en">EN</button>
+      </div>
+      <a class="cie-pill cie-pill--sm cie-anchor-nav__hide-sm" href="editorial.css">editorial.css</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <!-- ─── Hero (split) ─────────────────────────────────────── -->
+  <section class="cie-section" id="overview" data-tone="canvas">
+    <div class="cie-container cie-hero-split">
+      <div class="ed-stack">
+        <span class="cie-kicker cie-kicker--dot">Editorial mode</span>
+        <h1 class="ed-display" data-cie-reveal="blur">
+          <span lang="ja">静かな紙の上で、読むためのリズムを。</span>
+          <span lang="en">A quiet page, built for reading.</span>
+        </h1>
+      </div>
+      <div class="cie-hero-split__lead" data-cie-reveal="rise">
+        <p class="ed-lead" lang="ja">同じ2色のまま、紙の地・細い罫線・ゆったりした間で組むモード。<code>data-cie-mode="editorial"</code> を付けた範囲だけが切り替わります。</p>
+        <p class="ed-lead" lang="en">The same two inks, set on a paper ground with hairlines and generous space. Add <code>data-cie-mode="editorial"</code> and only that scope changes.</p>
+        <div class="cie-actions">
+          <a class="cie-pill" href="#features"><span lang="ja">特徴を見る</span><span lang="en">See the features</span></a>
+          <a class="cie-pill cie-pill--outline" href="#specs"><span lang="ja">数値を見る</span><span lang="en">Read the specs</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Features (band) ──────────────────────────────────── -->
+  <section class="cie-section" id="features" data-tone="band">
+    <div class="cie-container">
+      <header class="cie-section-head" data-cie-reveal="rise">
+        <div>
+          <span class="cie-kicker"><span lang="ja">01 · 特徴</span><span lang="en">01 · Features</span></span>
+          <h2 class="ed-heading">
+            <span lang="ja">面はひとつ深く、線は細く。</span>
+            <span lang="en">One step deeper. One hairline thinner.</span>
+          </h2>
+          <p class="ed-lead" lang="ja">影も第3の色も使いません。地の色に墨を数%混ぜた面だけで、奥行きを作ります。</p>
+          <p class="ed-lead" lang="en">No shadows, no third colour. Depth comes only from a few percent of ink mixed into the ground.</p>
+        </div>
+        <a class="cie-link" href="guide.md"><span lang="ja">使い方ガイド</span><span lang="en">Read the guide</span></a>
+      </header>
+
+      <div class="cie-feature-grid cie-reveal-stagger">
+        <article class="cie-feature" data-cie-reveal="rise">
+          <div class="cie-media plate" style="--ratio: 4 / 3"><span class="plate__num">96</span></div>
+          <h3><span lang="ja">大きな間</span><span lang="en">Generous rhythm</span></h3>
+          <p lang="ja">セクションの間は 80〜128px。画面幅に合わせて伸び縮みします。</p>
+          <p lang="en">Sections sit 80–128px apart, scaling smoothly with the viewport.</p>
+        </article>
+        <article class="cie-feature" data-cie-reveal="rise">
+          <div class="cie-media plate" style="--ratio: 4 / 3"><span class="shape-ring"></span></div>
+          <h3><span lang="ja">ささやく見出し</span><span lang="en">Whisper headlines</span></h3>
+          <p lang="ja">ウェイト 300、詰めた字間。太字の見出しは使いません。</p>
+          <p lang="en">Weight 300 with tight tracking. Headlines are never bold.</p>
+        </article>
+        <article class="cie-feature" data-cie-reveal="rise">
+          <div class="cie-media plate" style="--ratio: 4 / 3"><span class="shape-stack"><i></i><i></i><i></i><i></i></span></div>
+          <h3><span lang="ja">平らな面</span><span lang="en">Flat surfaces</span></h3>
+          <p lang="ja">枠線も影もないカード。帯の上では一段深い面に上がります。</p>
+          <p lang="en">Cards with no border or shadow. On a band they step up to plate.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Editorial block + bleeding frame (canvas) ────────── -->
+  <section class="cie-section" id="rhythm" data-tone="canvas">
+    <div class="cie-container split">
+      <div class="ed-stack" data-cie-reveal="rise">
+        <span class="cie-kicker"><span lang="ja">02 · リズム</span><span lang="en">02 · Rhythm</span></span>
+        <h2 class="ed-heading">
+          <span lang="ja">ひとつのセクションに、主役はひとつ。</span>
+          <span lang="en">One section, one focal point.</span>
+        </h2>
+        <div class="cie-prose">
+          <p lang="ja">本文は 16px、行送り 1.6、字間 0.01em。日本語は行送り 1.8、字間 0 で、約物を詰めて組みます。1行は 62 字までに収めます。</p>
+          <p lang="en">Body copy is 16px on a 1.6 line with 0.01em tracking. Japanese opens up to 1.8 with zero tracking and proportional punctuation. Lines stop at about 62 characters.</p>
+          <p lang="ja">大きな図はページの端まで伸ばし、文章のブロックは静かに左に置きます。</p>
+          <p lang="en">The large visual runs off the edge of the page while the text block stays calm on the left.</p>
+        </div>
+        <a class="cie-link" href="demo.html"><span lang="ja">CSS 版の見本</span><span lang="en">CSS kit demo</span></a>
+      </div>
+      <div class="cie-media cie-media--bleed-right stage" style="--ratio: 5 / 4" data-cie-reveal="fade">
+        <span class="stage__line"></span>
+        <span class="stage__disc"></span>
+        <span class="cie-kicker stage__cap">Fig. 1 — ink on plate</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Specs (band) ─────────────────────────────────────── -->
+  <section class="cie-section" id="specs" data-tone="band">
+    <div class="cie-container">
+      <header class="cie-section-head" data-cie-reveal="rise">
+        <div>
+          <span class="cie-kicker"><span lang="ja">03 · 仕様</span><span lang="en">03 · Specs</span></span>
+          <h2 class="ed-heading">
+            <span lang="ja">すべてトークンで測る。</span>
+            <span lang="en">Everything measured in tokens.</span>
+          </h2>
+        </div>
+        <a class="cie-link" href="tokens.css">tokens.css</a>
+      </header>
+
+      <dl class="cie-specs">
+        <div><dt><span lang="ja">セクションの間</span><span lang="en">Section gap</span></dt><dd>--cie-section · 80–128px</dd></div>
+        <div><dt><span lang="ja">外側の余白</span><span lang="en">Gutter</span></dt><dd>--cie-gutter · 20–64px</dd></div>
+        <div><dt><span lang="ja">最大幅</span><span lang="en">Container</span></dt><dd>--cie-container · 1280px</dd></div>
+        <div><dt><span lang="ja">カードの内側</span><span lang="en">Card padding</span></dt><dd>--cie-card-pad · 24–32px</dd></div>
+        <div><dt><span lang="ja">カードの角</span><span lang="en">Card radius</span></dt><dd>--cie-r-card · 20px</dd></div>
+        <div><dt><span lang="ja">画像の角</span><span lang="en">Media radius</span></dt><dd>--cie-r-media · 28px</dd></div>
+        <div><dt><span lang="ja">特大見出し</span><span lang="en">Display</span></dt><dd>40–72 / 1.06 / 300</dd></div>
+        <div><dt><span lang="ja">見出し</span><span lang="en">Heading</span></dt><dd>28–40 / 1.13 / 300</dd></div>
+        <div><dt><span lang="ja">リード文</span><span lang="en">Lead</span></dt><dd>18–20 / 1.45</dd></div>
+        <div><dt><span lang="ja">本文</span><span lang="en">Body</span></dt><dd>16 / 1.6 · ja 1.8</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ─── Closing (center) ─────────────────────────────────── -->
+  <section class="cie-section" data-tone="canvas">
+    <div class="cie-container cie-hero-center" data-cie-reveal="rise">
+      <span class="cie-kicker">cie-ds · Editorial</span>
+      <h2 class="ed-heading">
+        <span lang="ja">1行足すだけで、読むページに。</span>
+        <span lang="en">One attribute. A page made for reading.</span>
+      </h2>
+      <p class="ed-lead" lang="ja">いつもの tokens.css の後に editorial.css を読み込みます。</p>
+      <p class="ed-lead" lang="en">Load editorial.css after the usual tokens.css.</p>
+      <div class="cie-actions">
+        <a class="cie-pill" href="index.html"><span lang="ja">カタログへ戻る</span><span lang="en">Back to the catalog</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="cie-container">
+  <hr class="cie-hairline">
+  <div class="foot cie-kicker">
+    <span>cie-ds · Creativity Is Everywhere</span>
+    <span><a href="index.html">Catalog</a> · <a href="demo.html">Demo</a> · <a href="parallax.html">Parallax</a></span>
+  </div>
+</footer>
+
+<script>
+  // language switch (same key as index.html)
+  document.querySelectorAll("[data-set]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var l = b.getAttribute("data-set");
+      document.documentElement.setAttribute("data-ui", l);
+      try { localStorage.setItem("cie-ui-lang", l); } catch (e) {}
+    });
+  });
+</script>
+<script src="interaction.js" defer></script>
+</body>
+</html>

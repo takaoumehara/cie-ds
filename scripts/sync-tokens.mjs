@@ -31,7 +31,9 @@ const bezier = (s) => {
 const ms = (s) => Number.parseFloat(s) / 1000
 const fontStack = (f, fallback) => `'${f.family}', ${fallback}`
 
-const { color, motion, radius, scroll, semantic } = tokens
+const { color, motion, radius, scroll, semantic, editorial } = tokens
+const ed = editorial
+const mix = (pct) => `color-mix(in oklab, var(--foreground) ${pct}, var(--background))`
 const sans = fontStack(
   tokens.font.sans,
   "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
@@ -70,6 +72,20 @@ const raw = {
   "--cie-parallax-max": scroll.parallaxMax,
   "--cie-press-scale": String(scroll.pressScale),
   "--cie-hover-nudge": scroll.hoverNudge,
+  // Editorial mode — rhythm + shape (mode-independent so Board pages can borrow them too)
+  "--cie-measure": tokens.space.measure,
+  "--cie-section": ed.space.section,
+  "--cie-gutter": ed.space.gutter,
+  "--cie-container": ed.space.container,
+  "--cie-card-pad": ed.space.cardPad,
+  "--cie-gap": ed.space.gap,
+  "--cie-gap-lg": ed.space.gapLg,
+  "--cie-r-card": ed.radius.card,
+  "--cie-r-media": ed.radius.media,
+  // Surfaces: mixes of the two inks, so they flip with the theme
+  "--cie-surface-band": mix(ed.surface.band),
+  "--cie-surface-plate": mix(ed.surface.plate),
+  "--cie-hairline": `color-mix(in oklab, var(--foreground) ${ed.surface.hairline}, transparent)`,
 }
 
 // Goes into `@theme inline` — becomes Tailwind utilities (font-sans, ease-cie-expo, rounded-page, border-stroke…)
@@ -82,6 +98,23 @@ const theme = {
   "ease-cie-snap": motion.easeSnap,
   "radius-page": radius.page,
   "color-stroke": "var(--stroke)",
+  "spacing-section": "var(--cie-section)",
+  "spacing-gutter": "var(--cie-gutter)",
+  "spacing-card": "var(--cie-card-pad)",
+  "container-page": "var(--cie-container)",
+  "radius-card": "var(--cie-r-card)",
+  "radius-media": "var(--cie-r-media)",
+  "color-band": "var(--cie-surface-band)",
+  "color-plate": "var(--cie-surface-plate)",
+  "color-hairline": "var(--cie-hairline)",
+  ...Object.fromEntries(
+    ["display", "heading", "lead"].flatMap((k) => [
+      [`text-${k}`, ed.type[k].size],
+      [`text-${k}--line-height`, ed.type[k].leading],
+      [`text-${k}--letter-spacing`, ed.type[k].tracking],
+      [`text-${k}--font-weight`, String(ed.type[k].weight)],
+    ])
+  ),
   "animate-cie-shimmer": "cie-shimmer var(--cie-shimmer-duration, 2.4s) linear infinite",
   "animate-cie-grain": "cie-grain 0.9s steps(4) infinite",
 }
@@ -122,6 +155,24 @@ const css = {
       "letter-spacing": "0",
     },
     "::selection": { background: "var(--foreground)", color: "var(--background)" },
+    // Editorial mode: calmer reading rhythm for everything inside the scope (components inherit it).
+    // Surfaces are mixes of the *local* inks: re-declare them where the inks change so nested .dark blocks flip too.
+    '.dark, [data-cie-mode="editorial"]': {
+      "--cie-surface-band": mix(ed.surface.band),
+      "--cie-surface-plate": mix(ed.surface.plate),
+      "--cie-hairline": `color-mix(in oklab, var(--foreground) ${ed.surface.hairline}, transparent)`,
+    },
+    '[data-cie-mode="editorial"]': {
+      // One line weight inside Editorial: component borders use the hairline.
+      "--border": "var(--cie-hairline)",
+      "line-height": ed.type.body.leading,
+      "letter-spacing": ed.type.body.tracking,
+      "--cie-mode": "editorial",
+    },
+    '[data-cie-mode="editorial"]:lang(ja), :lang(ja) [data-cie-mode="editorial"]': {
+      "line-height": "1.8",
+      "letter-spacing": "0",
+    },
   },
 }
 

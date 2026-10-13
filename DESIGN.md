@@ -5,6 +5,7 @@ Fetch this file + `tokens.css` / `tokens.json` / `interaction.js` when styling T
 
 - Demo: https://cie-ds.vercel.app/demo
 - Parallax: https://cie-ds.vercel.app/parallax
+- Editorial: https://cie-ds.vercel.app/editorial
 - Catalog: https://cie-ds.vercel.app/
 - Tokens CSS: https://cie-ds.vercel.app/tokens.css
 - JS: https://cie-ds.vercel.app/interaction.js
@@ -16,6 +17,60 @@ Fetch this file + `tokens.css` / `tokens.json` / `interaction.js` when styling T
 
 Black ground (`#0b0b0b`), paper blocks (`#f3f2ee`). Two inks. No accent colour,
 no shadow, no gradient. Hierarchy = size + Outfit weight motion.
+
+## Modes: Board / Editorial
+
+cie has two layout languages. Both use the same two inks, fonts and motion tokens — they differ in rhythm.
+
+| | **Board** (default) | **Editorial** (`data-cie-mode="editorial"`) |
+|---|---|---|
+| Use for | Work, hero moments, the block → page expand, identity | Explaining, product / feature pages, writing, docs |
+| Ground | Ink (`.dark`) | Paper (light), ink optional |
+| Type | Huge, tight (`--cie-text-mark` / `title`), weight motion | Whisper display 300 · −0.025em; calm body 16 / 1.6 / +0.01em |
+| Space | Dense cells on a grid | `--cie-section` 80–128px between sections, `--cie-gutter` 20–64px, 1280 max |
+| Surfaces | Paper blocks on ink | Canvas → band (fg 4%) → plate (fg 7%) → hairline (fg 10%) |
+| Shape | `--cie-r` / `--cie-r-page` (fluid) | `--cie-r-card` 20px · `--cie-r-media` 28px · pills |
+
+Editorial was distilled from two references (a warm-cream editorial AI site and a white-gallery product page):
+the shared essence is a bright warm ground with one deeper band, whisper headlines, muted relaxed body copy,
+generous and consistent vertical rhythm, one focal element per section, flat surfaces and big radii.
+
+**Editorial tokens** (`tokens.json → editorial`):
+
+| Token | Value | Tailwind |
+|---|---|---|
+| `--cie-section` | clamp(80px, 10vw, 128px) | `py-section` |
+| `--cie-gutter` | clamp(20px, 5vw, 64px) | `px-gutter` |
+| `--cie-container` | 1280px | `max-w-page` |
+| `--cie-card-pad` | clamp(24px, 2.6vw, 32px) | `p-card` |
+| `--cie-gap` / `--cie-gap-lg` | 16px / 24px | — |
+| `--cie-surface-band` / `plate` | fg 4% / 7% into bg | `bg-band` / `bg-plate` |
+| `--cie-hairline` | fg 10% | `border-hairline` |
+| `--cie-r-card` / `--cie-r-media` | 20px / 28px | `rounded-card` / `rounded-media` |
+| display / heading / lead | clamp(40–72) 300 1.06 −0.025em / clamp(28–40) 300 1.13 −0.02em / 18–20 1.45 | `text-display` / `text-heading` / `text-lead` |
+| kicker | DM Mono 12 uppercase +0.04em, muted | — |
+
+Gotcha: `cn()` (tailwind-merge) reads `text-display` / `text-heading` / `text-lead` as *colours* and drops them
+when a colour class such as `text-foreground` is in the same `cn()` call. Let the colour inherit, or put the size
+class outside `cn()`.
+
+Inside the scope, body text inherits line-height 1.6 and +0.01em (Japanese: 1.8 / 0, palt) — existing components get
+the calmer reading rhythm without code changes.
+
+**Do**
+- One focal element per section; kicker → whisper headline → body, link aligned opposite the heading.
+- Alternate canvas and band sections; separate with space first, hairlines second, never shadows.
+- Keep text blocks ≤ `--cie-measure` (62ch); let media be large and let it bleed off one side.
+- Pills for actions: filled ink + hairline outline. Nothing else gets a fill.
+
+**Don't**
+- Bold display headlines (300 is the voice), boxes around every group, borders *and* bands together,
+  new hues, or Board-size type inside Editorial sections.
+
+Layout parts: React `layout` (Container, Section, SectionHeader, Kicker, Hairline, TextLink), `editorial-hero`,
+`feature-card` (+ FeatureGrid), `media-frame`, `anchor-nav`. Plain HTML: `editorial.css` (`.cie-container`,
+`.cie-section[data-tone]`, `.cie-section-head`, `.ed-display`, `.cie-feature`, `.cie-media`, `.cie-anchor-nav`, `.cie-pill` …),
+shown in `editorial.html`.
 
 ## Colour
 
