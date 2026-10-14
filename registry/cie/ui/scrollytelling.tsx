@@ -15,22 +15,6 @@ import { gsap, ScrollTrigger, useCieGsap } from "@/lib/cie-gsap"
 type StepCtx = { index: number; active: boolean }
 const ScrollytellingStepContext = React.createContext<StepCtx>({ index: 0, active: true })
 
-/** position: fixed breaks inside a transformed / filtered ancestor — fall back to transform pinning there. */
-function pinTypeFor(el: HTMLElement): "fixed" | "transform" {
-  for (let n = el.parentElement; n && n !== document.body; n = n.parentElement) {
-    const s = getComputedStyle(n)
-    if (
-      s.transform !== "none" ||
-      s.filter !== "none" ||
-      s.perspective !== "none" ||
-      (s.getPropertyValue("backdrop-filter") || "none") !== "none" ||
-      /paint|layout|strict|content/.test(s.contain) ||
-      /transform|filter|perspective/.test(s.willChange)
-    )
-      return "transform"
-  }
-  return "fixed"
-}
 
 type ScrollytellingProps = Omit<React.ComponentProps<"section">, "children"> & {
   /** Render the figure for the active step index. */
@@ -65,7 +49,6 @@ function Scrollytelling({ figure, side = "right", onStepChange, className, child
       const col = root.querySelector<HTMLElement>("[data-slot=scrollytelling-steps]")
       const els = gsap.utils.toArray<HTMLElement>(root.querySelectorAll("[data-slot=scrollytelling-step]"))
       if (!fig || !col) return
-      const pinType = pinTypeFor(root)
       const mm = gsap.matchMedia()
       mm.add({ desktop: "(min-width: 768px)", mobile: "(max-width: 767.98px)" }, (context) => {
         const desktop = Boolean(context.conditions?.desktop)
@@ -77,7 +60,7 @@ function Scrollytelling({ figure, side = "right", onStepChange, className, child
           end: desktop ? "bottom bottom" : "bottom 50%",
           pin: fig,
           pinSpacing: false,
-          pinType,
+          anticipatePin: 1,
           invalidateOnRefresh: true,
         })
         els.forEach((el, i) =>

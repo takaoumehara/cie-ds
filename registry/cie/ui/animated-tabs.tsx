@@ -125,7 +125,9 @@ function AnimatedTabsContent({
         data-slot="tabs-content"
         className={cn("outline-none", className)}
         initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        // Clear the filter once settled: a lingering filter makes this panel a containing block for
+        // position: fixed, which breaks fixed pins / overlays inside it (GSAP falls back to jittery transform pins).
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)", transitionEnd: { filter: "none" } }}
         transition={cieTransition.rise}
       >
         {children}

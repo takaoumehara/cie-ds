@@ -11,6 +11,8 @@ import { cieDuration, cieEase, cieTransition } from "@/lib/cie-motion"
 // Showcase · Expand card — the cie signature "block → page" morph, as a shared-layout
 // transition (Aceternity Expandable Card lineage). A board cell grows into a full panel
 // on --cie-t-move / expo; other cells step back. Esc / backdrop / × close; focus returns.
+// Only the block morphs. Text never rides the morph (a 3xl → 7xl title would squash mid-flight): the cell's
+// text keeps its shape via layout="position" scale correction, and the panel's text fades in after the block lands.
 //
 // <ExpandBoard>
 //   <ExpandCard id="work" title="Work" summary="…">full content…</ExpandCard>
@@ -94,18 +96,22 @@ function ExpandCard({ id, title, eyebrow, summary, children, className, panelCla
         transition={t}
       >
         {eyebrow && (
-          <motion.span layoutId={lid("eyebrow")} transition={t} className="font-mono text-xs uppercase opacity-60">
+          <motion.span layout="position" transition={t} className="font-mono text-xs uppercase opacity-60">
             {eyebrow}
           </motion.span>
         )}
         <motion.span
-          layoutId={lid("title")}
+          layout="position"
           transition={t}
           className="text-3xl font-[300] tracking-[-0.03em] transition-[font-weight] duration-[var(--cie-t-cell,320ms)] ease-cie-expo group-hover/cell:font-[560]"
         >
           {title}
         </motion.span>
-        {summary && <span className="text-sm opacity-70">{summary}</span>}
+        {summary && (
+          <motion.span layout="position" transition={t} className="text-sm opacity-70">
+            {summary}
+          </motion.span>
+        )}
       </motion.button>
 
       {/* Portalled so a transformed / filtered ancestor can't trap the fixed overlay. */}
@@ -133,25 +139,28 @@ function ExpandCard({ id, title, eyebrow, summary, children, className, panelCla
                     panelClassName
                   )}
                 >
-                  <div className="flex items-start justify-between gap-6 p-6 sm:p-10">
+                  <motion.div
+                    layout="position"
+                    className="flex items-start justify-between gap-6 p-6 sm:p-10"
+                    initial={{ opacity: 0 }}
+                    animate={{
+                      opacity: 1,
+                      transition: {
+                        delay: reduce ? 0 : cieDuration.move * 0.55,
+                        duration: cieDuration.cell,
+                        ease: cieEase.out,
+                      },
+                    }}
+                    exit={{ opacity: 0, transition: { duration: cieDuration.snap } }}
+                  >
                     <div className="flex flex-col gap-3">
-                      {eyebrow && (
-                        <motion.span
-                          layoutId={lid("eyebrow")}
-                          transition={t}
-                          className="font-mono text-xs uppercase opacity-60"
-                        >
-                          {eyebrow}
-                        </motion.span>
-                      )}
-                      <motion.h2
+                      {eyebrow && <span className="font-mono text-xs uppercase opacity-60">{eyebrow}</span>}
+                      <h2
                         id={lid("title")}
-                        layoutId={lid("title")}
-                        transition={t}
                         className="text-5xl leading-[0.95] font-[300] tracking-[-0.045em] sm:text-7xl"
                       >
                         {title}
-                      </motion.h2>
+                      </h2>
                     </div>
                     <button
                       ref={closeRef}
@@ -162,8 +171,9 @@ function ExpandCard({ id, title, eyebrow, summary, children, className, panelCla
                       <XIcon className="size-4" />
                       <span className="sr-only">Close</span>
                     </button>
-                  </div>
+                  </motion.div>
                   <motion.div
+                    layout="position"
                     className="flex-1 overflow-y-auto px-6 pb-10 sm:px-10"
                     initial={{ opacity: 0, y: 22 }}
                     animate={{

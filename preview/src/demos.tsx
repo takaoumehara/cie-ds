@@ -849,21 +849,39 @@ export const demos: Record<string, Demo> = {
 
   parallax: {
     layout: "flush",
-    note: "Scroll the page. Layers drift at different speeds; below, ScrollExpand grows a block into a page.",
+    note: "Scroll slowly. Each layer moves at its own speed (×), so the scene gains depth; then ScrollExpand opens a block into the full page.",
     render: () => (
       <div>
-        <div className="relative grid h-96 grid-cols-3 items-center gap-4 overflow-hidden px-6">
-          <Parallax speed={-1.5}>
-            <div className="aspect-[3/4] rounded-[var(--radius)] bg-card" />
+        <div className="relative h-[560px] overflow-hidden border-b border-border">
+          <Parallax speed={-3} className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center">
+            <span className="block text-[22vw] leading-none font-[200] tracking-[-0.06em] text-foreground/[0.07] select-none sm:text-[16vw]">
+              Depth
+            </span>
           </Parallax>
-          <Parallax speed={1}>
-            <p className="text-center text-4xl font-[200] tracking-[-0.045em]">Depth</p>
+          <Parallax speed={1.5} className="absolute top-[18%] left-[10%] w-[30%] max-w-72">
+            <div className="flex aspect-[3/4] flex-col justify-between rounded-[var(--radius)] bg-card p-4 text-card-foreground">
+              <Mono>
+                <span className="text-card-foreground/60">mid · ×1.5</span>
+              </Mono>
+              <span className="text-2xl font-[300] tracking-tight">Block</span>
+            </div>
           </Parallax>
-          <Parallax speed={2.5}>
-            <div className="aspect-square rounded-full border border-border" />
+          <Parallax speed={4} className="absolute top-[34%] right-[12%] w-[22%] max-w-56">
+            <div className="flex aspect-square items-end justify-center rounded-full border border-foreground/40 pb-6">
+              <Mono>near · ×4</Mono>
+            </div>
+          </Parallax>
+          <Parallax speed={7} className="absolute bottom-[12%] left-[46%]">
+            <div className="flex items-center gap-2">
+              <span className="size-3 rounded-full bg-foreground" />
+              <Mono>front · ×7</Mono>
+            </div>
+          </Parallax>
+          <Parallax speed={-3} className="absolute top-6 left-6">
+            <Mono>back · ×−3</Mono>
           </Parallax>
         </div>
-        <ScrollExpand length={1}>
+        <ScrollExpand>
           <div className="flex size-full flex-col justify-end p-8 sm:p-14">
             <Mono>
               <span className="text-card-foreground/60">ScrollExpand</span>
@@ -874,6 +892,7 @@ export const demos: Record<string, Demo> = {
       </div>
     ),
   },
+
   reveal: {
     layout: "plain",
     replay: true,

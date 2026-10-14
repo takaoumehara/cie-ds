@@ -11,22 +11,6 @@ import { cieGsapDuration, cieGsapEase, gsap, useCieGsap } from "@/lib/cie-gsap"
 // (invalidateOnRefresh). Optional `snap` settles on panel edges with cieGsapEase.expo over --cie-t-move.
 // Reduced motion: no pin, no scrub — a native horizontal scroller (overflow-x auto + scroll-snap).
 
-/** position: fixed breaks inside a transformed / filtered ancestor — fall back to transform pinning there. */
-function pinTypeFor(el: HTMLElement): "fixed" | "transform" {
-  for (let n = el.parentElement; n && n !== document.body; n = n.parentElement) {
-    const s = getComputedStyle(n)
-    if (
-      s.transform !== "none" ||
-      s.filter !== "none" ||
-      s.perspective !== "none" ||
-      (s.getPropertyValue("backdrop-filter") || "none") !== "none" ||
-      /paint|layout|strict|content/.test(s.contain) ||
-      /transform|filter|perspective/.test(s.willChange)
-    )
-      return "transform"
-  }
-  return "fixed"
-}
 
 type HorizontalScrollProps = React.ComponentProps<"section"> & {
   /** true = 1:1 with scroll, a number = seconds of catch-up smoothing. */
@@ -63,7 +47,7 @@ function HorizontalScroll({
           start: "top top",
           end: () => `+=${dist()}`,
           pin: true,
-          pinType: pinTypeFor(root),
+          anticipatePin: 1,
           scrub,
           invalidateOnRefresh: true,
           snap:

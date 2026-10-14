@@ -13,22 +13,6 @@ import { onThemeChange, readGroundColor, readTextColor, toCss } from "@/lib/cie-
 // and draw procedurally — `ink.fg` / `ink.bg` are the theme's two inks (cie-color), re-read on theme change.
 // Reduced motion: no pin, no scrub — the last frame is drawn once (freeze frame).
 
-/** position: fixed breaks inside a transformed / filtered ancestor — fall back to transform pinning there. */
-function pinTypeFor(el: HTMLElement): "fixed" | "transform" {
-  for (let n = el.parentElement; n && n !== document.body; n = n.parentElement) {
-    const s = getComputedStyle(n)
-    if (
-      s.transform !== "none" ||
-      s.filter !== "none" ||
-      s.perspective !== "none" ||
-      (s.getPropertyValue("backdrop-filter") || "none") !== "none" ||
-      /paint|layout|strict|content/.test(s.contain) ||
-      /transform|filter|perspective/.test(s.willChange)
-    )
-      return "transform"
-  }
-  return "fixed"
-}
 
 type ImageSequenceInk = { fg: string; bg: string }
 
@@ -170,7 +154,7 @@ function ImageSequence({
           start: "top top",
           end: `+=${distance}`,
           pin: true,
-          pinType: pinTypeFor(el),
+          anticipatePin: 1,
           scrub,
           invalidateOnRefresh: true,
         },
