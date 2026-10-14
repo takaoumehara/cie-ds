@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils"
 // cards slide up and cover earlier ones. As the stack scrolls, every card but the last scales down toward
 // 0.94–1 (deeper cards shrink more) and dims, driven by useScroll on the <CardStack> container.
 // Cards are cie blocks: rounded-page, hairline border, bg-card.
+// `hold` keeps the finished stack on screen for a while after the last card lands (default 60svh), so the
+// reader gets to enjoy the completed stack before it scrolls away; the shrink / dim finishes as it lands.
 // Reduced motion: a plain stacked list — sticky stays (it is layout, not animation), no scaling or dimming.
 
 type Ctx = { index: number; count: number; progress: MotionValue<number>; top: number; step: number; reduce: boolean }
@@ -20,15 +22,24 @@ type CardStackProps = React.ComponentProps<"div"> & {
   top?: number
   /** px each following card sits lower than the previous one. */
   step?: number
+  /** Extra scroll the completed stack stays pinned for (any CSS length). */
+  hold?: string
 }
 
-function CardStack({ top = 80, step = 16, className, children, ...props }: CardStackProps) {
-  const ref = React.useRef<HTMLDivElement>(null)
+function CardStack({ top = 80, step = 16, hold = "60svh", className, style, children, ...props }: CardStackProps) {
+  const track = React.useRef<HTMLDivElement>(null)
   const reduce = !!useReducedMotion()
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] })
+  // Progress runs over the cards only (the track stops short of the hold), so it completes as the last card lands.
+  const { scrollYProgress } = useScroll({ target: track, offset: ["start start", "end end"] })
   const items = React.Children.toArray(children).filter(React.isValidElement)
   return (
-    <div ref={ref} data-slot="card-stack" className={cn("relative flex flex-col gap-8 pb-16", className)} {...props}>
+    <div data-slot="card-stack" className={cn("relative flex flex-col gap-8", className)} style={style} {...props}>
+      <div
+        ref={track}
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0"
+        style={{ bottom: `calc(${hold} + 2rem)` }}
+      />
       {items.map((child, index) => (
         <StackCtx.Provider
           key={child.key ?? index}
@@ -37,6 +48,8 @@ function CardStack({ top = 80, step = 16, className, children, ...props }: CardS
           {child}
         </StackCtx.Provider>
       ))}
+      {/* Sticky boxes stop at their parent's content edge (padding does not count), so the hold is a real box. */}
+      <div aria-hidden data-slot="card-stack-hold" style={{ height: hold }} />
     </div>
   )
 }

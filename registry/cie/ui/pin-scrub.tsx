@@ -17,22 +17,6 @@ import { cieGsapEase, gsap, useCieGsap } from "@/lib/cie-gsap"
 type Timeline = ReturnType<typeof gsap.timeline>
 type Selector = ReturnType<typeof gsap.utils.selector>
 
-/** position: fixed breaks inside a transformed / filtered ancestor — fall back to transform pinning there. */
-function pinTypeFor(el: HTMLElement): "fixed" | "transform" {
-  for (let n = el.parentElement; n && n !== document.body; n = n.parentElement) {
-    const s = getComputedStyle(n)
-    if (
-      s.transform !== "none" ||
-      s.filter !== "none" ||
-      s.perspective !== "none" ||
-      (s.getPropertyValue("backdrop-filter") || "none") !== "none" ||
-      /paint|layout|strict|content/.test(s.contain) ||
-      /transform|filter|perspective/.test(s.willChange)
-    )
-      return "transform"
-  }
-  return "fixed"
-}
 
 type PinScrubProps = React.ComponentProps<"div"> & {
   /** Scroll distance the stage stays pinned for, relative to the viewport height ("150%") or in px ("800"). */
@@ -76,7 +60,7 @@ function PinScrub({
           start,
           end: `+=${distance}`,
           pin: true,
-          pinType: pinTypeFor(el),
+          anticipatePin: 1,
           scrub,
           invalidateOnRefresh: true,
         },
@@ -129,7 +113,7 @@ function PinScrubSteps({
           start,
           end: `+=${span}`,
           pin: true,
-          pinType: pinTypeFor(el),
+          anticipatePin: 1,
           scrub,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
