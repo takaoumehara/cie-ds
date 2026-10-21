@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // Full site build for Vercel → dist/
-//   dist/            the original no-build catalog (html/css/js/md copied verbatim, URLs unchanged)
+//   dist/index.html  docs shell (site/ — sidebar, component pages, foundations; hash routes /#/…)
+//   dist/            the no-build kit + pages (html/css/js/md copied verbatim, URLs unchanged;
+//                    the original one-page catalog lives on as /classic.html)
 //   dist/r/*.json    shadcn registry items  (npx shadcn add https://cie-ds.vercel.app/r/<name>.json)
 //   dist/registry/   React preview of every registry item
 import { execSync } from "node:child_process"
@@ -17,6 +19,7 @@ run("node scripts/sync-tokens.mjs")
 run("node scripts/check-tokens.mjs")
 run("npx shadcn build -o dist/r")
 run("npx vite build")
+run("npx vite build --config vite.site.config.ts")
 
 const STATIC = /\.(html|css|js|json|md)$|^(LICENSE|NOTICE)$/
 const SKIP = new Set([
@@ -31,6 +34,10 @@ const SKIP = new Set([
 ])
 for (const f of readdirSync(root)) {
   const p = join(root, f)
-  if (statSync(p).isFile() && STATIC.test(f) && !SKIP.has(f)) cpSync(p, join(dist, f))
+  if (statSync(p).isFile() && STATIC.test(f) && !SKIP.has(f)) {
+    // dist/index.html is the docs shell; never let a root file overwrite it
+    if (f === "index.html") throw new Error("root index.html would overwrite the docs shell — keep the catalog as classic.html")
+    cpSync(p, join(dist, f))
+  }
 }
 console.log("✓ dist ready")

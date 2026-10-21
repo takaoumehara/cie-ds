@@ -7,6 +7,7 @@
     "tokens": "node scripts/sync-tokens.mjs",
     "check": "node scripts/sync-tokens.mjs --check && node scripts/check-tokens.mjs && tsc --noEmit -p tsconfig.json",
     "dev": "node scripts/sync-tokens.mjs && vite",
+    "dev:docs": "node scripts/sync-tokens.mjs && vite --config vite.site.config.ts",
     "build": "node scripts/build.mjs"
   },
   "dependencies": {
