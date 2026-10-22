@@ -18,7 +18,7 @@ const sources = import.meta.glob("../../registry/cie/{ui,lib}/*.{ts,tsx}", {
 type Item = (typeof registry.items)[number] & { meta?: { tech?: string } }
 const items = registry.items as Item[]
 
-const CATEGORIES = [
+export const CATEGORIES = [
   {
     id: "foundation",
     title: "Foundation",
@@ -222,13 +222,13 @@ function ComponentCard({ item }: { item: Item }) {
   )
 }
 
-const REGISTRIES_JSON = `{
+export const REGISTRIES_JSON = `{
   "registries": {
     "@cie": "${ORIGIN}/r/{name}.json"
   }
 }`
 
-const RENDERERS = [
+export const RENDERERS = [
   [
     "CSS / SVG",
     "grid-pattern · noise · spotlight · border-beam",
